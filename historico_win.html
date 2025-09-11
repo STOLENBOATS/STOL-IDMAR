@@ -14,7 +14,7 @@
       <p class="subtitle"><span class="sub-en">(Maritime Identifications — WIN/HIN &amp; Engines)</span></p>
     </div>
   </div>
-  <nav class="main-nav">
+  <nav class="main-nav"><button id="themeToggle" class="btn-icon" aria-label="Alternar tema">🌙</button>
     <a href="validador.html">Validador</a>
     <a href="historico_win.html">Histórico WIN</a>
     <a href="historico_motor.html">Histórico Motor</a>
@@ -25,9 +25,22 @@
 
 <main class="container">
   <section class="card">
+
+    <div class="hist-links">
+      <a href="validador.html" class="btn">&larr; Voltar ao Validador</a>
+      <span class="sep">|</span>
+      <strong>Histórico WIN</strong> <span class='sep'>|</span> <a href='historico_motor.html'>Histórico Motor</a>
+    </div>
+    
+
+    
+      <a class="btn active" href="historico_win.html">Histórico WIN</a>
+      <a class="btn " href="historico_motor.html">Histórico Motor</a>
+    </div>
+    
     <button id="exportWinCsv" class="btn">Exportar CSV / Export CSV</button>
     <div class="table-wrap">
-      <table id="tabelaWin"><thead><tr>
+      <table id="tabelaWin" class=\"table\"><thead><tr>
         <th>Data / Date</th><th>WIN</th><th>Resultado / Result</th><th>Justificação / Reason</th><th>Foto / Photo (nome)</th><th>Miniatura / Thumbnail</th>
       </tr></thead><tbody></tbody></table>
     </div>
@@ -37,4 +50,5 @@
   <p>IDMAR — v2.2.7-baseline+merge-r1 — 2025-09-11</p>
 </footer>
 <script src="js/config.js"></script><script src="js/app.js"></script><script src="js/utils.js"></script><script src="js/historico-win.js"></script>
+  <script src="js/theme.js"></script>
 </body></html>
