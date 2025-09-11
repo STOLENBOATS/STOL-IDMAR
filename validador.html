@@ -6,6 +6,17 @@
 <script>if(sessionStorage.getItem('nav_session')!=='ok'){alert('Sessão expirada. Faça login.');location.replace('login.html');}</script>
 </head><body>
 
+
+<script>
+(function(){
+  try {
+    const ok = sessionStorage.getItem('NAV_SESSION')==='ok' || sessionStorage.getItem('IDMAR_SESSION')==='ok';
+    const isLogin = /login\.html$/i.test(location.pathname) || document.title.toLowerCase().includes('login');
+    if(!ok && !isLogin){ location.href = 'login.html'; }
+  } catch(e) {}
+})();
+</script>
+
 <header class="app-header">
   <div class="brand">
     <img src="img/logo-pm.png" alt="Polícia Marítima" class="logo">
@@ -14,7 +25,7 @@
       <p class="subtitle"><span class="sub-en">(Maritime Identifications — WIN/HIN &amp; Engines)</span></p>
     </div>
   </div>
-  <nav class="main-nav"><button id="themeToggle" class="btn-icon" aria-label="Alternar tema">🌙</button>
+  <nav class="main-nav"><button id=\"themeToggle\" class=\"btn-icon\" title=\"Alternar tema\">🌙</button>
     <a href="validador.html">Validador</a>
     <a href="historico_win.html">Histórico WIN</a>
     <a href="historico_motor.html">Histórico Motor</a>
@@ -83,5 +94,6 @@
 </footer>
 <script src="js/config.js"></script><script src="js/app.js"></script><script src="js/utils.js"></script>
 <script src="js/validador-win.js"></script><script src="js/validador-motor.js"></script>
+  <script src="js/hin-rules.patch.v1.js"></script>
   <script src="js/theme.js"></script>
 </body></html>

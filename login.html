@@ -39,15 +39,13 @@ document.getElementById('loginForm').addEventListener('submit',(e)=>{
   else{ alert('Credenciais inválidas / Invalid credentials'); }
 });
 </script>
-  <script src="js/utils.js"></script>
 <script>
 (function(){
-  // ensure session flag sets both legacy and new key
   window.IDMAR_loginOK = function(){
-    try { 
-      sessionStorage.setItem('NAV_SESSION','ok'); 
-      sessionStorage.setItem('IDMAR_SESSION','ok'); 
-    } catch(e){}
+    try{
+      sessionStorage.setItem('NAV_SESSION','ok');
+      sessionStorage.setItem('IDMAR_SESSION','ok');
+    }catch(e){}
   };
 })();
 </script>
