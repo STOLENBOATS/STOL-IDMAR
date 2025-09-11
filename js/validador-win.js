@@ -1,3 +1,39 @@
+
+// Patched for IDMAR baseline mapping
+(function(){
+  function byId(id){ return document.getElementById(id); }
+  function mapWinIds(){
+    return {
+      form: byId('formWin') || byId('winForm'),
+      input: byId('win') || byId('winInput'),
+      out: byId('winOut') || byId('winResult'),
+      photo: byId('winPhoto'),
+      certIssuer: byId('certIssuer'),
+      certLine: byId('certLine'),
+      certNumber: byId('certNumber'),
+      badge: byId('winBadge'),
+      cert: byId('winCert')
+    };
+  }
+  function initWinValidator(){
+    const el = mapWinIds();
+    if(!el.form) return; // page may not have WIN validator
+    el.form.addEventListener('submit', async (e)=>{
+      if(!el.input) return; // no input field
+      e.preventDefault();
+      try{
+        if(typeof window.__winValidate === 'function'){
+          const res = await window.__winValidate(el.input.value);
+          if(el.out){ el.out.innerHTML = res && res.html ? res.html : (res && res.text ? '<pre>'+res.text+'</pre>' : ''); }
+        }
+      }catch(err){
+        if(el.out){ el.out.innerHTML = '<div class="warn">Erro na validação: '+(err.message||err)+'</div>'; }
+      }
+    });
+  }
+  if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', initWinValidator); }
+  else { initWinValidator(); }
+})();
 // WIN/HIN Validator (UE: 14 chars; US: 14 or 16). Ignore hyphen at pos 3 (between 2&3).
 // Rules from Ricardo's spec.
 const monthsMap = {

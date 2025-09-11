@@ -1,3 +1,54 @@
+
+// Patched for IDMAR baseline mapping
+(function(){
+  function byId(id){ return document.getElementById(id); }
+  function ensureBrandFields(form){
+    var node = byId('brandFields');
+    if(!node && form){
+      node = document.createElement('div');
+      node.id = 'brandFields';
+      node.className = 'brand-fields';
+      // insert after the brand select if possible
+      var brandSel = byId('brand');
+      if(brandSel && brandSel.parentElement){
+        brandSel.parentElement.insertAdjacentElement('afterend', node);
+      } else {
+        form.appendChild(node);
+      }
+    }
+    return node;
+  }
+  function mapMotorIds(){
+    const form = byId('formMotor') || byId('motorForm');
+    return {
+      form,
+      out: byId('motorOut') || byId('motorResult'),
+      photo: byId('motorPhoto'),
+      brand: byId('brand'),
+      fields: ensureBrandFields(form)
+    };
+  }
+  function initMotorValidator(){
+    const el = mapMotorIds();
+    if(!el.form) return;
+    el.form.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      try{
+        if(typeof window.__motorValidate === 'function'){
+          const res = await window.__motorValidate({
+            brand: el.brand ? el.brand.value : '',
+            fieldsRoot: el.fields,
+          });
+          if(el.out){ el.out.innerHTML = res && res.html ? res.html : (res && res.text ? '<pre>'+res.text+'</pre>' : ''); }
+        }
+      }catch(err){
+        if(el.out){ el.out.innerHTML = '<div class="warn">Erro na validação: '+(err.message||err)+'</div>'; }
+      }
+    });
+  }
+  if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', initMotorValidator); }
+  else { initMotorValidator(); }
+})();
 // Dynamic brand fields and simple brand-specific validation for Yamaha/Honda.
 // Forensic/visual expansion can be added later without breaking API.
 const brandSelect = document.getElementById('brand');
