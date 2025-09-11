@@ -9,12 +9,17 @@
   <div class="brand">
     <img src="img/logo-pm.png" alt="Polícia Marítima" class="logo">
     <div class="titles">
-      <h1>IDMAR</h1>
-      <p class="subtitle">Identificação Marítima — Cascos &amp; Motores<br>
-        <span class="sub-en">(Maritime Identifications — WIN/HIN &amp; Engines)</span>
-      </p>
+      <h1>IDMAR <span class="title-descriptor">Identificação Marítima — Cascos &amp; Motores</span></h1>
+      <p class="subtitle"><span class="sub-en">(Maritime Identifications — WIN/HIN &amp; Engines)</span></p>
     </div>
   </div>
+  <nav class="main-nav">
+    <a href="validador.html">Validador</a>
+    <a href="historico_win.html">Histórico WIN</a>
+    <a href="historico_motor.html">Histórico Motor</a>
+    <a href="forense.html">Forense</a>
+    <a href="login.html" onclick="try{sessionStorage.clear();localStorage.setItem('IDMAR_LAST_LOGOUT',Date.now())}catch(e){}">Sair</a>
+  </nav>
 </header>
 
 <main class="container">
