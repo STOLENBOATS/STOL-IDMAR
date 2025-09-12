@@ -112,3 +112,96 @@
     const arr = loadFromLS(NAV.STORAGE.MOTOR_HISTORY); arr.unshift(rec); saveToLS(NAV.STORAGE.MOTOR_HISTORY, arr);
   });
 })();
+
+// === IDMAR Forense Add-on (non-invasive) ===
+(function(){
+  function ensureForenseUI(formId, afterElId){
+    var form = document.getElementById(formId) || document.getElementById(formId.replace('form','Form'));
+    if(!form) return;
+    if(document.getElementById('forenseBox_'+formId)) return;
+    var box = document.createElement('details');
+    box.id = 'forenseBox_'+formId;
+    box.className = 'forense-box';
+    box.innerHTML = '<summary>Forense (opcional)</summary>'
+      + '<div class="forense-grid">'
+      + '<label><input type="checkbox" id="flagRebites_'+formId+'"> Rebites</label>'
+      + '<label><input type="checkbox" id="flagSolda_'+formId+'"> Cordões de solda</label>'
+      + '<label><input type="checkbox" id="flagPlaca_'+formId+'"> Remarcação de placa</label>'
+      + '<label><input type="checkbox" id="flagFundicao_'+formId+'"> Marcas de fundição</label>'
+      + '<textarea id="forenseNotes_'+formId+'" rows="3" placeholder="Notas forenses…"></textarea>'
+      + '</div>';
+    var anchor = document.getElementById(afterElId);
+    if(anchor && anchor.parentElement){
+      anchor.parentElement.insertAdjacentElement('afterend', box);
+    } else {
+      form.appendChild(box);
+    }
+  }
+  async function sha256OfFile(file){
+    try{
+      const buf = await file.arrayBuffer();
+      const hash = await crypto.subtle.digest('SHA-256', buf);
+      return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    }catch(e){ return null; }
+  }
+  function bestHistoryKey(kind){ // 'win' or 'motor'
+    try{
+      if(kind==='win'){
+        return (window.NAV && NAV.STORAGE && NAV.STORAGE.WIN_HISTORY) || 'nav_win_history';
+      } else {
+        return (window.NAV && NAV.STORAGE && NAV.STORAGE.MOTOR_HISTORY) || 'nav_motor_history';
+      }
+    }catch(e){ return kind==='win'?'nav_win_history':'nav_motor_history'; }
+  }
+  function load(key){ try{ return JSON.parse(localStorage.getItem(key)||'[]'); }catch(e){ return []; } }
+  function save(key, arr){ localStorage.setItem(key, JSON.stringify(arr||[])); }
+  function tsOf(x){ if(x==null) return 0; if(typeof x==='number') return x; if(typeof x==='string' && /^\d+$/.test(x)) return Number(x); var t=Date.parse(x); return isNaN(t)?0:t; }
+  async function attachForense(kind, formId, photoInputId){
+    setTimeout(async function(){
+      try{
+        var photoInput = document.getElementById(photoInputId);
+        var file = (photoInput && photoInput.files && photoInput.files[0]) ? photoInput.files[0] : null;
+        var hash = file ? await sha256OfFile(file) : null;
+        var boxIdSuf = '_'+formId;
+        var flags = [];
+        if(document.getElementById('flagRebites'+boxIdSuf)?.checked) flags.push('rebites');
+        if(document.getElementById('flagSolda'+boxIdSuf)?.checked) flags.push('solda');
+        if(document.getElementById('flagPlaca'+boxIdSuf)?.checked) flags.push('placa');
+        if(document.getElementById('flagFundicao'+boxIdSuf)?.checked) flags.push('fundicao');
+        var notes = (document.getElementById('forenseNotes'+boxIdSuf)?.value)||'';
+        var forense = (hash || flags.length || notes) ? { hash, flags, notes } : null;
+        if(!forense) return;
+
+        var key = bestHistoryKey(kind);
+        var arr = load(key);
+        if(!Array.isArray(arr) || !arr.length){ // try legacy too
+          var legacy = load(kind==='win' ? 'hist_win' : 'hist_motor');
+          if(Array.isArray(legacy) && legacy.length) arr = legacy;
+          else return;
+        }
+        var idx = 0, bestTs = -1;
+        for(var i=0;i<arr.length;i++){
+          var r = arr[i], d = (r && (r.date||r.dt||r.time||r.when||r.timestamp||r.createdAt));
+          var t = tsOf(d);
+          if(t >= bestTs){ bestTs = t; idx = i; }
+        }
+        var rec = arr[idx] || {};
+        rec.forense = forense;
+        arr[idx] = rec;
+        save(key, arr);
+      }catch(e){ /* silent */ }
+    }, 0);
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    // WIN
+    ensureForenseUI('formWin', 'winPhoto');
+    var formWin = document.getElementById('formWin') || document.getElementById('winForm');
+    if(formWin){ formWin.addEventListener('submit', function(){ attachForense('win','formWin','winPhoto'); }); }
+    // MOTOR
+    ensureForenseUI('formMotor', 'motorPhoto');
+    var formMotor = document.getElementById('formMotor') || document.getElementById('motorForm');
+    if(formMotor){ formMotor.addEventListener('submit', function(){ attachForense('motor','formMotor','motorPhoto'); }); }
+  });
+})();
+// === /IDMAR Forense Add-on ===
