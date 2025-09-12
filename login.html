@@ -1,14 +1,11 @@
 <!doctype html>
 <html lang="pt"><head>
+<link rel="icon" type="image/png" href="img/favicon.png">
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>IDMAR — Login</title>
 <link rel="stylesheet" href="css/styles.css">
 
-<script>
-try{ localStorage.setItem('IDMAR_THEME','light'); }catch(e){}
-document.documentElement.setAttribute('data-theme','light');
-</script>
-
+<script>try{localStorage.setItem('IDMAR_THEME','light');}catch(e){}; document.documentElement.setAttribute('data-theme','light');</script>
 </head><body>
 
 <header class="app-header">
@@ -41,19 +38,9 @@ document.getElementById('loginForm').addEventListener('submit',(e)=>{
   e.preventDefault();
   const u=document.getElementById('user').value.trim();
   const p=document.getElementById('pass').value;
-  if(u==='admin' && p==='Admin2025'){ sessionStorage.setItem(NAV.STORAGE.SESSION,'ok'); sessionStorage.setItem('NAV_SESSION','ok'); sessionStorage.setItem('IDMAR_SESSION','ok'); sessionStorage.setItem('nav_session','ok'); location.href='validador.html'; }
+  if(u==='admin' && p==='Admin2025'){ try{ sessionStorage.setItem(NAV.STORAGE.SESSION,'ok'); sessionStorage.setItem('NAV_SESSION','ok'); sessionStorage.setItem('IDMAR_SESSION','ok'); sessionStorage.setItem('nav_session','ok'); }catch(e){} location.href='validador.html'; }
   else{ alert('Credenciais inválidas / Invalid credentials'); }
 });
-</script>
-<script>
-(function(){
-  window.IDMAR_loginOK = function(){
-    try{
-      sessionStorage.setItem('NAV_SESSION','ok');
-      sessionStorage.setItem('IDMAR_SESSION','ok');
-    }catch(e){}
-  };
-})();
 </script>
   <script src="js/theme.js"></script>
 </body></html>

@@ -72,12 +72,3 @@ th,td{border-bottom:1px solid var(--border);padding:10px 8px;text-align:left;ver
 @media (max-width: 640px){
   .main-nav { width: 100%; margin: 8px 0 0; }
 }
-
-
-/* Theme support (light default) */
-:root[data-theme="light"]{ --bg:#f7f9fc; --card:#ffffff; --txt:#0b1220; --muted:#475569; --accent:#2563eb; }
-:root[data-theme="dark"]{ --bg:#0b1220; --card:#111a2b; --txt:#e7ecf6; --muted:#9fb0cf; --accent:#2b74ff; }
-body{ background:var(--bg); color:var(--txt); }
-.card{ background:var(--card); color:var(--txt); }
-.btn-icon{ background:transparent; border:1px solid transparent; padding:6px 10px; border-radius:8px; cursor:pointer; margin-left:8px; }
-.btn-icon:hover{ border-color:#d1d5db; }

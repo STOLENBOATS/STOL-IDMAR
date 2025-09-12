@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="pt"><head>
+<link rel="icon" type="image/png" href="img/favicon.png">
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>N.A.V — Forense</title>
 <link rel="stylesheet" href="css/styles.css">
@@ -8,24 +9,10 @@
 
 <script>
 (function(){
-  try {
-    const ok = sessionStorage.getItem('NAV_SESSION')==='ok' || sessionStorage.getItem('IDMAR_SESSION')==='ok';
-    const isLogin = /login\.html$/i.test(location.pathname) || document.title.toLowerCase().includes('login');
-    if(!ok && !isLogin){ location.href = 'login.html'; }
-  } catch(e) {}
-})();
-</script>
-
-
-<script>
-(function(){
-  try {
-    const ok = (sessionStorage.getItem('NAV_SESSION')==='ok'
-      || sessionStorage.getItem('IDMAR_SESSION')==='ok'
-      || sessionStorage.getItem('nav_session')==='ok');
-    const isLogin = /login\.html$/i.test(location.pathname) || (document.title||'').toLowerCase().includes('login');
-    if(!ok && !isLogin){ location.href = 'login.html'; }
-  } catch(e) {}
+  try{
+    const ok = sessionStorage.getItem('NAV_SESSION')==='ok' || sessionStorage.getItem('IDMAR_SESSION')==='ok' || sessionStorage.getItem('nav_session')==='ok' || sessionStorage.getItem((NAV&&NAV.STORAGE&&NAV.STORAGE.SESSION)||'nav_session')==='ok';
+    if(!ok){ location.href='login.html'; }
+  }catch(e){}
 })();
 </script>
 
@@ -37,7 +24,7 @@
       <p class="subtitle"><span class="sub-en">(Maritime Identifications — WIN/HIN &amp; Engines)</span></p>
     </div>
   </div>
-  <nav class="main-nav"><button id=\"themeToggle\" class=\"btn-icon\" title=\"Alternar tema\">🌙</button>
+  <nav class="main-nav"><button id="themeToggle" class="btn-icon" title="Alternar tema">🌙</button>
     <a href="validador.html">Validador</a>
     <a href="historico_win.html">Histórico WIN</a>
     <a href="historico_motor.html">Histórico Motor</a>
@@ -375,9 +362,9 @@
 </footer>
 <script src="js/config.js"></script><script src="js/app.js"></script>
 <script src="js/forense.js"></script>
+  <script src="js/theme.js"></script>
   <script src="js/utils.js"></script>
   <script src="js/forense-regras.js"></script>
   <script src="js/forense-adapter.js"></script>
   <script src="js/lightbox.v1.js"></script>
-  <script src="js/theme.js"></script>
 </body></html>
