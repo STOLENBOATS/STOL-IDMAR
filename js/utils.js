@@ -1,5 +1,25 @@
-function fmtDate(d){ if(!d) return '-'; if(!(d instanceof Date)) d=new Date(d); if(isNaN(d)) return '-'; return d.toLocaleString(); }
-function saveToLS(key, arr){localStorage.setItem(key, JSON.stringify(arr))}
-function loadFromLS(key){try{return JSON.parse(localStorage.getItem(key)||"[]")}catch(e){return[]}}
-function downloadCSV(filename, rows){const esc=v=>('"'+String(v).replaceAll('"','""')+'"'); const csv=rows.map(r=>r.map(esc).join(',')).join('\n'); const blob=new Blob([csv],{type:'text/csv'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=filename; a.click();}
-function readFileAsDataURL(file){return new Promise((res,rej)=>{const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.onerror=rej; fr.readAsDataURL(file);});}
+// utils.js — IDMAR robust helpers
+function fmtDate(d){
+  try{
+    if (d == null) return '—';
+    // numeric timestamp or numeric string
+    if (typeof d === 'number' || (typeof d === 'string' && /^\d+$/.test(d))) {
+      const n = new Date(Number(d));
+      return isNaN(n) ? '—' : n.toLocaleString('pt-PT');
+    }
+    // ISO/string
+    const n = new Date(d);
+    return isNaN(n) ? '—' : n.toLocaleString('pt-PT');
+  }catch(e){
+    return '—';
+  }
+}
+function saveToLS(key, arr){ localStorage.setItem(key, JSON.stringify(arr||[])); }
+function loadFromLS(key){ try{ return JSON.parse(localStorage.getItem(key)||'[]'); }catch(e){ return []; } }
+function downloadCSV(filename, rows){
+  const csv = rows.map(r=>r.map(v=>(''+(v??'')).replace(/"/g,'""')).map(v=>`"${v}"`).join(',')).join('\n');
+  const blob = new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download=filename; a.style.display='none';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(()=>URL.revokeObjectURL(url), 1000);
+}
