@@ -1,18 +1,14 @@
-// utils.js — IDMAR robust helpers
+// utils.js — IDMAR helpers (safe to overwrite or keep your existing if already robust)
 function fmtDate(d){
   try{
     if (d == null) return '—';
-    // numeric timestamp or numeric string
     if (typeof d === 'number' || (typeof d === 'string' && /^\d+$/.test(d))) {
       const n = new Date(Number(d));
       return isNaN(n) ? '—' : n.toLocaleString('pt-PT');
     }
-    // ISO/string
     const n = new Date(d);
     return isNaN(n) ? '—' : n.toLocaleString('pt-PT');
-  }catch(e){
-    return '—';
-  }
+  }catch(e){ return '—'; }
 }
 function saveToLS(key, arr){ localStorage.setItem(key, JSON.stringify(arr||[])); }
 function loadFromLS(key){ try{ return JSON.parse(localStorage.getItem(key)||'[]'); }catch(e){ return []; } }

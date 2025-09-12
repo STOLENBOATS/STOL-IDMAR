@@ -11,11 +11,11 @@
     controls=document.createElement('div'); controls.id='histControls'; controls.className='hist-controls';
     controls.innerHTML = '<div class="controls-row">'
       + '<input id="hSearch" placeholder="Pesquisar (WIN)" />'
-      + '<select id="hValid"><option value="">Todos</option><option value="ok">Válido</option><option value="bad">Inválido</option></select>'
-      + '<input id="hFrom" type="date" />'
-      + '<input id="hTo" type="date" />'
-      + '<button id="btnClearWin" class="btn warn">Limpar histórico</button>'
-      + '<button id="exportWinCsv" class="btn">Exportar CSV</button>'
+      + '<select id="hValid"><option value=\"\">Todos</option><option value=\"ok\">Válido</option><option value=\"bad\">Inválido</option></select>'
+      + '<input id=\"hFrom\" type=\"date\" />'
+      + '<input id=\"hTo\" type=\"date\" />'
+      + '<button id=\"btnClearWin\" class=\"btn warn\">Limpar histórico</button>'
+      + '<button id=\"exportWinCsv\" class=\"btn\">Exportar CSV</button>'
       + '</div>';
     const firstSection = document.querySelector('.card h2, .card h3, .card .table-wrap, .card table') || card.firstChild;
     if(firstSection && firstSection.parentNode) firstSection.parentNode.insertBefore(controls, firstSection); else card.prepend(controls);
@@ -60,16 +60,16 @@
   function render(){
     if(!tbody) return;
     const rows=getAll().filter(passFilters);
-    tbody.innerHTML = rows.length? '' : '<tr><td colspan="6" class="small">Sem registos / No records</td></tr>';
+    tbody.innerHTML = rows.length? '' : '<tr><td colspan=\"6\" class=\"small\">Sem registos / No records</td></tr>';
     rows.forEach(r=>{
       const tr=document.createElement('tr');
-      const img = r.photoData ? '<img class="thumb" src="'+(r.photoData)+'" alt="'+(r.photoName||'photo')+'">' : '';
-      const fx = r.hasForense ? ' <span title="Evidências forenses" aria-label="Forense">🧪</span>' : '';
+      const img = r.photoData ? '<img class=\"thumb\" src=\"'+(r.photoData)+'\" alt=\"'+(r.photoName||'photo')+'\">' : '';
+      const fx = r.hasForense ? ' <span title=\"Evidências forenses\" aria-label=\"Forense\">🧪</span>' : '';
       tr.innerHTML = ''
         + '<td>'+fmtDate(r.date)+'</td>'
-        + ''
+        + 
         + '<td><strong>${r.win||r.WIN||''}</strong></td>'
-        + '<td><span class="badge '+(r.valid?'good':'bad')+'">'+(r.valid?'Válido':'Inválido')+'</span>'+fx+'</td>'
+        + '<td><span class=\"badge '+(r.valid?'good':'bad')+'\">'+(r.valid?'Válido':'Inválido')+'</span>'+fx+'</td>'
         + '<td>'+(r.reason)+'</td>'
         + '<td>'+(r.photoName)+'</td>'
         + '<td>'+img+'</td>';
@@ -79,13 +79,11 @@
   [elSearch, elValid, elFrom, elTo].forEach(el=>{ if(el) el.addEventListener('input', render); });
   if(btnCsv) btnCsv.addEventListener('click', ()=>{
     const rows = [["Data/Date","WIN","Resultado","Justificação","Foto"]];
-    getAll().filter(passFilters).forEach(r=>{
-      rows.push([fmtDate(r.date), r.win||r.WIN||'', r.valid?'Válido':'Inválido', r.reason||'', r.photoName||'']);
-    });
+    getAll().filter(passFilters).forEach(r=>{ rows.push([fmtDate(r.date), r.win||r.WIN||'', r.valid?'Válido':'Inválido', r.reason||'', r.photoName||'']); });
     const csv = rows.map(r=>r.map(v=>(''+(v??'')).replace(/\"/g,'\"\"')).map(v=>'\"'+v+'\"').join(',')).join('\\n');
     const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
     const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='historico_win.csv'; document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(()=>URL.revokeObjectURL(url),1000);
   });
-  if(btnClr) btnClr.addEventListener('click', ()=>{ if(!confirm('Apagar todos os registos de Histórico WIN?')) return; save(KEY_NEW, []); save(KEY_LEG, []); render(); });
+  if(btnClr) btnClr.addEventListener('click', ()=>{ if(!confirm('Apagar todos os registos?')) return; save(KEY_NEW, []); save(KEY_LEG, []); render(); });
   render();
 })();

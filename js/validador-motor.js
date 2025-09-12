@@ -113,29 +113,32 @@
   });
 })();
 
-// === IDMAR Forense Add-on (non-invasive) ===
+// === IDMAR Forense Add-on (split per module) ===
 (function(){
-  function ensureForenseUI(formId, afterElId){
+  function ensureForenseUI(kind, formId, afterElId){
     var form = document.getElementById(formId) || document.getElementById(formId.replace('form','Form'));
     if(!form) return;
-    if(document.getElementById('forenseBox_'+formId)) return;
+    var boxId = 'forenseBox_'+formId;
+    if(document.getElementById(boxId)) return;
+    var flagsHtml = (kind==='win')
+      ? '<label><input type="checkbox" id="flagRebites_'+formId+'"> Rebites</label>'
+        + '<label><input type="checkbox" id="flagSolda_'+formId+'"> Cordões de solda</label>'
+        + '<label><input type="checkbox" id="flagPlaca_'+formId+'"> Placa remarcada</label>'
+        + '<label><input type="checkbox" id="flagTinta_'+formId+'"> Camadas de tinta/abrasões</label>'
+      : '<label><input type="checkbox" id="flagEtiqueta_'+formId+'"> Etiqueta adulterada/ausente</label>'
+        + '<label><input type="checkbox" id="flagCore_'+formId+'"> Core plug danificado/removido</label>'
+        + '<label><input type="checkbox" id="flagBoss_'+formId+'"> Solda/corrosão anómala no boss</label>'
+        + '<label><input type="checkbox" id="flagBloco_'+formId+'"> Remarcação no bloco</label>';
     var box = document.createElement('details');
-    box.id = 'forenseBox_'+formId;
+    box.id = boxId;
     box.className = 'forense-box';
     box.innerHTML = '<summary>Forense (opcional)</summary>'
-      + '<div class="forense-grid">'
-      + '<label><input type="checkbox" id="flagRebites_'+formId+'"> Rebites</label>'
-      + '<label><input type="checkbox" id="flagSolda_'+formId+'"> Cordões de solda</label>'
-      + '<label><input type="checkbox" id="flagPlaca_'+formId+'"> Remarcação de placa</label>'
-      + '<label><input type="checkbox" id="flagFundicao_'+formId+'"> Marcas de fundição</label>'
+      + '<div class="forense-grid">'+ flagsHtml
       + '<textarea id="forenseNotes_'+formId+'" rows="3" placeholder="Notas forenses…"></textarea>'
       + '</div>';
     var anchor = document.getElementById(afterElId);
-    if(anchor && anchor.parentElement){
-      anchor.parentElement.insertAdjacentElement('afterend', box);
-    } else {
-      form.appendChild(box);
-    }
+    if(anchor && anchor.parentElement){ anchor.parentElement.insertAdjacentElement('afterend', box); }
+    else { form.appendChild(box); }
   }
   async function sha256OfFile(file){
     try{
@@ -144,13 +147,10 @@
       return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,'0')).join('');
     }catch(e){ return null; }
   }
-  function bestHistoryKey(kind){ // 'win' or 'motor'
+  function bestHistoryKey(kind){
     try{
-      if(kind==='win'){
-        return (window.NAV && NAV.STORAGE && NAV.STORAGE.WIN_HISTORY) || 'nav_win_history';
-      } else {
-        return (window.NAV && NAV.STORAGE && NAV.STORAGE.MOTOR_HISTORY) || 'nav_motor_history';
-      }
+      if(kind==='win') return (window.NAV && NAV.STORAGE && NAV.STORAGE.WIN_HISTORY) || 'nav_win_history';
+      return (window.NAV && NAV.STORAGE && NAV.STORAGE.MOTOR_HISTORY) || 'nav_motor_history';
     }catch(e){ return kind==='win'?'nav_win_history':'nav_motor_history'; }
   }
   function load(key){ try{ return JSON.parse(localStorage.getItem(key)||'[]'); }catch(e){ return []; } }
@@ -162,19 +162,25 @@
         var photoInput = document.getElementById(photoInputId);
         var file = (photoInput && photoInput.files && photoInput.files[0]) ? photoInput.files[0] : null;
         var hash = file ? await sha256OfFile(file) : null;
-        var boxIdSuf = '_'+formId;
+        var suf = '_'+formId;
         var flags = [];
-        if(document.getElementById('flagRebites'+boxIdSuf)?.checked) flags.push('rebites');
-        if(document.getElementById('flagSolda'+boxIdSuf)?.checked) flags.push('solda');
-        if(document.getElementById('flagPlaca'+boxIdSuf)?.checked) flags.push('placa');
-        if(document.getElementById('flagFundicao'+boxIdSuf)?.checked) flags.push('fundicao');
-        var notes = (document.getElementById('forenseNotes'+boxIdSuf)?.value)||'';
+        if(kind==='win'){
+          if(document.getElementById('flagRebites'+suf)?.checked) flags.push('rebites');
+          if(document.getElementById('flagSolda'+suf)?.checked) flags.push('solda');
+          if(document.getElementById('flagPlaca'+suf)?.checked) flags.push('placa');
+          if(document.getElementById('flagTinta'+suf)?.checked) flags.push('tinta');
+        }else{
+          if(document.getElementById('flagEtiqueta'+suf)?.checked) flags.push('etiqueta');
+          if(document.getElementById('flagCore'+suf)?.checked) flags.push('coreplug');
+          if(document.getElementById('flagBoss'+suf)?.checked) flags.push('boss');
+          if(document.getElementById('flagBloco'+suf)?.checked) flags.push('bloco');
+        }
+        var notes = (document.getElementById('forenseNotes'+suf)?.value)||'';
         var forense = (hash || flags.length || notes) ? { hash, flags, notes } : null;
         if(!forense) return;
-
         var key = bestHistoryKey(kind);
         var arr = load(key);
-        if(!Array.isArray(arr) || !arr.length){ // try legacy too
+        if(!Array.isArray(arr) || !arr.length){
           var legacy = load(kind==='win' ? 'hist_win' : 'hist_motor');
           if(Array.isArray(legacy) && legacy.length) arr = legacy;
           else return;
@@ -189,19 +195,22 @@
         rec.forense = forense;
         arr[idx] = rec;
         save(key, arr);
-      }catch(e){ /* silent */ }
+      }catch(e){}
     }, 0);
   }
-
   document.addEventListener('DOMContentLoaded', function(){
     // WIN
-    ensureForenseUI('formWin', 'winPhoto');
     var formWin = document.getElementById('formWin') || document.getElementById('winForm');
-    if(formWin){ formWin.addEventListener('submit', function(){ attachForense('win','formWin','winPhoto'); }); }
+    if(formWin){
+      ensureForenseUI('win','formWin','winPhoto');
+      formWin.addEventListener('submit', function(){ attachForense('win','formWin','winPhoto'); });
+    }
     // MOTOR
-    ensureForenseUI('formMotor', 'motorPhoto');
     var formMotor = document.getElementById('formMotor') || document.getElementById('motorForm');
-    if(formMotor){ formMotor.addEventListener('submit', function(){ attachForense('motor','formMotor','motorPhoto'); }); }
+    if(formMotor){
+      ensureForenseUI('motor','formMotor','motorPhoto');
+      formMotor.addEventListener('submit', function(){ attachForense('motor','formMotor','motorPhoto'); });
+    }
   });
 })();
 // === /IDMAR Forense Add-on ===
