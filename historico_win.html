@@ -2,7 +2,7 @@
 <html lang="pt"><head>
 <link rel="icon" type="image/png" href="img/favicon.png">
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>N.A.V — Histórico WIN</title>
+<title>IDMAR — Histórico WIN</title>
 <link rel="stylesheet" href="css/styles.css">
 <script>if(sessionStorage.getItem('nav_session')!=='ok'){alert('Sessão expirada. Faça login.');location.replace('login.html');}</script>
 </head><body>
@@ -12,19 +12,20 @@
 
 <header class="app-header">
   <div class="brand">
-    <img src="img/logo-nav.png" class="logo" alt="NAV">
-    <div class="title-wrap">
-      <div class="brand-title">N.A.V — Nautical Application Verifier</div>
-      <div class="brand-subtitle">Maritime Identification • PT/EN</div>
+    <img src="img/logo-pm.png" alt="Polícia Marítima" class="logo">
+    <div class="titles">
+      <h1>IDMAR <span class="title-descriptor">Identificação Marítima — Cascos &amp; Motores</span></h1>
+      <p class="subtitle"><span class="sub-en">(Maritime Identifications — WIN/HIN &amp; Engines)</span></p>
     </div>
   </div>
-  <div class="header-actions">
-    <a class="btn" href="validador.html">Validador</a>
-    <a class="btn" href="forense.html">Forense</a>
-    <a class="btn" href="historico_win.html">Histórico WIN</a>
-    <a class="btn" href="historico_motor.html">Histórico Motor</a>
-    <button id="themeToggle" class="theme-btn"><span id="themeIcon">☀️</span></button>
-  </div>
+  <nav class="main-nav">
+    <a href="validador.html">Validador</a>
+    <a href="historico_win.html">Histórico WIN</a>
+    <a href="historico_motor.html">Histórico Motor</a>
+    <a href="forense.html">Forense</a>
+    <a href="login.html" onclick="try{sessionStorage.clear();localStorage.setItem('IDMAR_LAST_LOGOUT',Date.now())}catch(e){}">Sair</a>
+    <button id="themeToggle" class="btn-icon" title="Alternar tema">🌙</button>
+  </nav>
 </header>
 
 <main class="container">
@@ -37,7 +38,9 @@
     </div>
   </section>
 </main>
-<footer class="app-footer"><div id="footerDynamic"></div><div></div></footer>
+<footer class="app-footer">
+  <p>IDMAR — v2.2.7-baseline+merge-r1 — 2025-09-11</p>
+</footer>
 <script src="js/config.js"></script><script src="js/app.js"></script><script src="js/utils.js"></script><script src="js/historico-win.js"></script>
   <script src="js/theme.js"></script>
 </body></html>

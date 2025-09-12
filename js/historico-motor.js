@@ -9,7 +9,7 @@
     data.forEach(r=>{
       const tr=document.createElement('tr');
       const img = r.photoData ? `<img class="thumb" src="${r.photoData}" alt="${r.photoName||'photo'}">` : '';
-      tr.innerHTML = `<td>${fmtDate(r.date)}</td>
+      tr.innerHTML = `<td>${fmtDate(r.date||r.dt||r.time||r.when||r.timestamp||r.createdAt)}</td>
         <td>${r.brand||''}</td>
         <td><strong>${r.sn||''}</strong></td>
         <td><span class="badge ${r.valid?'good':'bad'}">${r.valid?'Válido':'Inválido'}</span></td>
@@ -22,7 +22,7 @@
   if(btnCsv){
     btnCsv.addEventListener('click', ()=>{
       const rows=[['Data/Date','Marca/Brand','S/N','Resultado/Result','Justificação/Reason','Foto/Photo']];
-      data.forEach(r=>rows.push([fmtDate(r.date), r.brand||'', r.sn||'', r.valid?'Válido':'Inválido', r.reason||'', r.photoName||'']));
+      data.forEach(r=>rows.push([fmtDate(r.date||r.dt||r.time||r.when||r.timestamp||r.createdAt), r.brand||'', r.sn||'', r.valid?'Válido':'Inválido', r.reason||'', r.photoName||'']));
       downloadCSV('historico_motor.csv', rows);
     });
   }

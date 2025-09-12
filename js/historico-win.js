@@ -9,7 +9,7 @@
     data.forEach(r=>{
       const tr=document.createElement('tr');
       const img = r.photoData ? `<img class="thumb" src="${r.photoData}" alt="${r.photoName||'photo'}">` : '';
-      tr.innerHTML = `<td>${fmtDate(r.date)}</td>
+      tr.innerHTML = `<td>${fmtDate(r.date||r.dt||r.time||r.when||r.timestamp||r.createdAt)}</td>
         <td><strong>${r.win}</strong></td>
         <td><span class="badge ${r.valid?'good':'bad'}">${r.valid?'Válido':'Inválido'}</span></td>
         <td>${r.reason||''}</td>
@@ -21,7 +21,7 @@
   if(btnCsv){
     btnCsv.addEventListener('click', ()=>{
       const rows=[['Data/Date','WIN','Resultado/Result','Justificação/Reason','Foto/Photo']];
-      data.forEach(r=>rows.push([fmtDate(r.date), r.win, r.valid?'Válido':'Inválido', r.reason||'', r.photoName||'']));
+      data.forEach(r=>rows.push([fmtDate(r.date||r.dt||r.time||r.when||r.timestamp||r.createdAt), r.win, r.valid?'Válido':'Inválido', r.reason||'', r.photoName||'']));
       downloadCSV('historico_win.csv', rows);
     });
   }

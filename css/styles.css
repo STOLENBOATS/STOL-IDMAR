@@ -72,3 +72,16 @@ th,td{border-bottom:1px solid var(--border);padding:10px 8px;text-align:left;ver
 @media (max-width: 640px){
   .main-nav { width: 100%; margin: 8px 0 0; }
 }
+
+
+/* IDMAR branding tweaks */
+.app-header{display:flex;align-items:center;gap:16px;padding:12px 16px;border-bottom:1px solid #e5e7eb}
+.app-header .brand{display:flex;align-items:center;gap:12px}
+.app-header .logo{height:42px;width:auto;object-fit:contain}
+.app-header .titles h1{margin:0;font-size:1.4rem;line-height:1.2}
+.app-header .title-descriptor{font-weight:500;margin-left:.4ch;white-space:nowrap}
+.app-header .subtitle{margin:0;font-size:.9rem;opacity:.85}
+.main-nav{margin-left:auto;display:flex;gap:12px;align-items:center}
+.btn-icon{background:transparent;border:1px solid transparent;padding:6px 10px;border-radius:8px;cursor:pointer}
+.btn-icon:hover{border-color:#d1d5db}
+.app-footer{margin-top:24px;padding:12px 16px;border-top:1px solid #e5e7eb;text-align:center;opacity:.9}
