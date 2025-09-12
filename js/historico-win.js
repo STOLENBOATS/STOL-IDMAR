@@ -1,9 +1,9 @@
 (function(){
   const tbody = document.querySelector('#tabelaWin tbody');
   const btnCsv = document.getElementById('exportWinCsv');
-  const data = loadFromLS(NAV.STORAGE.WIN_HISTORY);
+  let data = loadFromLS(NAV.STORAGE.WIN_HISTORY);
   const legacy = loadFromLS('hist_win');
-  const data = (Array.isArray(legacy)?legacy:[]).concat(Array.isArray(data)?data:[]);
+  data =  (Array.isArray(legacy)?legacy:[]).concat(Array.isArray(data)?data:[]);
   if(tbody){
     tbody.innerHTML = data.length ? '' : '<tr><td colspan="6" class="small">Sem registos. / No records.</td></tr>';
     data.forEach(r=>{

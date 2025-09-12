@@ -1,9 +1,9 @@
 (function(){
   const tbody = document.querySelector('#tabelaMotor tbody');
   const btnCsv = document.getElementById('exportMotorCsv');
-  const data = loadFromLS(NAV.STORAGE.MOTOR_HISTORY);
+  let data = loadFromLS(NAV.STORAGE.MOTOR_HISTORY);
   const legacy = loadFromLS('hist_motor');
-  const data = (Array.isArray(legacy)?legacy:[]).concat(Array.isArray(data)?data:[]);
+  data =  (Array.isArray(legacy)?legacy:[]).concat(Array.isArray(data)?data:[]);
   if(tbody){
     tbody.innerHTML = data.length ? '' : '<tr><td colspan="7" class="small">Sem registos. / No records.</td></tr>';
     data.forEach(r=>{
