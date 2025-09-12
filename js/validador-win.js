@@ -200,8 +200,8 @@ function fileToDataURL(file){
 
 (function(){var __f=document.getElementById('formWin')||document.getElementById('winForm'); if(!__f) return; __f.addEventListener('submit', async (e)=>{
   e.preventDefault();
-  const input = document.getElementById('winInput').value;
-  const photoFile = document.getElementById('winPhoto').files[0];
+  const input = (document.getElementById('win')||document.getElementById('winInput')).value;
+  const photoFile = (document.getElementById('winPhoto')?document.getElementById('winPhoto').files[0]:null);
   const dataUrl = await fileToDataURL(photoFile);
 
   const res = validateWIN(input);
@@ -464,8 +464,8 @@ function fileToDataURL(file){
 
 (function(){var __f=document.getElementById('formWin')||document.getElementById('winForm'); if(!__f) return; __f.addEventListener('submit', async (e)=>{
   e.preventDefault();
-  const input = document.getElementById('winInput').value;
-  const photoFile = document.getElementById('winPhoto').files[0];
+  const input = (document.getElementById('win')||document.getElementById('winInput')).value;
+  const photoFile = (document.getElementById('winPhoto')?document.getElementById('winPhoto').files[0]:null);
   const dataUrl = await fileToDataURL(photoFile);
 
   const res = validateWIN(input);

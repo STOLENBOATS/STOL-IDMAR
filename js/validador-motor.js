@@ -1,6 +1,6 @@
 (function(){ if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded', function(){ // Dynamic brand fields and simple brand-specific validation for Yamaha/Honda.
 // Forensic/visual expansion can be added later without breaking API.
-const brandSelect = document.getElementById('brand');
+const brandSelect = (document.getElementById('brand')||document.getElementById('marcaMotor'));
 const brandFieldsDiv = document.getElementById('brandFields');
 
 // Brand registry: defines fields per brand and status (active/partial)
@@ -189,7 +189,7 @@ function fileToDataURL(file){
     payload.sn = document.getElementById('hon_sn').value.trim();
   }
 
-  const photoFile = document.getElementById('motorPhoto').files[0];
+  const photoFile = (document.getElementById('motorPhoto')?document.getElementById('motorPhoto').files[0]:null);
   const dataUrl = await fileToDataURL(photoFile);
 
   const res = isSoon ? { 
@@ -197,7 +197,7 @@ function fileToDataURL(file){
     interp:`Registo para ${brand}.`, 
     details:[`Validação ${brand} em breve. (Validation pending)`] 
   } : validateMotor(payload);
-  const div = document.getElementById('motorResult');
+  const div = (document.getElementById('motorOut')||document.getElementById('motorResult'));
   div.className = 'result ' + (res.ok ? 'ok' : 'bad');
   const detailsHtml = res.details.length ? `<ul>${res.details.map(d=>`<li>⚠️ ${d}</li>`).join('')}</ul>` : '<p>Sem advertências.</p>';
   div.innerHTML = `
@@ -225,7 +225,7 @@ function fileToDataURL(file){
 });
  });} else { // Dynamic brand fields and simple brand-specific validation for Yamaha/Honda.
 // Forensic/visual expansion can be added later without breaking API.
-const brandSelect = document.getElementById('brand');
+const brandSelect = (document.getElementById('brand')||document.getElementById('marcaMotor'));
 const brandFieldsDiv = document.getElementById('brandFields');
 
 // Brand registry: defines fields per brand and status (active/partial)
@@ -414,7 +414,7 @@ function fileToDataURL(file){
     payload.sn = document.getElementById('hon_sn').value.trim();
   }
 
-  const photoFile = document.getElementById('motorPhoto').files[0];
+  const photoFile = (document.getElementById('motorPhoto')?document.getElementById('motorPhoto').files[0]:null);
   const dataUrl = await fileToDataURL(photoFile);
 
   const res = isSoon ? { 
@@ -422,7 +422,7 @@ function fileToDataURL(file){
     interp:`Registo para ${brand}.`, 
     details:[`Validação ${brand} em breve. (Validation pending)`] 
   } : validateMotor(payload);
-  const div = document.getElementById('motorResult');
+  const div = (document.getElementById('motorOut')||document.getElementById('motorResult'));
   div.className = 'result ' + (res.ok ? 'ok' : 'bad');
   const detailsHtml = res.details.length ? `<ul>${res.details.map(d=>`<li>⚠️ ${d}</li>`).join('')}</ul>` : '<p>Sem advertências.</p>';
   div.innerHTML = `
