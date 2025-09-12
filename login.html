@@ -38,7 +38,7 @@ document.getElementById('loginForm').addEventListener('submit',(e)=>{
   e.preventDefault();
   const u=document.getElementById('user').value.trim();
   const p=document.getElementById('pass').value;
-  if(u==='admin' && p==='Admin2025'){ try{ sessionStorage.setItem(NAV.STORAGE.SESSION,'ok'); sessionStorage.setItem('NAV_SESSION','ok'); sessionStorage.setItem('IDMAR_SESSION','ok'); sessionStorage.setItem('nav_session','ok'); }catch(e){} location.href='validador.html'; }
+  if(u==='admin' && p==='Admin2025'){try{sessionStorage.setItem(NAV.STORAGE.SESSION,'ok');sessionStorage.setItem('NAV_SESSION','ok');sessionStorage.setItem('IDMAR_SESSION','ok');sessionStorage.setItem('nav_session','ok');}catch(e){};location.href='validador.html';}
   else{ alert('Credenciais inválidas / Invalid credentials'); }
 });
 </script>

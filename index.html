@@ -8,14 +8,7 @@
 </head><body>
 
 
-<script>
-(function(){
-  try{
-    const ok = sessionStorage.getItem('NAV_SESSION')==='ok' || sessionStorage.getItem('IDMAR_SESSION')==='ok' || sessionStorage.getItem('nav_session')==='ok' || sessionStorage.getItem((NAV&&NAV.STORAGE&&NAV.STORAGE.SESSION)||'nav_session')==='ok';
-    if(!ok){ location.href='login.html'; }
-  }catch(e){}
-})();
-</script>
+<script>(function(){try{const ok=sessionStorage.getItem('NAV_SESSION')==='ok'||sessionStorage.getItem('IDMAR_SESSION')==='ok'||sessionStorage.getItem('nav_session')==='ok'||sessionStorage.getItem((NAV&&NAV.STORAGE&&NAV.STORAGE.SESSION)||'nav_session')==='ok'; if(!ok) location.href='login.html';}catch(e){}})();</script>
 
 <header class="app-header">
   <div class="brand">
