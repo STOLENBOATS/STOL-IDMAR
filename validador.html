@@ -1,1 +1,96 @@
-<!doctype html><html lang="pt" data-theme="light"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>IDMAR — Validador</title><link rel="icon" href="img/favicon.png"/><link rel="stylesheet" href="css/styles.css"/><script src="js/idmar-session.js"></script><script src="js/idmar-theme.js"></script></head><body><header class="topbar"><img src="img/logo-pm.png" alt="Polícia Marítima" class="logo" style="height:36px;vertical-align:middle"/><strong style="margin-left:8px;">IDMAR</strong> <span>Identificação Marítima — Cascos & Motores</span><nav class="main"><a href="validador.html">Validador</a><a href="historico_win.html">Histórico WIN</a><a href="historico_motor.html">Histórico Motor</a><a href="forense.html">Forense</a><a href="#" onclick="sessionStorage.clear();location.href='login.html'">Sair</a></nav><button onclick="IDMAR_setTheme()" title="Alternar tema">🌗</button></header><main class="container"><h1>Validador WIN</h1><form id="winForm" data-form="win" class="panel"><label for="winInput">WIN / HIN</label><input id="winInput" name="win" maxlength="20" placeholder="Ex.: PT-ABC12345D404" required/><button id="btnWin" type="submit">Validar WIN</button></form><section id="win-output" class="panel"><h2>Resultado WIN</h2><div id="winResult" class="resultado"></div></section><hr/><h1>Validador Motor</h1><form id="motorForm" data-form="motor" class="panel"><label for="brandSelect">Marca</label><select id="brandSelect" name="brand"><option value="">—</option><option>Yamaha</option><option>Honda</option><option>Suzuki</option><option>Tohatsu</option><option>Mercury</option><option>MerCruiser</option><option>Volvo Penta</option><option>Yanmar</option><option>Evinrude/Johnson</option></select><label for="modelInput">Modelo</label><input id="modelInput" name="model" placeholder="Modelo (opcional)"/><label for="snInput">S/N</label><input id="snInput" name="sn" placeholder="Número de série" required/><button id="btnMotor" type="submit">Validar Motor</button></form><section id="motor-output" class="panel"><h2>Resultado Motor</h2><div id="motorResult" class="resultado"></div></section></main><footer class="footer">IDMAR — v2.2.7-baseline+merge-r2.3</footer><script src="js/history-core.js"></script><script src="js/history-hook.js"></script><script src="js/validador-win.js"></script><script src="js/validador-motor.js"></script></body></html>
+<!doctype html>
+<html lang="pt" data-theme="light">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>IDMAR — Validador</title>
+
+  <!-- Favicon e CSS -->
+  <link rel="icon" href="img/favicon.png"/>
+  <link rel="stylesheet" href="css/styles.css"/>
+  <link rel="stylesheet" href="css/idmar-theme.css"/>
+
+  <!-- Sessão + Tema + i18n (light por defeito) -->
+  <script src="js/idmar-session.js"></script>
+  <script src="js/idmar-theme.js"></script>
+  <script src="js/idmar-i18n.js"></script>
+
+  <!-- NAV shim: precisa existir ANTES dos teus validadores -->
+  <script>window.IDMAR=window.IDMAR||{}; window.NAV=window.NAV||window.IDMAR;</script>
+</head>
+<body>
+  <header class="topbar">
+    <img src="img/logo-pm.png" alt="Polícia Marítima" class="logo" style="height:36px;vertical-align:middle"/>
+    <strong style="margin-left:8px;">IDMAR</strong>
+    <span>Identificação Marítima — Cascos & Motores</span>
+
+    <nav class="main" style="margin-left:1rem;">
+      <a href="validador.html">Validador</a>
+      <a href="historico_win.html">Histórico WIN</a>
+      <a href="historico_motor.html">Histórico Motor</a>
+      <a href="forense.html">Forense</a>
+      <a href="#" onclick="sessionStorage.clear();location.href='login.html'">Sair</a>
+    </nav>
+
+    <div style="margin-left:auto; display:flex; gap:.5rem;">
+      <button id="idmar-theme-toggle" title="Dia/Noite">🌗</button>
+      <button class="ghost" onclick="IDMAR_lang.set('pt')">PT</button>
+      <button class="ghost" onclick="IDMAR_lang.set('en')">EN</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>Validador WIN</h1>
+    <form id="winForm" data-form="win" class="panel">
+      <label for="winInput">WIN / HIN</label>
+      <input id="winInput" name="win" maxlength="20" placeholder="Ex.: PT-ABC12345D404" required/>
+      <button id="btnWin" type="submit" class="btn">Validar WIN</button>
+    </form>
+
+    <section id="win-output" class="panel">
+      <h2>Resultado WIN</h2>
+      <div id="winResult" class="resultado"></div>
+    </section>
+
+    <hr/>
+
+    <h1>Validador Motor</h1>
+    <form id="motorForm" data-form="motor" class="panel">
+      <label for="brandSelect">Marca</label>
+      <select id="brandSelect" name="brand">
+        <option value="">—</option>
+        <option>Yamaha</option><option>Honda</option><option>Suzuki</option>
+        <option>Tohatsu</option><option>Mercury</option><option>MerCruiser</option>
+        <option>Volvo Penta</option><option>Yanmar</option><option>Evinrude/Johnson</option>
+      </select>
+
+      <label for="modelInput">Modelo</label>
+      <input id="modelInput" name="model" placeholder="Modelo (opcional)"/>
+
+      <label for="snInput">S/N</label>
+      <input id="snInput" name="sn" placeholder="Número de série" required/>
+
+      <button id="btnMotor" type="submit" class="btn">Validar Motor</button>
+    </form>
+
+    <section id="motor-output" class="panel">
+      <h2>Resultado Motor</h2>
+      <div id="motorResult" class="resultado"></div>
+    </section>
+  </main>
+
+  <footer class="footer">IDMAR — v2.2.7-baseline+merge — 2025-09-16</footer>
+
+  <!-- Core histórico + UI interpretativa -->
+  <script src="js/history-core.js"></script>
+  <script src="js/compat-nav-shim.js"></script>
+  <script src="js/validador-ui.js"></script>
+
+  <!-- Os teus validadores (precisam do NAV shim carregado) -->
+  <script src="js/validador-win.js"></script>
+  <script src="js/validador-motor.js"></script>
+
+  <!-- Hook que grava no histórico depois da validação -->
+  <script src="js/history-hook.js"></script>
+</body>
+</html>
