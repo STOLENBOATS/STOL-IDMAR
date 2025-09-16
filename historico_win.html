@@ -1,46 +1,50 @@
 <!doctype html>
-<html lang="pt"><head>
-<link rel="icon" type="image/png" href="img/favicon.png">
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="pt" data-theme="light">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>IDMAR — Histórico WIN</title>
-<link rel="stylesheet" href="css/styles.css">
-<script>if(sessionStorage.getItem('nav_session')!=='ok'){alert('Sessão expirada. Faça login.');location.replace('login.html');}</script>
-</head><body>
-
-
-<script>(function(){try{const ok=sessionStorage.getItem('NAV_SESSION')==='ok'||sessionStorage.getItem('IDMAR_SESSION')==='ok'||sessionStorage.getItem('nav_session')==='ok'||sessionStorage.getItem((NAV&&NAV.STORAGE&&NAV.STORAGE.SESSION)||'nav_session')==='ok'; if(!ok) location.href='login.html';}catch(e){}})();</script>
-
-<header class="app-header">
-  <div class="brand">
-    <img src="img/logo-pm.png" alt="Polícia Marítima" class="logo">
-    <div class="titles">
-      <h1>IDMAR <span class="title-descriptor">Identificação Marítima — Cascos &amp; Motores</span></h1>
-      <p class="subtitle"><span class="sub-en">(Maritime Identifications — WIN/HIN &amp; Engines)</span></p>
-    </div>
-  </div>
-  <nav class="main-nav">
+<link rel="icon" href="img/logo-pm.png"/>
+<link rel="stylesheet" href="css/style.css"/>
+<script src="js/idmar-session.js"></script>
+<script src="js/idmar-theme.js"></script>
+</head>
+<body data-hist="win">
+<header class="topbar">
+  <img src="img/Polícia Marítima.png" alt="Polícia Marítima" class="logo" style="height:36px;vertical-align:middle"/>
+  <strong style="margin-left:8px;">IDMAR</strong> <span>Identificação Marítima — Cascos & Motores</span>
+  <nav class="main">
     <a href="validador.html">Validador</a>
     <a href="historico_win.html">Histórico WIN</a>
     <a href="historico_motor.html">Histórico Motor</a>
     <a href="forense.html">Forense</a>
-    <a href="login.html" onclick="try{sessionStorage.clear();localStorage.setItem('IDMAR_LAST_LOGOUT',Date.now())}catch(e){}">Sair</a>
-    <button id="themeToggle" class="btn-icon" title="Alternar tema">🌙</button>
+    <a href="#" onclick="sessionStorage.clear();location.href='login.html'">Sair</a>
   </nav>
+  <button onclick="IDMAR_setTheme()" title="Alternar tema">🌗</button>
 </header>
 
 <main class="container">
-  <section class="card">
-    <button id="exportWinCsv" class="btn">Exportar CSV / Export CSV</button>
-    <div class="table-wrap">
-      <table id="tabelaWin"><thead><tr>
-        <th>Data / Date</th><th>WIN</th><th>Resultado / Result</th><th>Justificação / Reason</th><th>Foto / Photo (nome)</th><th>Miniatura / Thumbnail</th>
-      </tr></thead><tbody></tbody></table>
-    </div>
-  </section>
+  <h1>Histórico — WIN</h1>
+  <div class="filters">
+    <input id="hist-q" placeholder="Pesquisar (WIN / texto)"/>
+    <select id="hist-estado">
+      <option value="">Estado (todos)</option>
+      <option value="válido">Válido</option>
+      <option value="inválido">Inválido</option>
+    </select>
+    <label>De <input id="hist-from" type="date"/></label>
+    <label>Até <input id="hist-to" type="date"/></label>
+    <button id="hist-csv">Exportar CSV</button>
+    <button id="hist-clear">Limpar histórico (WIN)</button>
+  </div>
+  <table id="hist-tbl">
+    <thead><tr><th>Quando</th><th>WIN/HIN</th><th>Estado</th></tr></thead>
+    <tbody></tbody>
+  </table>
 </main>
-<footer class="app-footer">
-  <p>IDMAR — v2.2.7-baseline+merge-r1 — 2025-09-11</p>
-</footer>
-<script src="js/config.js"></script><script src="js/app.js"></script><script src="js/utils.js"></script><script src="js/historico-win.js"></script>
-  <script src="js/theme.js"></script>
-</body></html>
+
+<footer class="footer">IDMAR — v2.2.7-baseline+merge-r2 — 2025-09-16</footer>
+<script src="js/history-core.js"></script>
+<script src="js/historico-common.js"></script>
+</body>
+</html>

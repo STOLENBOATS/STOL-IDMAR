@@ -1,46 +1,34 @@
 <!doctype html>
-<html lang="pt"><head>
-<link rel="icon" type="image/png" href="img/favicon.png">
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>IDMAR — Login</title>
-<link rel="stylesheet" href="css/styles.css">
-
-<script>try{localStorage.setItem('IDMAR_THEME','light');}catch(e){}; document.documentElement.setAttribute('data-theme','light');</script>
-</head><body>
-
-<header class="app-header">
-  <div class="brand">
-    <img src="img/logo-pm.png" alt="Polícia Marítima" class="logo">
-    <div class="titles">
-      <h1>IDMAR <span class="title-descriptor">Identificação Marítima — Cascos &amp; Motores</span></h1>
-      <p class="subtitle"><span class="sub-en">(Maritime Identifications — WIN/HIN &amp; Engines)</span></p>
-    </div>
-  </div>
-  
-</header>
-
+<html lang="pt" data-theme="light">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>IDMAR — Entrar</title>
+<link rel="icon" href="img/logo-pm.png"/>
+<link rel="stylesheet" href="css/style.css"/>
+<script src="js/idmar-theme.js"></script>
+</head>
+<body>
 <main class="container">
-  <section class="card">
-    <form id="loginForm" class="grid">
-      <div><label>Utilizador<div class="en">Username</div></label><input id="user" required placeholder="admin"></div>
-      <div><label>Password<div class="en">Password</div></label><input id="pass" type="password" required placeholder="Admin2025"></div>
-      <div><button class="btn primary" type="submit">Entrar / Sign in</button></div>
-      <p class="small">Credenciais / Credentials: <span class="kbd">admin / Admin2025</span></p>
-    </form>
-  </section>
+  <h1>Iniciar sessão</h1>
+  <form id="loginForm">
+    <label>Utilizador <input id="u" required></label>
+    <label>Palavra-passe <input id="p" type="password" required></label>
+    <button>Entrar</button>
+  </form>
 </main>
-<footer class="app-footer">
-  <p>IDMAR — v2.2.7-baseline+merge-r1 — 2025-09-11</p>
-</footer>
-<script src="js/config.js"></script><script src="js/app.js"></script>
+<footer class="footer">IDMAR — v2.2.7-baseline+merge-r2 — 2025-09-16</footer>
 <script>
-document.getElementById('loginForm').addEventListener('submit',(e)=>{
-  e.preventDefault();
-  const u=document.getElementById('user').value.trim();
-  const p=document.getElementById('pass').value;
-  if(u==='admin' && p==='Admin2025'){try{sessionStorage.setItem(NAV.STORAGE.SESSION,'ok');sessionStorage.setItem('NAV_SESSION','ok');sessionStorage.setItem('IDMAR_SESSION','ok');sessionStorage.setItem('nav_session','ok');}catch(e){};location.href='validador.html';}
-  else{ alert('Credenciais inválidas / Invalid credentials'); }
+document.addEventListener('DOMContentLoaded', function(){
+  var f = document.getElementById('loginForm');
+  if(!f) return;
+  f.addEventListener('submit', function(ev){
+    ev.preventDefault();
+    sessionStorage.setItem('IDMAR_SESSION', 'ok');
+    sessionStorage.setItem('NAV_SESSION', 'ok');
+    location.href = 'validador.html';
+  });
 });
 </script>
-  <script src="js/theme.js"></script>
-</body></html>
+</body>
+</html>

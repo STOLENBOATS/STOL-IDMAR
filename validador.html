@@ -1,93 +1,69 @@
 <!doctype html>
-<html lang="pt"><head>
-<link rel="icon" type="image/png" href="img/favicon.png">
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="pt" data-theme="light">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>IDMAR — Validador</title>
-<link rel="stylesheet" href="css/styles.css">
-<script>if(sessionStorage.getItem('nav_session')!=='ok'){alert('Sessão expirada. Faça login.');location.replace('login.html');}</script>
-</head><body>
-
-
-<script>(function(){try{const ok=sessionStorage.getItem('NAV_SESSION')==='ok'||sessionStorage.getItem('IDMAR_SESSION')==='ok'||sessionStorage.getItem('nav_session')==='ok'||sessionStorage.getItem((NAV&&NAV.STORAGE&&NAV.STORAGE.SESSION)||'nav_session')==='ok'; if(!ok) location.href='login.html';}catch(e){}})();</script>
-
-<header class="app-header">
-  <div class="brand">
-    <img src="img/logo-pm.png" alt="Polícia Marítima" class="logo">
-    <div class="titles">
-      <h1>IDMAR <span class="title-descriptor">Identificação Marítima — Cascos &amp; Motores</span></h1>
-      <p class="subtitle"><span class="sub-en">(Maritime Identifications — WIN/HIN &amp; Engines)</span></p>
-    </div>
-  </div>
-  <nav class="main-nav">
+<link rel="icon" href="img/logo-pm.png"/>
+<link rel="stylesheet" href="css/style.css"/>
+<script src="js/idmar-session.js"></script>
+<script src="js/idmar-theme.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <img src="img/Polícia Marítima.png" alt="Polícia Marítima" class="logo" style="height:36px;vertical-align:middle"/>
+  <strong style="margin-left:8px;">IDMAR</strong> <span>Identificação Marítima — Cascos & Motores</span>
+  <nav class="main">
     <a href="validador.html">Validador</a>
     <a href="historico_win.html">Histórico WIN</a>
     <a href="historico_motor.html">Histórico Motor</a>
     <a href="forense.html">Forense</a>
-    <a href="login.html" onclick="try{sessionStorage.clear();localStorage.setItem('IDMAR_LAST_LOGOUT',Date.now())}catch(e){}">Sair</a>
-    <button id="themeToggle" class="btn-icon" title="Alternar tema">🌙</button>
+    <a href="#" onclick="sessionStorage.clear();location.href='login.html'">Sair</a>
   </nav>
+  <button onclick="IDMAR_setTheme()" title="Alternar tema">🌗</button>
 </header>
 
 <main class="container">
-  <div class="grid grid-2">
-    <section class="card">
-      <h2>Validador WIN<div class="small">Hull Identification Number</div></h2>
-      <form id="formWin">
-        <label>WIN (UE:14 / EUA:16)<div class="en">HIN (EU:14 / US:16)</div></label>
-        <input id="win" maxlength="20" placeholder="FR-CNBZA135A612">
-        <label class="small">Foto opcional / Optional photo</label>
-        <input type="file" id="winPhoto" accept="image/*">
-        <div style="margin-top:10px;"><button class="btn primary" type="submit">Validar WIN / Validate HIN</button></div>
-      </form>
-      <div id="winOut" style="margin-top:10px;"></div>
-      <div class="table-wrap" style="margin-top:10px;">
-        <table class="interp-table">
-          <thead><tr><th>Campo / Field</th><th>Valor / Value</th><th>Interpretação / Meaning</th></tr></thead>
-          <tbody id="interpWinBody"></tbody>
-        </table>
-      </div>
-    </section>
+  <h1>Validador WIN</h1>
+  <form id="winForm" data-form="win">
+    <label for="winInput">WIN / HIN</label>
+    <input id="winInput" name="win" maxlength="20" placeholder="Ex.: PT-ABC12345D404" required/>
+    <button id="btnWin" type="submit">Validar WIN</button>
+  </form>
+  <section id="win-output" class="panel">
+    <h2>Resultado WIN</h2>
+    <div id="winResult" class="resultado"></div>
+  </section>
 
-    <section class="card">
-      <h2>Validador Motor<div class="small">Engine Serial Validator</div></h2>
-      <form id="formMotor" class="grid">
-        <div><label>Marca<div class="en">Brand</div></label>
-          <select id="brand">
-            <option>Yamaha</option><option>Honda</option><option>Suzuki</option><option>Tohatsu</option>
-            <option>Mercury</option><option>MerCruiser</option><option>Volvo Penta</option><option>Yanmar</option>
-            <option>Evinrude/Johnson</option>
-          </select>
-        </div>
+  <hr/>
 
-        <div class="hr"></div>
-        <h3>Pesquisa técnica / Technical search</h3>
-        <div class="grid grid-3">
-          <div><label>Modelo<div class="en">Model</div></label><input id="srch_model" placeholder="ex.: DF140A / BF150A / F350NSA"></div>
-          <div><label>Potência (hp)<div class="en">Power (hp)</div></label><input id="srch_power" placeholder="ex.: 150"></div>
-          <div><label>Cilindrada (cc)<div class="en">Displacement (cc)</div></label><input id="srch_disp" placeholder="ex.: 2394"></div>
-          <div><label>Ano<div class="en">Year</div></label><input id="srch_year" placeholder="ex.: 2019"></div>
-          <div><label>Origem<div class="en">Origin</div></label><input id="srch_origin" placeholder="ex.: JP / US / TH / CN"></div>
-        </div>
-
-        <div class="hr"></div>
-        <h3>Identificação de série / Serial identification</h3>
-        <div id="brandDynamic" class="grid"></div>
-        <div id="brandHint" class="small" style="margin-top:6px;"></div>
-        <div id="brandNote" class="small" style="margin-top:6px;"></div>
-
-        <label class="small">Foto opcional / Optional photo</label>
-        <input type="file" id="motorPhoto" accept="image/*">
-        <div style="margin-top:10px;"><button class="btn primary" type="submit">Validar Motor / Validate Engine</button></div>
-      </form>
-      <div id="motorOut" style="margin-top:10px;"></div>
-    </section>
-  </div>
+  <h1>Validador Motor</h1>
+  <form id="motorForm" data-form="motor">
+    <label for="brandSelect">Marca</label>
+    <select id="brandSelect" name="brand">
+      <option value="">—</option>
+      <option>Yamaha</option><option>Honda</option><option>Suzuki</option>
+      <option>Tohatsu</option><option>Mercury</option><option>MerCruiser</option>
+      <option>Volvo Penta</option><option>Yanmar</option><option>Evinrude/Johnson</option>
+    </select>
+    <label for="modelInput">Modelo</label>
+    <input id="modelInput" name="model" placeholder="Modelo (opcional)"/>
+    <label for="snInput">S/N</label>
+    <input id="snInput" name="sn" placeholder="Número de série" required/>
+    <button id="btnMotor" type="submit">Validar Motor</button>
+  </form>
+  <section id="motor-output" class="panel">
+    <h2>Resultado Motor</h2>
+    <div id="motorResult" class="resultado"></div>
+  </section>
 </main>
-<footer class="app-footer">
-  <p>IDMAR — v2.2.7-baseline+merge-r1 — 2025-09-11</p>
-</footer>
-<script src="js/config.js"></script><script src="js/app.js"></script><script src="js/utils.js"></script>
-<script src="js/validador-win.js"></script><script src="js/validador-motor.js"></script>
-  <script src="js/hin-rules.patch.v1.js"></script>
-  <script src="js/theme.js"></script>
-</body></html>
+
+<footer class="footer">IDMAR — v2.2.7-baseline+merge-r2 — 2025-09-16</footer>
+
+<script src="js/history-core.js"></script>
+<script src="js/history-hook.js"></script>
+<!-- mantém os teus validadores existentes abaixo -->
+<script src="js/validador-win.js"></script>
+<script src="js/validador-motor.js"></script>
+</body>
+</html>
