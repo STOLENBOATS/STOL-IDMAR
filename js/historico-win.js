@@ -1,89 +1,126 @@
-(function(){'use strict';
-  const KEY_NEW = (window.NAV && NAV.STORAGE && NAV.STORAGE.WIN_HISTORY) || 'nav_win_history';
-  const KEY_LEG = 'hist_win';
+
+// IDMAR — Histórico WIN (r3a) — filtros, ordenação, CSV, foto/miniatura, razão e forense hint
+(function(w,d){
+  w.IDMAR=w.IDMAR||{}; w.NAV=w.NAV||w.IDMAR;
+  NAV.STORAGE = NAV.STORAGE || { SESSION:'IDMAR_SESSION', WIN_HISTORY:'hist_win', MOTOR_HISTORY:'hist_motor' };
+
+  function ready(fn){ if(d.readyState==='loading'){ d.addEventListener('DOMContentLoaded', fn); } else { fn(); } }
   function load(key){ try{ return JSON.parse(localStorage.getItem(key)||'[]'); }catch(e){ return []; } }
-  function save(key,arr){ localStorage.setItem(key, JSON.stringify(arr||[])); }
-  function fmtDate(d){ try{ if(d==null) return '—'; if(typeof d==='number'||(/^\d+$/.test(String(d)))){const n=new Date(Number(d)); return isNaN(n)?'—':n.toLocaleString('pt-PT');} const n=new Date(d); return isNaN(n)?'—':n.toLocaleString('pt-PT'); }catch(e){return '—';} }
-  function ts(d){ if(d==null) return 0; if(typeof d==='number') return d; if(typeof d==='string' && /^\d+$/.test(d)) return Number(d); const t=Date.parse(d); return isNaN(t)?0:t; }
-  const card = document.querySelector('.card')||document.body;
-  let controls = document.getElementById('histControls');
-  if(!controls){
-    controls=document.createElement('div'); controls.id='histControls'; controls.className='hist-controls';
-    controls.innerHTML = '<div class="controls-row">'
-      + '<input id="hSearch" placeholder="Pesquisar (WIN)" />'
-      + '<select id="hValid"><option value=\"\">Todos</option><option value=\"ok\">Válido</option><option value=\"bad\">Inválido</option></select>'
-      + '<input id=\"hFrom\" type=\"date\" />'
-      + '<input id=\"hTo\" type=\"date\" />'
-      + '<button id=\"btnClearWin\" class=\"btn warn\">Limpar histórico</button>'
-      + '<button id=\"exportWinCsv\" class=\"btn\">Exportar CSV</button>'
-      + '</div>';
-    const firstSection = document.querySelector('.card h2, .card h3, .card .table-wrap, .card table') || card.firstChild;
-    if(firstSection && firstSection.parentNode) firstSection.parentNode.insertBefore(controls, firstSection); else card.prepend(controls);
+  function save(key, val){ try{ localStorage.setItem(key, JSON.stringify(val||[])); }catch(e){} }
+  function ts(x){ if(x==null) return 0; if(typeof x==='number') return x; if(/^[0-9]+$/.test(String(x))) return Number(x); var t=Date.parse(x); return isNaN(t)?0:t; }
+
+  function findInput(){ return d.getElementById('hist_win_search') || d.querySelector('input[placeholder*="Pesquisar"], input[type="search"]'); }
+  function findState(){ return d.getElementById('hist_win_state') || d.querySelector('select'); }
+  function findFrom(){ return d.getElementById('hist_win_from') || d.querySelector('input[type="date"]:not([id$="to"]), input[placeholder*="dd"]'); }
+  function findTo(){ return d.getElementById('hist_win_to') || d.querySelectorAll('input[type="date"]')[1] || d.querySelectorAll('input[placeholder*="dd"]')[1]; }
+  function findTableBody(){ return d.getElementById('hist_win_tbody') || d.querySelector('table tbody') || (function(){var t=d.createElement('table');t.innerHTML='<thead><tr><th>Quando</th><th>WIN/HIN</th><th>Estado</th><th>Justificação</th><th>Foto (nome)</th><th>Miniatura</th></tr></thead><tbody id="hist_win_tbody"></tbody>'; (d.querySelector('.container')||d.body).appendChild(t); return t.tBodies[0];})() }
+  function findCSV(){ return d.getElementById('hist_win_csv') || Array.from(d.querySelectorAll('button,input[type="button"]')).find(b=>/exportar/i.test(b.textContent||b.value||'')); }
+  function findClear(){ return d.getElementById('hist_win_clear') || Array.from(d.querySelectorAll('button,input[type="button"]')).find(b=>/limpar/i.test(b.textContent||b.value||'')); }
+
+  function applyFilters(data, q, state, from, to){
+    const qn = (q||'').trim().toLowerCase();
+    const fts = from? ts(from + (from.length<12?'T00:00:00':'')) : null;
+    const tts = to?   ts(to   + (to.length<12?'T23:59:59':'')) : null;
+    return data.filter(r=>{
+      if(qn){
+        const blob = (r.win||'') + ' ' + (r.reason||'');
+        if(blob.toLowerCase().indexOf(qn)===-1) return false;
+      }
+      if(state==='ok' && !r.valid) return false;
+      if(state==='bad' && r.valid) return false;
+      const dt = ts(r.date||r.dt||r.time||r.when||r.timestamp||r.createdAt);
+      if(fts!=null && dt<fts) return false;
+      if(tts!=null && dt>tts) return false;
+      return true;
+    });
   }
-  const tbody = document.querySelector('#tabelaWin tbody');
-  const elSearch = document.getElementById('hSearch');
-  const elValid  = document.getElementById('hValid');
-  const elFrom   = document.getElementById('hFrom');
-  const elTo     = document.getElementById('hTo');
-  const btnCsv   = document.getElementById('exportWinCsv');
-  const btnClr   = document.getElementById('btnClearWin');
-  function getAll(){
-    const newer = load(KEY_NEW);
-    const legacy = load(KEY_LEG);
-    const merged = (Array.isArray(legacy)?legacy:[]).concat(Array.isArray(newer)?newer:[]);
-    return merged.map(r=>({
-      raw:r,
-      date: r.date||r.dt||r.time||r.when||r.timestamp||r.createdAt,
-      ts: ts(r.date||r.dt||r.time||r.when||r.timestamp||r.createdAt),
-      valid: !!r.valid,
-      reason: r.reason||r.error||'',
-      photoName: r.photoName||'',
-      photoData: r.photoData||r.photo||'',
-      brand: r.brand||r.marca||'',
-      win: r.win||r.WIN||'',
-      sn: r.sn||r.serial||'',
-      hasForense: !!r.forense
-    })).sort((a,b)=>b.ts-a.ts);
-  }
-  function passFilters(rec){
-    const q=(elSearch.value||'').trim().toLowerCase();
-    const fValid=elValid.value;
-    const fFrom=elFrom.value?new Date(elFrom.value+'T00:00:00').getTime():null;
-    const fTo=elTo.value?new Date(elTo.value+'T23:59:59').getTime():null;
-    if(q){ const hay=(rec.win+' '+rec.sn+' '+rec.brand+' '+rec.reason).toLowerCase(); if(!hay.includes(q)) return false; }
-    if(fValid==='ok' && !rec.valid) return false;
-    if(fValid==='bad' && rec.valid) return false;
-    if(fFrom!=null && rec.ts<fFrom) return false;
-    if(fTo!=null && rec.ts>fTo) return false;
-    return true;
-  }
+
   function render(){
+    const key = NAV.STORAGE.WIN_HISTORY;
+    const raw = load(key);
+    const tbody = findTableBody();
     if(!tbody) return;
-    const rows=getAll().filter(passFilters);
-    tbody.innerHTML = rows.length? '' : '<tr><td colspan=\"6\" class=\"small\">Sem registos / No records</td></tr>';
-    rows.forEach(r=>{
-      const tr=document.createElement('tr');
-      const img = r.photoData ? '<img class=\"thumb\" src=\"'+(r.photoData)+'\" alt=\"'+(r.photoName||'photo')+'\">' : '';
-      const fx = r.hasForense ? ' <span title=\"Evidências forenses\" aria-label=\"Forense\">🧪</span>' : '';
-      tr.innerHTML = ''
-        + '<td>'+fmtDate(r.date)+'</td>'
-        + 
-        + '<td><strong>${r.win||r.WIN||''}</strong></td>'
-        + '<td><span class=\"badge '+(r.valid?'good':'bad')+'\">'+(r.valid?'Válido':'Inválido')+'</span>'+fx+'</td>'
-        + '<td>'+(r.reason)+'</td>'
-        + '<td>'+(r.photoName)+'</td>'
-        + '<td>'+img+'</td>';
+
+    // controls
+    const input = findInput();
+    const stateSel = findState();
+    const from = findFrom();
+    const to = findTo();
+    const q = input && input.value || '';
+    let state = stateSel && stateSel.value || 'all';
+    if(/válido/i.test(state) || /valid/i.test(state)) state = 'ok';
+    if(/inválido/i.test(state) || /invalid/i.test(state)) state = 'bad';
+
+    // order newest first regardless of storage order
+    const sorted = [...raw].sort((a,b)=> ts(b.date||b.dt||b.time||b.timestamp)-ts(a.date||a.dt||a.time||a.timestamp));
+    const data = applyFilters(sorted, q, state, from && from.value, to && to.value);
+
+    // render rows
+    tbody.innerHTML='';
+    data.forEach(r=>{
+      const dtxt = new Date(ts(r.date||r.dt||r.time||r.timestamp)).toLocaleString();
+      const state = r.valid ? '<span class="badge good">Válido</span>' : '<span class="badge bad">Inválido</span>';
+      const reason = r.reason || '';
+      const photo = r.photoName || '';
+      const thumb = r.photoData ? '<img src="'+r.photoData+'" alt="" style="height:44px;border-radius:6px;border:1px solid var(--border)">' : '';
+      const forIcon = r.forense ? ' 🔍' : '';
+      const tr = d.createElement('tr');
+      tr.innerHTML = '<td>'+dtxt+'</td>'
+                   + '<td>'+ (r.win||'') + forIcon + '</td>'
+                   + '<td>'+state+'</td>'
+                   + '<td>'+reason+'</td>'
+                   + '<td>'+photo+'</td>'
+                   + '<td>'+thumb+'</td>';
+      if(r.forense){
+        tr.title = 'Forense: ' + JSON.stringify(r.forense);
+      }
       tbody.appendChild(tr);
     });
   }
-  [elSearch, elValid, elFrom, elTo].forEach(el=>{ if(el) el.addEventListener('input', render); });
-  if(btnCsv) btnCsv.addEventListener('click', ()=>{
-    const rows = [["Data/Date","WIN","Resultado","Justificação","Foto"]];
-    getAll().filter(passFilters).forEach(r=>{ rows.push([fmtDate(r.date), r.win||r.WIN||'', r.valid?'Válido':'Inválido', r.reason||'', r.photoName||'']); });
-    const csv = rows.map(r=>r.map(v=>(''+(v??'')).replace(/\"/g,'\"\"')).map(v=>'\"'+v+'\"').join(',')).join('\\n');
-    const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
-    const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='historico_win.csv'; document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(()=>URL.revokeObjectURL(url),1000);
-  });
-  if(btnClr) btnClr.addEventListener('click', ()=>{ if(!confirm('Apagar todos os registos?')) return; save(KEY_NEW, []); save(KEY_LEG, []); render(); });
-  render();
-})();
+
+  function toCSV(rows){
+    const esc=v=>(''+(v==null?'':v)).replace(/"/g,'""');
+    const header=['date','win','valid','reason','photoName','forense.hash','forense.flags','forense.notes'];
+    const lines=[header.join(',')];
+    rows.forEach(r=>{
+      const line=[
+        r.date||r.dt||r.time||r.timestamp||'',
+        r.win||'',
+        r.valid?'1':'0',
+        r.reason||'',
+        r.photoName||'',
+        (r.forense && r.forense.hash)||'',
+        (r.forense && Array.isArray(r.forense.flags)? r.forense.flags.join('|') : ''),
+        (r.forense && r.forense.notes)||''
+      ].map(esc).map(v=>'"'+v+'"').join(',');
+      lines.push(line);
+    });
+    return lines.join('\r\n');
+  }
+
+  function wire(){
+    const input = findInput(); const stateSel = findState(); const from = findFrom(); const to = findTo();
+    if(input) input.addEventListener('input', render);
+    if(stateSel) stateSel.addEventListener('change', render);
+    if(from) from.addEventListener('change', render);
+    if(to) to.addEventListener('change', render);
+    const csvBtn = findCSV();
+    if(csvBtn) csvBtn.addEventListener('click', function(e){
+      e.preventDefault();
+      const all = load(NAV.STORAGE.WIN_HISTORY);
+      const sorted = [...all].sort((a,b)=> ts(b.date||b.dt||b.time||b.timestamp)-ts(a.date||a.dt||a.time||a.timestamp));
+      const csv = toCSV(sorted);
+      const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+      const url = URL.createObjectURL(blob);
+      const a = d.createElement('a'); a.href=url; a.download='historico_win.csv'; a.click();
+      URL.revokeObjectURL(url);
+    });
+    const clrBtn = findClear();
+    if(clrBtn) clrBtn.addEventListener('click', function(e){
+      e.preventDefault();
+      if(confirm('Limpar histórico WIN? Esta ação é irreversível.')){ save(NAV.STORAGE.WIN_HISTORY, []); render(); }
+    });
+  }
+
+  ready(function(){ wire(); render(); });
+})(window, document);
