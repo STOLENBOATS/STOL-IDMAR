@@ -1,24 +1,17 @@
-// --- IDMAR/NAV bootstrap (first-aid) ---
-window.IDMAR = window.IDMAR || {};
-window.NAV   = window.NAV   || window.IDMAR;
-NAV.STORAGE  = NAV.STORAGE  || { SESSION:'IDMAR_SESSION', WIN_HISTORY:'hist_win', MOTOR_HISTORY:'hist_motor' };
-// ---------------------------------------
-(function(){
-  if (sessionStorage.getItem(NAV.STORAGE.SESSION) !== 'ok'){ alert('Sessão expirada. Faça login.'); location.replace('login.html'); return; }
-  const form = document.getElementById('formMotor');
-  const brandSel = document.getElementById('brand');
-  const dyn = document.getElementById('brandDynamic');
-  const out = document.getElementById('motorOut');
-  const file = document.getElementById('motorPhoto');
-
-  // Campos de pesquisa (fixos)
-  const search = {
-    model: document.getElementById('srch_model'),
-    power: document.getElementById('srch_power'),
-    disp:  document.getElementById('srch_disp'),
-    year:  document.getElementById('srch_year'),
-    origin:document.getElementById('srch_origin')
+// IDMAR - Validador Motor (r3a, robusto, idempotente)
+(function(w,d){
+  w.IDMAR = w.IDMAR || {}; w.NAV = w.NAV || w.IDMAR;
+  NAV.STORAGE = NAV.STORAGE || { SESSION:'IDMAR_SESSION', WIN_HISTORY:'hist_win', MOTOR_HISTORY:'hist_motor' };
+  w.loadFromLS = w.loadFromLS || function(k){ try{ return JSON.parse(localStorage.getItem(k)||'[]'); }catch(e){ return []; } };
+  w.saveToLS   = w.saveToLS   || function(k,a){ try{ localStorage.setItem(k, JSON.stringify(a||[])); }catch(e){} };
+  w.readFileAsDataURL = w.readFileAsDataURL || function(file){
+    return new Promise(function(resolve,reject){
+      try{ if(!file) return resolve(''); var r=new FileReader(); r.onload=function(){resolve(String(r.result||''));}; r.onerror=reject; r.readAsDataURL(file); }
+      catch(e){ resolve(''); }
+    });
   };
+  function ready(fn){ if(d.readyState==='loading'){ d.addEventListener('DOMContentLoaded', fn); } else { fn(); } }
+  function qs(s,r){ return (r||d).querySelector(s); }
 
   const SCHEMAS = {
     "Yamaha":[
@@ -61,161 +54,121 @@ NAV.STORAGE  = NAV.STORAGE  || { SESSION:'IDMAR_SESSION', WIN_HISTORY:'hist_win'
     ]
   };
 
-  function renderFields(){
-    const brand = brandSel.value;
-    const schema = SCHEMAS[brand] || [];
-    dyn.innerHTML = "";
-    schema.forEach(f=>{
-      const wrap = document.createElement('div');
-      wrap.innerHTML = `<label>${f.label}</label><input id="${f.id}" placeholder="${f.ph}">`;
-      dyn.appendChild(wrap);
-    });
-    const note = document.getElementById('brandNote');
-    let txt = "";
-    if(brand==='Mercury'){ txt="≤30hp podem ser Tohatsu; verificar sticker e core plug."; }
-    if(brand==='MerCruiser'){ txt="Desde 2010: 7 dígitos iniciados por 'A'. Engine/Drive/Transom podem existir."; }
-    if(brand==='Evinrude/Johnson'){ txt="OMC até 2000 não rastreável; BRP cessou 2007/2020."; }
-    if(brand==='Tohatsu'){ txt=">60hp por Honda; ≤30hp por Mercury; ≤15hp por Tohatsu para Evinrude."; }
-    document.getElementById('brandNote').textContent = txt;
-  }
-  brandSel.addEventListener('change', renderFields); renderFields();
-
-  form.addEventListener('submit', async (e)=>{
-    e.preventDefault();
-    const brand = brandSel.value;
-    // Read dynamic fields
-    const inputs = Array.from(dyn.querySelectorAll('input'));
-    const serialParts = inputs.map(i=>`${i.previousElementSibling.textContent}: ${i.value.trim()}`).filter(s=>/:\s*\S/.test(s));
-    const hasSerialInfo = inputs.some(i=>i.value.trim().length>0);
-    // Compose search fields summary
-    const srch = {
-      model: search.model.value.trim(),
-      power: search.power.value.trim(),
-      disp:  search.disp.value.trim(),
-      year:  search.year.value.trim(),
-      origin:search.origin.value.trim()
-    };
-    const hasSearch = Object.values(srch).some(v=>v.length>0);
-    if(!hasSerialInfo && !hasSearch){
-      out.innerHTML = '<span class="badge bad">Preencha pelo menos os campos de pesquisa ou de série</span>';
-      return;
+  function brandNote(brand){
+    switch(brand){
+      case 'Mercury': return '≤30hp podem ser Tohatsu; verificar sticker e core plug.';
+      case 'MerCruiser': return 'Desde 2010: 7 dígitos iniciados por “A”. Engine/Drive/Transom podem existir.';
+      case 'Evinrude/Johnson': return 'OMC até 2000 pouco rastreável; BRP cessou 2007/2020.';
+      case 'Tohatsu': return '>60hp por Honda; ≤30hp por Mercury; ≤15hp por Tohatsu para Evinrude.';
+      default: return '';
     }
-    const summary = [];
-    if(hasSearch){
-      summary.push(`Pesquisa: Modelo=${srch.model||'-'} | Potência(hp)=${srch.power||'-'} | Cilindrada(cc)=${srch.disp||'-'} | Ano=${srch.year||'-'} | Origem=${srch.origin||'-'}`);
+  }
+
+  function buildRulesMotor(brand){
+    const get = id => (d.getElementById(id)?.value || '').trim();
+    const rules = [];
+    if(brand==='Yamaha'){
+      const yearpair=get('yam_yearpair').toUpperCase(), serial=get('yam_serial'), shaft=get('yam_shaft').toUpperCase();
+      if(/^[A-Z]{2}$/.test(yearpair) && !/[IOQ]/.test(yearpair)) rules.push('Yamaha: Par de letras do ano — OK / Year letter pair — OK');
+      else if(yearpair) rules.push('Yamaha: Par de letras inválido (I,O,Q não usados) / Invalid year letters'); else rules.push('Yamaha: Par de letras do ano — em falta / missing');
+      if(/^[0-9]{6,7}$/.test(serial)) rules.push('Yamaha: Nº de série 6–7 dígitos — OK'); else if(serial) rules.push('Yamaha: Nº de série deve ter 6–7 dígitos'); else rules.push('Yamaha: Nº de série — em falta / missing');
+      if(/^(S|L|X|U|UL|N)$/i.test(shaft)) rules.push('Yamaha: Shaft S/L/X/U/UL/N — OK'); else if(shaft) rules.push('Yamaha: Shaft fora do conjunto esperado');
+    } else if(brand==='Honda'){
+      const fr=get('hon_frame'), en=get('hon_engine'); if(fr||en) rules.push('Honda: frame/engine presentes — OK'); else rules.push('Honda: indicar frame e/ou engine');
+    } else if(brand==='Suzuki'){
+      const s=get('suz_serial'); if(/^[0-9]{6}$/.test(s)) rules.push('Suzuki: Nº de série 6 dígitos — OK'); else if(s) rules.push('Suzuki: Nº de série deve ter 6 dígitos'); else rules.push('Suzuki: Nº de série — em falta / missing');
+    } else if(brand==='Tohatsu'){
+      const s=get('toh_serial'); if(/^[0-9]{6,7}$/.test(s)) rules.push('Tohatsu: Nº de série 6–7 dígitos — OK'); else if(s) rules.push('Tohatsu: Nº de série deve ter 6–7 dígitos'); else rules.push('Tohatsu: Nº de série — em falta / missing');
+    } else if(brand==='MerCruiser'){
+      const e=get('mrc_engine'), dno=get('mrc_drive'), t=get('mrc_transom'); const all=[e,dno,t].filter(Boolean);
+      if(all.length) rules.push('MerCruiser: engine/drive/transom presentes — OK'); else rules.push('MerCruiser: indicar engine/drive/transom');
+      if([e,dno,t].some(v=>/^A[0-9A-Z]{6}$/i.test(v))) rules.push('MerCruiser: Formato pós-2010 (A + 6) — OK');
+    } else if(brand==='Mercury'){
+      const e=get('mer_engine'); if(e) rules.push('Mercury: nº de motor presente — OK'); else rules.push('Mercury: indicar nº de motor (≤30hp podem ser Tohatsu)');
+    } else if(brand==='Volvo Penta'){
+      const e=get('vol_engine'), tr=get('vol_trans'); if(e||tr) rules.push('Volvo Penta: engine/transmission presentes — OK'); else rules.push('Volvo Penta: indicar engine/transmission');
+    } else if(brand==='Yanmar'){
+      const e=get('yan_engine'), s=get('yan_engine2'); if(e||s) rules.push('Yanmar: label/stamped presentes — OK'); else rules.push('Yanmar: indicar label/stamped');
+    } else if(brand==='Evinrude/Johnson'){
+      const e=get('evj_engine'); if(e) rules.push('Evinrude/Johnson: nº presente — OK'); else rules.push('Evinrude/Johnson: indicar nº de motor');
     }
-    if(hasSerialInfo){
-      summary.push('Identificação: '+ serialParts.join(' · '));
+    const note=brandNote(brand); if(note) rules.push('Nota: '+note);
+    return rules;
+  }
+
+  function ensureRulesBoxMotor(){
+    const host = qs('#motorResult') || qs('#motor-output .resultado') || d.getElementById('motorOut');
+    if(!host) return null;
+    let box = d.getElementById('motorRulesBox');
+    if(!box){
+      box = d.createElement('div'); box.id='motorRulesBox';
+      box.style.marginTop='0.75rem'; box.style.border='1px solid var(--border,#e5e7eb)'; box.style.borderRadius='12px';
+      box.style.padding='0.8rem 1rem'; box.style.background='var(--bg-elev,#fff)';
+      box.innerHTML='<h3 style="margin:.25rem 0 .5rem 0">Regras aplicadas / <span style="opacity:.7">Applied rules</span></h3><ul id="motorRulesList" style="margin:.25rem 0 0 1.1rem"></ul>';
+      host.appendChild(box);
     }
-    out.innerHTML = '<span class="badge good">Registo criado</span> ' + summary.join(' | ');
-
-    // Photo
-    let photoName='', photoData='';
-    if (file && file.files && file.files[0]){ photoName=file.files[0].name; try{ photoData = await readFileAsDataURL(file.files[0]); }catch(e){} }
-
-    const rec = {date:new Date().toISOString(), brand, sn: summary.join(' | '), valid: true, reason:'OK', photoName, photoData};
-    const arr = loadFromLS(NAV.STORAGE.MOTOR_HISTORY); arr.unshift(rec); saveToLS(NAV.STORAGE.MOTOR_HISTORY, arr);
-  });
-})();
-
-// === IDMAR Forense Add-on (split per module) ===
-(function(){
-  function ensureForenseUI(kind, formId, afterElId){
-    var form = document.getElementById(formId) || document.getElementById(formId.replace('form','Form'));
-    if(!form) return;
-    var boxId = 'forenseBox_'+formId;
-    if(document.getElementById(boxId)) return;
-    var flagsHtml = (kind==='win')
-      ? '<label><input type="checkbox" id="flagRebites_'+formId+'"> Rebites</label>'
-        + '<label><input type="checkbox" id="flagSolda_'+formId+'"> Cordões de solda</label>'
-        + '<label><input type="checkbox" id="flagPlaca_'+formId+'"> Placa remarcada</label>'
-        + '<label><input type="checkbox" id="flagTinta_'+formId+'"> Camadas de tinta/abrasões</label>'
-      : '<label><input type="checkbox" id="flagEtiqueta_'+formId+'"> Etiqueta adulterada/ausente</label>'
-        + '<label><input type="checkbox" id="flagCore_'+formId+'"> Core plug danificado/removido</label>'
-        + '<label><input type="checkbox" id="flagBoss_'+formId+'"> Solda/corrosão anómala no boss</label>'
-        + '<label><input type="checkbox" id="flagBloco_'+formId+'"> Remarcação no bloco</label>';
-    var box = document.createElement('details');
-    box.id = boxId;
-    box.className = 'forense-box';
-    box.innerHTML = '<summary>Forense (opcional)</summary>'
-      + '<div class="forense-grid">'+ flagsHtml
-      + '<textarea id="forenseNotes_'+formId+'" rows="3" placeholder="Notas forenses…"></textarea>'
-      + '</div>';
-    var anchor = document.getElementById(afterElId);
-    if(anchor && anchor.parentElement){ anchor.parentElement.insertAdjacentElement('afterend', box); }
-    else { form.appendChild(box); }
+    return box;
   }
-  async function sha256OfFile(file){
-    try{
-      const buf = await file.arrayBuffer();
-      const hash = await crypto.subtle.digest('SHA-256', buf);
-      return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,'0')).join('');
-    }catch(e){ return null; }
+  function showRulesMotor(brand){
+    const box=ensureRulesBoxMotor(); if(!box) return;
+    const ul=box.querySelector('#motorRulesList'); if(!ul) return;
+    const rules=buildRulesMotor(brand);
+    ul.innerHTML = rules.map(r=>'<li>'+r+'</li>').join('');
   }
-  function bestHistoryKey(kind){
-    try{
-      if(kind==='win') return (window.NAV && NAV.STORAGE && NAV.STORAGE.WIN_HISTORY) || 'nav_win_history';
-      return (window.NAV && NAV.STORAGE && NAV.STORAGE.MOTOR_HISTORY) || 'nav_motor_history';
-    }catch(e){ return kind==='win'?'nav_win_history':'nav_motor_history'; }
-  }
-  function load(key){ try{ return JSON.parse(localStorage.getItem(key)||'[]'); }catch(e){ return []; } }
-  function save(key, arr){ localStorage.setItem(key, JSON.stringify(arr||[])); }
-  function tsOf(x){ if(x==null) return 0; if(typeof x==='number') return x; if(typeof x==='string' && /^\d+$/.test(x)) return Number(x); var t=Date.parse(x); return isNaN(t)?0:t; }
-  async function attachForense(kind, formId, photoInputId){
-    setTimeout(async function(){
+
+  ready(function(){
+    var form = d.getElementById('motorForm') || d.getElementById('formMotor') || qs('form[data-form="motor"]') || qs('form[action*="motor"]');
+    var brandSel = d.getElementById('brandSelect') || d.getElementById('brand') || qs('select[name="brand"], select[name="marca"]');
+    var dyn = d.getElementById('brandDynamic') || d.getElementById('motorDynamic') || qs('#motorForm .dynamic');
+    var outHost = d.getElementById('motorResult') || qs('#motor-output .resultado') || d.getElementById('motorOut');
+    var file = d.getElementById('motorPhoto') || qs('input[type="file"][name="motorPhoto"]');
+
+    if(!outHost){ outHost=d.createElement('div'); outHost.id='motorResult'; (qs('#motor-output')||form||d.body).appendChild(outHost); }
+    if(!dyn){ dyn=d.createElement('div'); dyn.id='brandDynamic'; (form||d.body).appendChild(dyn); }
+    if(!form || !brandSel){ console.warn('[IDMAR] MOTOR: form/brand não encontrado.'); return; }
+
+    function renderFields(){
+      const brand = brandSel.value || '';
+      const schema = SCHEMAS[brand] || [];
+      dyn.innerHTML='';
+      schema.forEach(f=>{
+        const wrap=d.createElement('div'); wrap.className='field';
+        wrap.innerHTML='<label for="'+f.id+'">'+f.label+'</label><input id="'+f.id+'" placeholder="'+f.ph+'">';
+        dyn.appendChild(wrap);
+      });
+      const noteTxt=brandNote(brand); let noteEl=d.getElementById('brandNote');
+      if(!noteEl){ noteEl=d.createElement('div'); noteEl.id='brandNote'; noteEl.style.marginTop='.5rem'; noteEl.style.opacity='.8'; dyn.appendChild(noteEl); }
+      noteEl.textContent = noteTxt || '';
+    }
+    brandSel.addEventListener('change', renderFields); renderFields();
+
+    form.addEventListener('submit', async function(e){
+      e.preventDefault();
+      const brand = brandSel.value || '';
+      const inputs = Array.from(dyn.querySelectorAll('input'));
+      const parts = inputs.map(i=> (i.previousElementSibling?.textContent||i.id)+': '+(i.value||'').trim()).filter(s=>/:\s*\S/.test(s));
+      const hasSerialInfo = inputs.some(i => (i.value||'').trim().length>0);
+
+      if(!brand){ outHost.innerHTML='<span class="badge bad">Indique a marca</span>'; return; }
+      if(!hasSerialInfo){ outHost.innerHTML='<span class="badge bad">Indique pelo menos um campo de identificação</span>'; return; }
+
+      outHost.innerHTML = '<span class="badge good">Registo criado</span> ' + brand + ' — ' + parts.join(' · ');
+
+      let photoName='', photoData=''; try{ if(file && file.files && file.files[0]){ photoName=file.files[0].name; photoData=await readFileAsDataURL(file.files[0]); } }catch(e){}
       try{
-        var photoInput = document.getElementById(photoInputId);
-        var file = (photoInput && photoInput.files && photoInput.files[0]) ? photoInput.files[0] : null;
-        var hash = file ? await sha256OfFile(file) : null;
-        var suf = '_'+formId;
-        var flags = [];
-        if(kind==='win'){
-          if(document.getElementById('flagRebites'+suf)?.checked) flags.push('rebites');
-          if(document.getElementById('flagSolda'+suf)?.checked) flags.push('solda');
-          if(document.getElementById('flagPlaca'+suf)?.checked) flags.push('placa');
-          if(document.getElementById('flagTinta'+suf)?.checked) flags.push('tinta');
-        }else{
-          if(document.getElementById('flagEtiqueta'+suf)?.checked) flags.push('etiqueta');
-          if(document.getElementById('flagCore'+suf)?.checked) flags.push('coreplug');
-          if(document.getElementById('flagBoss'+suf)?.checked) flags.push('boss');
-          if(document.getElementById('flagBloco'+suf)?.checked) flags.push('bloco');
-        }
-        var notes = (document.getElementById('forenseNotes'+suf)?.value)||'';
-        var forense = (hash || flags.length || notes) ? { hash, flags, notes } : null;
-        if(!forense) return;
-        var key = bestHistoryKey(kind);
-        var arr = load(key);
-        if(!Array.isArray(arr) || !arr.length){
-          var legacy = load(kind==='win' ? 'hist_win' : 'hist_motor');
-          if(Array.isArray(legacy) && legacy.length) arr = legacy;
-          else return;
-        }
-        var idx = 0, bestTs = -1;
-        for(var i=0;i<arr.length;i++){
-          var r = arr[i], d = (r && (r.date||r.dt||r.time||r.when||r.timestamp||r.createdAt));
-          var t = tsOf(d);
-          if(t >= bestTs){ bestTs = t; idx = i; }
-        }
-        var rec = arr[idx] || {};
-        rec.forense = forense;
-        arr[idx] = rec;
-        save(key, arr);
+        const rec={date:new Date().toISOString(), brand, sn:parts.join(' · '), valid:true, reason:'OK', photoName, photoData};
+        const arr=loadFromLS(NAV.STORAGE.MOTOR_HISTORY); arr.unshift(rec); saveToLS(NAV.STORAGE.MOTOR_HISTORY, arr);
       }catch(e){}
-    }, 0);
-  }
-  document.addEventListener('DOMContentLoaded', function(){
-    // WIN
-    var formWin = document.getElementById('formWin') || document.getElementById('winForm');
-    if(formWin){
-      ensureForenseUI('win','formWin','winPhoto');
-      formWin.addEventListener('submit', function(){ attachForense('win','formWin','winPhoto'); });
-    }
-    // MOTOR
-    var formMotor = document.getElementById('formMotor') || document.getElementById('motorForm');
-    if(formMotor){
-      ensureForenseUI('motor','formMotor','motorPhoto');
-      formMotor.addEventListener('submit', function(){ attachForense('motor','formMotor','motorPhoto'); });
-    }
+
+      try{ showRulesMotor(brand); }catch(e){}
+
+      try{
+        if(typeof w.renderMotorResult==='function'){
+          const fields = parts.map(p=>({label:'Identificação', value:p, meaning:''}));
+          const rules = buildRulesMotor(brand);
+          w.renderMotorResult({ status:'ok', brand, fields, rules });
+        }
+      }catch(e){}
+    });
   });
-})();
-// === /IDMAR Forense Add-on ===
+})(window, document);
