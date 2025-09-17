@@ -1,4 +1,4 @@
-/*! IDMAR theme CSS r3 — Light por defeito, Dark opcional */
+/*! IDMAR theme CSS (One r3) — Claro por defeito, Dark opcional via data-theme="dark" */
 :root{
   --bg: #f6f7fb;
   --bg-elev: #ffffff;
@@ -38,6 +38,5 @@ th,td{border-bottom:1px solid var(--border);padding:.6rem .5rem;text-align:left}
 .badge.ok{background:color-mix(in oklab, var(--ok) 18%, transparent); color:var(--ok);}
 .badge.nok{background:color-mix(in oklab, var(--nok) 18%, transparent); color:var(--nok);}
 .footer{opacity:.8;padding:1rem;color:var(--muted)}
-/* pequena ajuda para separar blocos */
 .result-header{margin:.25rem 0 .5rem 0}
 .rules{margin:.25rem 0 0 1rem}
