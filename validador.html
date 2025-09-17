@@ -5,25 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>IDMAR — Validador</title>
 
-  <!-- Favicon e CSS -->
+  <!-- CSS (teu styles.css + tema claro sóbrio) -->
   <link rel="icon" href="img/favicon.png"/>
   <link rel="stylesheet" href="css/styles.css"/>
   <link rel="stylesheet" href="css/idmar-theme.css"/>
 
-  <!-- Sessão + Tema + i18n (light por defeito) -->
+  <!-- Gate + Tema + i18n -->
   <script src="js/idmar-session.js"></script>
   <script src="js/idmar-theme.js"></script>
   <script src="js/idmar-i18n.js"></script>
 
-  <!-- NAV shim: precisa existir ANTES dos teus validadores -->
-  <script>window.IDMAR=window.IDMAR||{}; window.NAV=window.NAV||window.IDMAR;</script>
+  <!-- *** NAV shim tem de vir ANTES dos validadores *** -->
+  <script>window.IDMAR = window.IDMAR || {}; window.NAV = window.NAV || window.IDMAR;</script>
+  <script src="js/compat-nav-shim.js?v=r3"></script>
 </head>
 <body>
   <header class="topbar">
     <img src="img/logo-pm.png" alt="Polícia Marítima" class="logo" style="height:36px;vertical-align:middle"/>
     <strong style="margin-left:8px;">IDMAR</strong>
     <span>Identificação Marítima — Cascos & Motores</span>
-
     <nav class="main" style="margin-left:1rem;">
       <a href="validador.html">Validador</a>
       <a href="historico_win.html">Histórico WIN</a>
@@ -31,7 +31,6 @@
       <a href="forense.html">Forense</a>
       <a href="#" onclick="sessionStorage.clear();location.href='login.html'">Sair</a>
     </nav>
-
     <div style="margin-left:auto; display:flex; gap:.5rem;">
       <button id="idmar-theme-toggle" title="Dia/Noite">🌗</button>
       <button class="ghost" onclick="IDMAR_lang.set('pt')">PT</button>
@@ -46,7 +45,6 @@
       <input id="winInput" name="win" maxlength="20" placeholder="Ex.: PT-ABC12345D404" required/>
       <button id="btnWin" type="submit" class="btn">Validar WIN</button>
     </form>
-
     <section id="win-output" class="panel">
       <h2>Resultado WIN</h2>
       <div id="winResult" class="resultado"></div>
@@ -63,34 +61,29 @@
         <option>Tohatsu</option><option>Mercury</option><option>MerCruiser</option>
         <option>Volvo Penta</option><option>Yanmar</option><option>Evinrude/Johnson</option>
       </select>
-
       <label for="modelInput">Modelo</label>
       <input id="modelInput" name="model" placeholder="Modelo (opcional)"/>
-
       <label for="snInput">S/N</label>
       <input id="snInput" name="sn" placeholder="Número de série" required/>
-
       <button id="btnMotor" type="submit" class="btn">Validar Motor</button>
     </form>
-
     <section id="motor-output" class="panel">
       <h2>Resultado Motor</h2>
       <div id="motorResult" class="resultado"></div>
     </section>
   </main>
 
-  <footer class="footer">IDMAR — v2.2.7-baseline+merge — 2025-09-16</footer>
+  <footer class="footer">IDMAR — v2.2.7-baseline+merge — Validador (full r3)</footer>
 
   <!-- Core histórico + UI interpretativa -->
-  <script src="js/history-core.js"></script>
-  <script src="js/compat-nav-shim.js"></script>
-  <script src="js/validador-ui.js"></script>
+  <script src="js/history-core.js?v=r3"></script>
+  <script src="js/validador-ui.js?v=r3"></script>
 
-  <!-- Os teus validadores (precisam do NAV shim carregado) -->
-  <script src="js/validador-win.js"></script>
-  <script src="js/validador-motor.js"></script>
+  <!-- Teus validadores (precisam do NAV) -->
+  <script src="js/validador-win.js?v=r3"></script>
+  <script src="js/validador-motor.js?v=r3"></script>
 
-  <!-- Hook que grava no histórico depois da validação -->
-  <script src="js/history-hook.js"></script>
+  <!-- Hook que grava no histórico -->
+  <script src="js/history-hook.js?v=r3"></script>
 </body>
 </html>
