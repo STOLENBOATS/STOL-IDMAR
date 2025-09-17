@@ -1,139 +1,136 @@
 <!doctype html>
-<html lang="pt" data-theme="light">
+<html lang="pt">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>IDMAR — Validador</title>
-
-  <!-- CSS do teu projeto -->
-  <link rel="icon" href="img/favicon.png"/>
-  <link rel="stylesheet" href="css/styles.css"/>
-  <link rel="stylesheet" href="css/idmar-theme.css"/>
-
+  <link rel="icon" href="img/logo-pm.png" />
   <style>
-    /* pequenos ajustes visuais (opcional) */
+    :root{--bg:#f8fafc;--fg:#0f172a;--bg-elev:#ffffff;--border:#e5e7eb;--link:#0b6bcb}
+    html,body{height:100%}
+    body{background:var(--bg);color:var(--fg);margin:0;display:flex;flex-direction:column;
+         font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial,sans-serif}
+    main{flex:1}
+    .topbar{display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;border-bottom:1px solid var(--border);background:var(--bg-elev)}
+    .topbar img{height:36px}
+    .topbar .brand{display:flex;flex-direction:column}
+    .topbar .brand .app{font-weight:800}
+    .topbar nav a{margin-right:1rem;color:var(--link);text-decoration:none}
     .container{max-width:1100px;margin:1.25rem auto;padding:0 1rem}
     .panel{background:var(--bg-elev);border:1px solid var(--border);border-radius:12px;padding:1rem;margin:.75rem 0}
-    .resultado{min-height:3rem}
-    .topbar{display:flex;align-items:center;gap:.75rem;padding:1rem;border-bottom:1px solid var(--border);background:var(--bg-elev)}
-    .topbar img{height:36px}
-    .topbar .title{display:flex;flex-direction:column}
-    .topbar .title .app{font-weight:800}
-    nav.main a{margin-right:1rem}
-    h1{margin:1rem 0}
+    .two{display:grid;grid-template-columns:1fr;gap:1rem}
+    @media(min-width:980px){ .two{grid-template-columns:1fr 1fr} }
+    label{display:block;margin:.35rem 0 .25rem}
+    input[type="text"], input[type="search"], input[type="file"], select, textarea{
+      width:100%;border:1px solid var(--border);background:#fff;border-radius:10px;padding:.5rem .6rem;
+    }
+    button{background:#0b6bcb;color:#fff;border:none;border-radius:10px;padding:.55rem .9rem;cursor:pointer}
+    table{width:100%;border-collapse:collapse;margin-top:.5rem}
+    th,td{border-bottom:1px solid var(--border);padding:.6rem .5rem;text-align:left}
+    .small{opacity:.75;font-size:.9em}
+    .badge{display:inline-block;border-radius:999px;padding:.15rem .55rem;font-weight:600}
+    .good{background:#10b98120;color:#065f46}
+    .bad{background:#ef444420;color:#7f1d1d}
+    details.forense-box{margin-top:.75rem;border:1px dashed var(--border);border-radius:10px;padding:.5rem}
+    .forense-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.5rem;margin-top:.5rem}
+    .footer{border-top:1px solid var(--border);padding:1rem;text-align:left;opacity:.85;background:var(--bg-elev)}
   </style>
+  <script>
+    // Gate de sessão simples
+    (function(){
+      try{
+        var ok = sessionStorage.getItem('IDMAR_SESSION')==='ok' || sessionStorage.getItem('NAV_SESSION')==='ok';
+        if(!ok) location.replace('login.html');
+      }catch(e){}
+    })();
+  </script>
 </head>
 <body>
-  <!-- HEADER / NAVIGATION -->
-  <header class="topbar">
+  <header class="topbar" id="fallback-topbar">
     <img src="img/logo-pm.png" alt="Polícia Marítima">
-    <div class="title">
+    <div class="brand">
       <span class="app">IDMAR</span>
-      <small>Identificação Marítima — Cascos & Motores</small>
+      <small>Identificação Marítima — Cascos &amp; Motores</small>
     </div>
-    <nav class="main" style="margin-left:1rem;">
+    <nav style="margin-left:auto">
       <a href="validador.html">Validador</a>
       <a href="historico_win.html">Histórico WIN</a>
       <a href="historico_motor.html">Histórico Motor</a>
       <a href="forense.html">Forense</a>
-      <a href="#" onclick="sessionStorage.clear();location.href='login.html'">Sair</a>
+      <a href="#" onclick="try{sessionStorage.clear()}catch(e){};location.href='login.html'">Sair</a>
     </nav>
-    <div style="margin-left:auto">
-      <button id="idmar-theme-toggle" class="ghost" title="Dia/Noite">🌗</button>
-    </div>
   </header>
 
   <main class="container">
-    <!-- WIN -->
-    <h1>Validador WIN</h1>
-    <form id="winForm" class="panel" data-form="win">
-      <label for="winInput">WIN / HIN</label>
-      <input id="winInput" placeholder="Ex.: PT-ABC12345D404" autocomplete="on">
-      <div style="margin-top:.5rem">
-        <button id="btnWin" type="submit" class="btn">Validar WIN</button>
+    <h1>Validador</h1>
+
+    <section class="two">
+      <!-- WIN -->
+      <div class="panel">
+        <h2>Validador WIN</h2>
+        <form id="formWin">
+          <label for="win">WIN / HIN</label>
+          <input id="win" type="text" placeholder="Ex.: PT-ABC12345D404"/>
+          <div style="margin:.5rem 0">
+            <button id="btnWin" type="submit">Validar WIN</button>
+          </div>
+
+          <div style="margin-top:.5rem">
+            <label for="winPhoto">Foto opcional / Optional photo</label>
+            <input id="winPhoto" type="file" accept="image/*"/>
+          </div>
+
+          <div id="winOut" style="margin-top:.75rem"></div>
+
+          <table>
+            <thead>
+              <tr><th>Campo / Field</th><th>Valor / Value</th><th>Interpretação / Meaning</th></tr>
+            </thead>
+            <tbody id="interpWinBody"></tbody>
+          </table>
+        </form>
       </div>
-      <!-- opcional: certificado para regra pré-1998 -->
-      <label style="display:inline-flex;gap:.5rem;align-items:center;margin-top:.6rem">
-        <input type="checkbox" id="winCert"> Certificado BV / Notified Body (pré-1998)
-      </label>
-    </form>
-    <section id="win-output" class="panel">
-      <h2>Resultado WIN</h2>
-      <div id="winResult" class="resultado"></div>
-    </section>
 
-    <hr/>
-
-    <!-- MOTOR -->
-    <h1>Validador Motor</h1>
-    <form id="motorForm" class="panel" data-form="motor">
-      <div style="display:grid;grid-template-columns:240px 1fr 1fr;gap:.6rem;align-items:end">
-        <div>
-          <label for="brandSelect">Marca</label>
-          <select id="brandSelect" name="brand">
-            <option value="">—</option>
-            <option>Yamaha</option><option>Honda</option><option>Suzuki</option>
-            <option>Tohatsu</option><option>Mercury</option><option>MerCruiser</option>
-            <option>Volvo Penta</option><option>Yanmar</option><option>Evinrude/Johnson</option>
+      <!-- MOTOR -->
+      <div class="panel">
+        <h2>Validador Motor</h2>
+        <form id="formMotor">
+          <label for="brand">Marca</label>
+          <select id="brand">
+            <option>Yamaha</option><option>Honda</option><option>Suzuki</option><option>Tohatsu</option>
+            <option>Mercury</option><option>MerCruiser</option><option>Volvo Penta</option>
+            <option>Yanmar</option><option>Evinrude/Johnson</option>
           </select>
-        </div>
-        <div>
-          <label for="modelInput">Modelo (opcional)</label>
-          <input id="modelInput" name="model" placeholder="Modelo (opcional)">
-        </div>
-        <div>
-          <label for="snInput">S/N</label>
-          <input id="snInput" name="sn" placeholder="Número de série">
-        </div>
-      </div>
 
-      <!-- campos dinâmicos por marca (o teu JS preenche aqui) -->
-      <div id="brandDynamic" style="margin-top:.6rem"></div>
+          <div id="brandDynamic"></div>
 
-      <div style="margin-top:.6rem">
-        <label for="motorPhoto">Foto (opcional)</label>
-        <input id="motorPhoto" type="file" accept="image/*">
-      </div>
+          <div style="margin-top:.5rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.5rem">
+            <div><label>Modelo (pesquisa)</label><input id="srch_model" type="text" placeholder="Ex.: DF140A"/></div>
+            <div><label>Potência (hp)</label><input id="srch_power" type="text" placeholder="Ex.: 150"/></div>
+            <div><label>Cilindrada (cc)</label><input id="srch_disp" type="text" placeholder="Ex.: 2670"/></div>
+            <div><label>Ano</label><input id="srch_year" type="text" placeholder="Ex.: 2017"/></div>
+            <div><label>Origem</label><input id="srch_origin" type="text" placeholder="Ex.: Japão"/></div>
+          </div>
 
-      <div style="margin-top:.6rem">
-        <button id="btnMotor" type="submit" class="btn">Validar Motor</button>
+          <div style="margin:.5rem 0">
+            <button id="btnMotor" type="submit">Validar Motor</button>
+          </div>
+
+          <div style="margin-top:.5rem">
+            <label for="motorPhoto">Foto opcional / Optional photo</label>
+            <input id="motorPhoto" type="file" accept="image/*"/>
+          </div>
+
+          <div id="motorOut" style="margin-top:.75rem"></div>
+        </form>
       </div>
-    </form>
-    <section id="motor-output" class="panel">
-      <h2>Resultado Motor</h2>
-      <div id="motorResult" class="resultado"></div>
     </section>
   </main>
 
-  <footer class="footer">IDMAR — v2.2.7-baseline+merge</footer>
+  <footer class="footer" id="fallback-footer">IDMAR — v2.2.7-baseline+merge-r3.3</footer>
 
-  <!-- ====================== SCRIPTS NO FIM (CORREÇÃO A) ====================== -->
-  <!-- 1) Bootstrap do NAV + bridge (garante IDs e helpers esperados pelos teus JS) -->
-  <script>
-    window.IDMAR=window.IDMAR||{};
-    window.NAV=window.NAV||window.IDMAR;
-    // sessão retrocompatível
-    try{
-      if(!sessionStorage.getItem('IDMAR_SESSION') && sessionStorage.getItem('NAV_SESSION')==='ok'){
-        sessionStorage.setItem('IDMAR_SESSION','ok');
-      }
-    }catch(e){}
-  </script>
-  <script src="js/idmar-compat-bridge.r3.js?v=r3"></script>
-
-  <!-- 2) (Opcional) utilitários/tema/i18n/histórico se já estás a usar -->
-  <script src="js/idmar-one.r3.js"></script>
-
-  <!-- 3) VALIDADORES (depois do DOM) -->
-  <script src="js/validador-win.js?v=r3"></script>
-  <!-- add-on: regras / tabela interpretativa WIN -->
-  <script src="js/idmar-win-rules.r3.js?v=r3"></script>
-
-  <script src="js/validador-motor.js?v=r3"></script>
-
-  <!-- Add-on Forense (depois dos validadores) -->
-<script src="js/idmar-forense-addon.r3.js?v=r3"></script>
-  
-  <!-- ======================================================================== -->
+  <script src="js/idmar-layout.r3b.js?v=r3b"></script>
+  <script src="js/validador-win.r3b.js?v=r3b"></script>
+  <script src="js/validador-motor.r3b.js?v=r3b"></script>
 </body>
 </html>
