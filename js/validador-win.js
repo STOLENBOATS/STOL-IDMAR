@@ -1,3 +1,8 @@
+// --- IDMAR/NAV bootstrap (first-aid) ---
+window.IDMAR = window.IDMAR || {};
+window.NAV   = window.NAV   || window.IDMAR;
+NAV.STORAGE  = NAV.STORAGE  || { SESSION:'IDMAR_SESSION', WIN_HISTORY:'hist_win', MOTOR_HISTORY:'hist_motor' };
+// ---------------------------------------
 (function(){
   if (sessionStorage.getItem(NAV.STORAGE.SESSION) !== 'ok'){ alert('Sessão expirada. Faça login.'); location.replace('login.html'); return; }
   const form = document.getElementById('formWin');
