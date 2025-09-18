@@ -1,87 +1,295 @@
-// IDMAR - Validador WIN (r3a, robusto, idempotente)
-(function(w,d){
-  w.IDMAR = w.IDMAR || {}; w.NAV = w.NAV || w.IDMAR;
-  NAV.STORAGE = NAV.STORAGE || { SESSION:'IDMAR_SESSION', WIN_HISTORY:'hist_win', MOTOR_HISTORY:'hist_motor' };
-  w.loadFromLS = w.loadFromLS || function(k){ try{ return JSON.parse(localStorage.getItem(k)||'[]'); }catch(e){ return []; } };
-  w.saveToLS   = w.saveToLS   || function(k,a){ try{ localStorage.setItem(k, JSON.stringify(a||[])); }catch(e){} };
-  w.readFileAsDataURL = w.readFileAsDataURL || function(file){
-    return new Promise(function(resolve,reject){
-      try{ if(!file) return resolve(''); var r=new FileReader(); r.onload=function(){resolve(String(r.result||''));}; r.onerror=reject; r.readAsDataURL(file); }
-      catch(e){ resolve(''); }
-    });
+/* MIEC / IDMAR — validador-win.js (Fase 1: mensagens PT + dica EN, histórico intacto)
+   Data: 2025-09-18  |  Escopo: apenas JS, sem tocar em HTML/CSS, sem deps externas.
+   Regras WIN (resumo aplicado):
+   - UE (14): 1–2 país [A-Z], 3–5 fabricante [A-Z], 6–10 livre [A-Z0-9], 11 mês [A-H,J,K,L,M,N,P,R,S,T,U,V,W,X,Y,Z], 12 ano [0-9], 13–14 modelo [0-9]
+   - EUA (14 ou 16; 15 é inválido): 1–2 país [A-Z], 3–5 fabricante [A-Z], 6–12 livre [A-Z0-9],
+     13 mês [A-H,J,K,L,M,N,P,R,S,T,U,V,W,X,Y,Z], 14 ano [0-9], (15–16 modelo [0-9] se len=16)
+   - Hífen opcional entre pos. 2–3 (ignorar na validação). Letras inválidas: I, O, Q nos campos de mês.
+   - País/Fabricante não podem ter números; sem espaços/símbolos inesperados.
+   Histórico:
+   - Mantém localStorage key existente (prioridade: 'history_win', fallback 'historyWin').
+   - Se já existirem registos, adapta o novo registo ao mesmo esquema (auto-map de chaves).
+*/
+
+(() => {
+  const STATE = {
+    // tentativa de autodetecção do campo e botão sem depender de HTML específico
+    selInput: ['#win', '#winInput', 'input[name="win"]', '.js-win', '#hin', '#hinInput', 'input[name="hin"]'],
+    selButton: ['#btnValidar', '#validateBtn', '.js-validate', 'button[type="submit"]'],
+    selOutput: ['#resultado', '.js-result', '[data-result]'],
+    historyKeys: ['history_win', 'historyWin'],
   };
-  function ready(fn){ if(d.readyState==='loading'){ d.addEventListener('DOMContentLoaded', fn); } else { fn(); } }
-  function qs(s, r){ return (r||d).querySelector(s); }
-  ready(function(){
-    try{
-      var s = sessionStorage.getItem(NAV.STORAGE.SESSION) || sessionStorage.getItem('IDMAR_SESSION') || sessionStorage.getItem('NAV_SESSION');
-      if(!s){ /* opcional: location.replace('login.html'); return; */ }
-    }catch(e){}
-    var form  = d.getElementById('formWin') || d.getElementById('winForm') || qs('form[data-form="win"]') || qs('form[action*="win"]');
-    var input = d.getElementById('win') || d.getElementById('winInput') || qs('input[name="win"], input[name="hin"]');
-    var file  = d.getElementById('winPhoto') || qs('input[type="file"][name="winPhoto"]');
-    var outHost = d.getElementById('winResult') || qs('#win-output .resultado') || d.getElementById('winOut');
-    if(!outHost){ outHost = d.createElement('div'); outHost.id='winResult'; (qs('#win-output') || form || d.body).appendChild(outHost); }
-    var interpBody = d.getElementById('interpWinBody');
-    if(!interpBody){
-      var tbl=d.createElement('table'); tbl.className='interp'; tbl.innerHTML='<tbody id="interpWinBody"></tbody>';
-      (outHost||form).appendChild(tbl); interpBody = tbl.tBodies[0];
+
+  // Map de letras de mês válidas (sem I, O, Q)
+  const MONTH_LETTERS = new Set(['A','B','C','D','E','F','G','H','J','K','L','M','N','P','R','S','T','U','V','W','X','Y','Z']);
+
+  // Utilidades DOM seguras
+  function qSelAll(arr) {
+    for (const s of arr) {
+      const el = document.querySelector(s);
+      if (el) return el;
     }
-    if(!form || !input){ console.warn('[IDMAR] WIN: form/input não encontrado.'); return; }
-    function interpretWIN(win){
-      const c=String(win||'').replace(/-/g,'').toUpperCase().trim();
-      if(c.length!==14 && c.length!==16) return {valid:false,reason:'Tamanho inválido (14/16).'};
-      if(c.length===15) return {valid:false,reason:'Formato EUA não admite 15.'};
-      if(!/^[A-Z0-9]+$/.test(c)) return {valid:false,reason:'Caracteres inválidos.'};
-      const eu=(c.length===14); const country=c.slice(0,2), maker=c.slice(2,5);
-      let series,month,year,model;
-      if(eu){ series=c.slice(5,10); month=c.slice(10,11); year=c.slice(11,12); model=c.slice(12,14); }
-      else { series=c.slice(5,12); month=c.slice(12,13); year=c.slice(13,14); model=c.slice(14,16); }
-      if(!/^[A-Z]{2}$/.test(country)) return {valid:false,reason:'País inválido.'};
-      if(!/^[A-Z]{3}$/.test(maker)) return {valid:false,reason:'Fabricante inválido.'};
-      if(!/^[A-HJ-NPR-Z]$/.test(month)) return {valid:false,reason:'Mês inválido (I,O,Q proibidas).'};
-      if(!/^[0-9]$/.test(year)) return {valid:false,reason:'Ano (1 dígito) inválido.'};
-      if(!/^[0-9]{2}$/.test(model)) return {valid:false,reason:'Modelo (2 dígitos) inválido.'};
-      const map='ABCDEFGHJKLMNPRSTUVWXYZ'.split(''); const idx=map.indexOf(month);
-      const monthName=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'][Math.max(0,idx%12)];
-      const yy=parseInt(year,10), myy=parseInt(model,10);
-      const current=new Date().getFullYear(); const windowMax=current+1;
-      let modelResolved=null; [1900,2000,2100].forEach(cent=>{ const y=cent+myy; if(y>=1998 && y<=windowMax) modelResolved=y; });
-      if(modelResolved===null) return {valid:false,reason:'Ano do modelo fora do intervalo permitido (>=1998).'};
-      const candidates=[]; for(let dlt=0; dlt<=1; dlt++){ const y=modelResolved-dlt; if((y%10)===yy && y>=1998 && y<=current) candidates.push(y); }
-      for(let dlt=2; dlt<=9; dlt++){ const y=modelResolved-dlt; if((y%10)===yy && y>=1998 && y<=current) candidates.push(y); }
-      let prodResolved=candidates.length?candidates[0]:null; if(prodResolved===null) return {valid:false,reason:'Ano de produção inconsistente ou fora de 1998+.'};
-      if(modelResolved<prodResolved) return {valid:false,reason:'Ano do modelo não pode ser anterior ao de produção.'};
-      const countryMap={'PT':'Portugal','FR':'França','ES':'Espanha','IT':'Itália','DE':'Alemanha','NL':'Países Baixos','GB':'Reino Unido','UK':'Reino Unido','US':'Estados Unidos','CA':'Canadá'};
-      const makerMap={'CNB':'CNB Yacht Builders (França)','BEN':'Bénéteau (França)','JEA':'Jeanneau (França)','SEA':'Sea Ray (EUA)','BRP':'Bombardier Recreational Products (Evinrude)','YAM':'Yamaha (Japão)','HON':'Honda (Japão)'};
-      const countryName=countryMap[country]||'Desconhecido'; const makerName=makerMap[maker]||'Código de fabricante (não identificado)';
-      return {valid:true,reason:'Estrutura válida.',eu,cleaned:c,country,countryName,maker,makerName,series,month,monthName,year,prodResolved,model,modelResolved};
-    }
-    function renderInterpretation(info){
-      if(!interpBody) return;
-      interpBody.innerHTML='';
-      const rows=[
-        ['País','Country',info.country,`${info.country} → ${info.countryName}`],
-        ['Fabricante','Manufacturer',info.maker,`${info.maker} → ${info.makerName}`],
-        ['Série','Series',info.series,'Sequência livre / Free sequence'],
-        ['Mês de produção','Prod. month',info.month,info.monthName],
-        ['Ano de produção','Prod. year',info.year,String(info.prodResolved)],
-        ['Ano do modelo','Model year',info.model,String(info.modelResolved)],
-        ['Formato','Format',info.eu?'UE (14)':'EUA (16)','Derivado do comprimento / Based on length']
-      ];
-      rows.forEach(r=>{ const tr=d.createElement('tr'); tr.innerHTML=`<td>${r[0]}<div class="small">${r[1]}</div></td><td><strong>${r[2]??''}</strong></td><td>${r[3]??''}</td>`; interpBody.appendChild(tr); });
-    }
-    form.addEventListener('submit', async function(e){
-      e.preventDefault();
-      const win=(input.value||'').trim();
-      const info=interpretWIN(win);
-      if(!info.valid){ outHost.innerHTML='<span class="badge bad">Inválido</span> '+info.reason; if(interpBody) interpBody.innerHTML=''; }
-      else{ outHost.innerHTML='<span class="badge good">Válido</span> Estrutura conforme regras básicas.'; renderInterpretation(info); }
-      let photoName='', photoData=''; try{ if(file && file.files && file.files[0]){ photoName=file.files[0].name; photoData=await readFileAsDataURL(file.files[0]); } }catch(e){}
-      try{ const rec={date:new Date().toISOString(), win, valid:info.valid, reason:info.reason||(info.valid?'OK':''), photoName, photoData};
-           const arr=loadFromLS(NAV.STORAGE.WIN_HISTORY); arr.unshift(rec); saveToLS(NAV.STORAGE.WIN_HISTORY, arr); }catch(e){}
-      try{ if(typeof w.IDMAR_showWinRules==='function'){ w.IDMAR_showWinRules(info); } }catch(e){}
-      try{ if(typeof w.enhanceInterpTable==='function'){ w.enhanceInterpTable(); } }catch(e){}
+    return null;
+  }
+
+  function normalizeInput(raw) {
+    if (!raw) return '';
+    // remover espaços e símbolos, manter apenas A-Z0-9 e hífen
+    const cleaned = raw.toUpperCase().trim().replace(/\s+/g, '');
+    return cleaned;
+  }
+
+  function stripOptionalHyphen(s) {
+    // Hífen permitido apenas entre posições 2 e 3; ignoramos na validação
+    return s.replace(/^(..)-(.*)$/, '$1$2');
+  }
+
+  function isLetters(str) { return /^[A-Z]+$/.test(str); }
+  function isAlnum(str) { return /^[A-Z0-9]+$/.test(str); }
+  function isDigits(str){ return /^[0-9]+$/.test(str); }
+
+  function detectFormat(win) {
+    const len = win.length;
+    if (len === 14) return 'EU_OR_US_14';
+    if (len === 16) return 'US_16';
+    if (len === 15) return 'INVALID_15';
+    return 'UNKNOWN';
+  }
+
+  function validateMonthLetter(ch) {
+    return MONTH_LETTERS.has(ch);
+  }
+
+  function validateEU14(win) {
+    // Posições 1-2 país; 3-5 fabricante; 6-10 livre; 11 mês letra válida; 12 ano dígito; 13-14 modelo dígitos
+    const country = win.slice(0,2);
+    const manuf   = win.slice(2,5);
+    const free    = win.slice(5,10);
+    const month   = win[10];
+    const year    = win[11];
+    const model   = win.slice(12,14);
+
+    if (!isLetters(country)) return fail(`País inválido [letters only]`, `Country must be letters`);
+    if (!isLetters(manuf))   return fail(`Fabricante inválido [letters only]`, `Manufacturer must be letters`);
+    if (!isAlnum(free))      return fail(`Série (6–10) inválida [A-Z/0-9]`, `Free block must be A-Z/0-9`);
+    if (!validateMonthLetter(month)) return fail(`Mês (11) inválido [sem I/O/Q]`, `Month letter excludes I/O/Q`);
+    if (!isDigits(year))     return fail(`Ano (12) inválido [0-9]`, `Year must be a digit`);
+    if (!isDigits(model))    return fail(`Modelo (13–14) inválido [0-9]`, `Model must be digits`);
+    return ok(`Formato UE (14) válido`, `EU 14 format valid`, {
+      country, manufacturer: manuf, month, year, model
     });
-  });
-})(window, document);
+  }
+
+  function validateUS14(win) {
+    // EUA 14: 1-2 país; 3-5 fabricante; 6-12 livre; 13 mês; 14 ano
+    const country = win.slice(0,2);
+    const manuf   = win.slice(2,5);
+    const free    = win.slice(5,12);
+    const month   = win[12];
+    const year    = win[13];
+
+    if (!isLetters(country)) return fail(`País inválido [letters only]`, `Country must be letters`);
+    if (!isLetters(manuf))   return fail(`Fabricante inválido [letters only]`, `Manufacturer must be letters`);
+    if (!isAlnum(free))      return fail(`Série (6–12) inválida [A-Z/0-9]`, `Free block must be A-Z/0-9`);
+    if (!validateMonthLetter(month)) return fail(`Mês (13) inválido [sem I/O/Q]`, `Month letter excludes I/O/Q`);
+    if (!isDigits(year))     return fail(`Ano (14) inválido [0-9]`, `Year must be a digit`);
+    return ok(`Formato EUA (14) válido`, `US 14 format valid`, {
+      country, manufacturer: manuf, month, year
+    });
+  }
+
+  function validateUS16(win) {
+    // EUA 16: 1-2 país; 3-5 fabricante; 6-12 livre; 13 mês; 14 ano; 15-16 modelo
+    const country = win.slice(0,2);
+    const manuf   = win.slice(2,5);
+    const free    = win.slice(5,12);
+    const month   = win[12];
+    const year    = win[13];
+    const model   = win.slice(14,16);
+
+    if (!isLetters(country)) return fail(`País inválido [letters only]`, `Country must be letters`);
+    if (!isLetters(manuf))   return fail(`Fabricante inválido [letters only]`, `Manufacturer must be letters`);
+    if (!isAlnum(free))      return fail(`Série (6–12) inválida [A-Z/0-9]`, `Free block must be A-Z/0-9`);
+    if (!validateMonthLetter(month)) return fail(`Mês (13) inválido [sem I/O/Q]`, `Month letter excludes I/O/Q`);
+    if (!isDigits(year))     return fail(`Ano (14) inválido [0-9]`, `Year must be a digit`);
+    if (!isDigits(model))    return fail(`Modelo (15–16) inválido [0-9]`, `Model must be digits`);
+    return ok(`Formato EUA (16) válido`, `US 16 format valid`, {
+      country, manufacturer: manuf, month, year, model
+    });
+  }
+
+  function ok(msgPT, msgEN, meta={}) {
+    return { valid: true, code: 'OK', message: `${msgPT} [${msgEN}]`, meta };
+  }
+  function fail(msgPT, msgEN, meta={}) {
+    return { valid: false, code: 'ERR', message: `${msgPT} [${msgEN}]`, meta };
+  }
+
+  function validateWIN(rawInput) {
+    let win = normalizeInput(rawInput);
+    if (!win) return fail(`Campo vazio`, `Empty field`);
+    if (/[^A-Z0-9-]/.test(win)) return fail(`Caracteres inválidos`, `Invalid characters`);
+    // permitir hífen opcional 2–3
+    if (/^..-./.test(win)) win = stripOptionalHyphen(win);
+
+    const len = win.length;
+    if (len < 14 || len > 16) return fail(`Tamanho inválido (${len})`, `Length must be 14 or 16`);
+
+    const fmt = detectFormat(win);
+    if (fmt === 'INVALID_15') return fail(`Formato EUA (15) é inválido`, `US 15 is invalid`);
+    if (fmt === 'EU_OR_US_14') {
+      // tentar UE; se falhar, tentar EUA 14; devolver o que passar
+      const eu = validateEU14(win);
+      if (eu.valid) return { ...eu, meta: { ...eu.meta, format: 'EU-14', normalized: win } };
+      const us14 = validateUS14(win);
+      if (us14.valid) return { ...us14, meta: { ...us14.meta, format: 'US-14', normalized: win } };
+      // se ambos falharem, devolver o mais informativo (ficamos com o UE por norma)
+      return { ...eu, meta: { ...eu.meta, tried: ['EU-14','US-14'], normalized: win } };
+    }
+    if (fmt === 'US_16') {
+      const us16 = validateUS16(win);
+      return { ...us16, meta: { ...us16.meta, format: 'US-16', normalized: win } };
+    }
+    return fail(`Formato desconhecido`, `Unknown format`, { normalized: win, length: len });
+  }
+
+  // ===== Histórico (preservando formato/keys) =====
+  function readHistoryStoreKey() {
+    for (const k of STATE.historyKeys) {
+      try {
+        const raw = localStorage.getItem(k);
+        if (raw) return k;
+      } catch (_) {}
+    }
+    // default preferido
+    return STATE.historyKeys[0];
+  }
+
+  function readHistory(key) {
+    try {
+      const raw = localStorage.getItem(key);
+      if (!raw) return [];
+      const arr = JSON.parse(raw);
+      return Array.isArray(arr) ? arr : [];
+    } catch (_) {
+      return [];
+    }
+  }
+
+  function mapToExistingShape(example, newItem) {
+    // tenta perceber chaves existentes e alinhar
+    if (!example || typeof example !== 'object') return newItem;
+    const lower = Object.keys(example).reduce((acc, k) => (acc[k.toLowerCase()] = k, acc), {});
+    const out = {};
+    // mapeamentos comuns
+    out[lower['id'] || 'id']                 = newItem.id;
+    out[lower['ts'] || lower['timestamp'] || 'ts'] = newItem.ts;
+    out[lower['win'] || lower['hin'] || 'win']     = newItem.win;
+    out[lower['valid'] || 'valid']           = newItem.valid;
+    out[lower['resultado'] || lower['result'] || 'resultado'] = newItem.resultado;
+    out[lower['justificacao'] || lower['reason'] || 'justificacao'] = newItem.justificacao;
+    out[lower['meta'] || 'meta']             = newItem.meta;
+    // manter quaisquer campos extra do exemplo (evitar perder estrutura)
+    for (const k of Object.keys(example)) {
+      if (!(k in out)) out[k] = example[k];
+    }
+    return out;
+  }
+
+  function writeHistory(key, list) {
+    try { localStorage.setItem(key, JSON.stringify(list)); } catch (_) {}
+  }
+
+  function recordHistoryWIN(winStr, verdict) {
+    const key = readHistoryStoreKey();
+    const list = readHistory(key);
+
+    // construir novo item base
+    const entryBase = {
+      id: cryptoRandomId(),
+      ts: new Date().toISOString(),
+      win: verdict?.meta?.normalized || winStr,
+      valid: !!verdict.valid,
+      resultado: verdict.valid ? 'VÁLIDO' : 'INVÁLIDO',
+      justificacao: verdict.message,
+      meta: { ...verdict.meta, engine: false, module: 'WIN' }
+    };
+
+    const shaped = list.length ? mapToExistingShape(list[0], entryBase) : entryBase;
+
+    // inserir no topo (mais recente primeiro)
+    const newList = [shaped, ...list];
+    writeHistory(key, newList);
+    return shaped;
+  }
+
+  function cryptoRandomId() {
+    try {
+      const a = new Uint8Array(8);
+      crypto.getRandomValues(a);
+      return Array.from(a).map(x => x.toString(16).padStart(2,'0')).join('');
+    } catch {
+      return 'id-' + Math.random().toString(16).slice(2);
+    }
+  }
+
+  // ===== UI helper (mensagem PT + EN na mesma linha) =====
+  function renderResult(targetEl, verdict) {
+    if (!targetEl) return;
+    targetEl.textContent = verdict.message; // uma linha, PT + [EN]
+    targetEl.setAttribute('data-valid', verdict.valid ? '1' : '0');
+  }
+
+  // ===== Ligação à página (sem exigir HTML específico) =====
+  function bootstrap() {
+    const input = qSelAll(STATE.selInput);
+    const btn   = qSelAll(STATE.selButton);
+    const out   = qSelAll(STATE.selOutput);
+
+    // Se a página já tinha listeners, evitamos duplicar (marcador)
+    if (document.body.dataset.winBound) return;
+    document.body.dataset.winBound = '1';
+
+    // Fallback: capturar submits de forms
+    const form = input ? input.closest('form') : document.querySelector('form');
+
+    function runValidation(ev) {
+      if (ev) ev.preventDefault?.();
+      const raw = (input && input.value) ? input.value : '';
+      const verdict = validateWIN(raw);
+      renderResult(out, verdict);
+      recordHistoryWIN(raw, verdict);
+      // Se existir uma função global de UI já tua, chamamos com os dados
+      if (typeof window.onWINValidated === 'function') {
+        try { window.onWINValidated({ raw, verdict }); } catch {}
+      }
+      return verdict;
+    }
+
+    if (btn) {
+      btn.addEventListener('click', runValidation);
+    }
+    if (form) {
+      form.addEventListener('submit', runValidation);
+    }
+    // Enter no input
+    if (input) {
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') { e.preventDefault(); runValidation(); }
+      });
+    }
+
+    // Expor API mínima caso precises noutros scripts
+    window.MIEC_WIN = Object.freeze({
+      validateWIN,
+      recordHistoryWIN,
+      run: () => runValidation()
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bootstrap);
+  } else {
+    bootstrap();
+  }
+})();
