@@ -196,42 +196,44 @@
     return out;
   }
 
-  function writeHistory(key, list) {
-    try { localStorage.setItem(key, JSON.stringify(list)); } catch (_) {}
-  }
+ // escreve nas duas keys para compatibilidade total
+function writeHistory(list) {
+  try {
+    localStorage.setItem('history_win', JSON.stringify(list));
+    localStorage.setItem('historyWin', JSON.stringify(list));
+  } catch (_) {}
+}
 
-  function recordHistoryWIN(winStr, verdict) {
-    const key = readHistoryStoreKey();
-    const list = readHistory(key);
+function recordHistoryWIN(winStr, verdict) {
+  // ler de qualquer uma das duas keys (a primeira que existir)
+  const rawA = localStorage.getItem('history_win');
+  const rawB = localStorage.getItem('historyWin');
+  const list = (() => {
+    try { if (rawA) return JSON.parse(rawA) || []; } catch(_) {}
+    try { if (rawB) return JSON.parse(rawB) || []; } catch(_) {}
+    return [];
+  })();
 
-    // construir novo item base
-    const entryBase = {
-      id: cryptoRandomId(),
-      ts: new Date().toISOString(),
-      win: verdict?.meta?.normalized || winStr,
-      valid: !!verdict.valid,
-      resultado: verdict.valid ? 'VÁLIDO' : 'INVÁLIDO',
-      justificacao: verdict.message,
-      meta: { ...verdict.meta, engine: false, module: 'WIN' }
-    };
+  // novo item – inclui campos esperados pelos históricos
+  const entry = {
+    id: cryptoRandomId(),
+    ts: new Date().toISOString(),
+    win: verdict?.meta?.normalized || (winStr || '').toUpperCase(),
+    valid: !!verdict.valid,
+    resultado: verdict.valid ? 'VÁLIDO' : 'INVÁLIDO',      // compat legado
+    estado: verdict.valid ? 'ok' : 'erro',                 // usado por filtros
+    estadoLabel: verdict.valid ? 'Válido' : 'Inválido',    // coluna “Estado”
+    justificacao: verdict.message || '',                   // coluna “Justificação”
+    foto: '',                                              // mantém campo se alguma vez anexares nome de foto
+    meta: { ...verdict.meta, engine: false, module: 'WIN' }
+  };
 
-    const shaped = list.length ? mapToExistingShape(list[0], entryBase) : entryBase;
+  // inserir no topo
+  const newList = [entry, ...list];
+  writeHistory(newList);
 
-    // inserir no topo (mais recente primeiro)
-    const newList = [shaped, ...list];
-    writeHistory(key, newList);
-    return shaped;
-  }
-
-  function cryptoRandomId() {
-    try {
-      const a = new Uint8Array(8);
-      crypto.getRandomValues(a);
-      return Array.from(a).map(x => x.toString(16).padStart(2,'0')).join('');
-    } catch {
-      return 'id-' + Math.random().toString(16).slice(2);
-    }
-  }
+  return entry;
+}
 
   // ===== UI helper (mensagem PT + EN na mesma linha) =====
   function renderResult(targetEl, verdict) {
