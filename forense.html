@@ -1,49 +1,364 @@
 <!doctype html>
-<html lang="pt">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>IDMAR — Forense</title>
-  <link rel="icon" href="img/logo-pm.png">
-  <link rel="stylesheet" href="css/idmar-hotfix-r3b.css?v=1">
-  <script>try{document.documentElement.dataset.theme=localStorage.getItem('IDMAR_THEME')||'light';}catch(e){}</script>
-</head>
-<body>
-  <header id="fallback-topbar"></header>
-  <main class="container">
-    <h1>Forense — Índice / Forensic — Index</h1>
-    <section class="panel">
-      <div style="display:flex;flex-wrap:wrap;gap:.5rem">
-        <a class="badge" href="#yamaha">Yamaha</a>
-        <a class="badge" href="#honda">Honda</a>
-        <a class="badge" href="#suzuki">Suzuki</a>
-        <a class="badge" href="#tohatsu">Tohatsu</a>
-        <a class="badge" href="#mercury">Mercury (Outboard)</a>
-        <a class="badge" href="#mercruiser">MerCruiser (Inboard)</a>
-        <a class="badge" href="#volvo">Volvo Penta (Inboard)</a>
-        <a class="badge" href="#yanmar">Yanmar (Inboard)</a>
-        <a class="badge" href="#evinrude">Evinrude/Johnson</a>
+<html lang="pt"><head>
+<link rel="icon" type="image/png" href="img/favicon.png">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IDMAR — Forense</title>
+<link rel="stylesheet" href="css/styles.css">
+</head><body>
+
+
+<script>(function(){try{const ok=sessionStorage.getItem('NAV_SESSION')==='ok'||sessionStorage.getItem('IDMAR_SESSION')==='ok'||sessionStorage.getItem('nav_session')==='ok'||sessionStorage.getItem((NAV&&NAV.STORAGE&&NAV.STORAGE.SESSION)||'nav_session')==='ok'; if(!ok) location.href='login.html';}catch(e){}})();</script>
+
+<header class="app-header">
+  <div class="brand">
+    <img src="img/logo-pm.png" alt="Polícia Marítima" class="logo">
+    <div class="titles">
+      <h1>IDMAR <span class="title-descriptor">Identificação Marítima — Cascos &amp; Motores</span></h1>
+      <p class="subtitle"><span class="sub-en">(Maritime Identifications — WIN/HIN &amp; Engines)</span></p>
+    </div>
+  </div>
+  <nav class="main-nav">
+    <a href="validador.html">Validador</a>
+    <a href="historico_win.html">Histórico WIN</a>
+    <a href="historico_motor.html">Histórico Motor</a>
+    <a href="forense.html">Forense</a>
+    <a href="login.html" onclick="try{sessionStorage.clear();localStorage.setItem('IDMAR_LAST_LOGOUT',Date.now())}catch(e){}">Sair</a>
+    <button id="themeToggle" class="btn-icon" title="Alternar tema">🌙</button>
+  </nav>
+</header>
+
+<main class="container">
+  <section class="card">
+    <h2>Forense — Índice / Forensic — Index</h2>
+    <div class="pills">
+      <a href="#yamaha">Yamaha</a><a href="#honda">Honda</a><a href="#suzuki">Suzuki</a><a href="#tohatsu">Tohatsu</a><a href="#mercury">Mercury (Outboard)</a><a href="#mercruiser">MerCruiser (Inboard)</a><a href="#volvo">Volvo Penta (Inboard)</a><a href="#yanmar">Yanmar (Inboard)</a><a href="#evinrude">Evinrude/Johnson</a>
+    </div>
+  </section>
+  
+  <section id="yamaha" class="card">
+    <h3>Yamaha</h3>
+    <div class="two-col">
+      <div>
+        <h4>Técnico (PT)</h4>
+        <table>
+          <tr><th>Formato</th><td>Formato Yamaha resumido. Core plug/autocolante; par de letras do ano.</td></tr>
+          <tr><th>Localização</th><td>—</td></tr>
+          <tr><th>Notas forenses</th><td>Coop. Mariner; produção MBK/TH.</td></tr>
+        </table>
       </div>
-    </section>
-    <section class="panel">
-      <h2 id="yamaha">Yamaha</h2>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
-        <div>
-          <h3>Técnico (PT)</h3>
-          <p><strong>Formato:</strong> Formato Yamaha resumido. Core plug/autocolante; par de letras do ano.</p>
-          <p><strong>Localização:</strong> —</p>
-          <p><strong>Notas forenses:</strong> Coop. Mariner; produção MBK/TH.</p>
-        </div>
-        <div>
-          <h3>Technical (EN)</h3>
-          <p><strong>Format:</strong> Yamaha summary format. Core plug/sticker; year letter pair.</p>
-          <p><strong>Location:</strong> —</p>
-          <p><strong>Forensic notes:</strong> Mariner cooperation; MBK/TH production.</p>
-        </div>
+      <div>
+        <h4>Technical (EN)</h4>
+        <table>
+          <tr><th>Format</th><td>Yamaha summary format. Core plug/sticker; year letter pair.</td></tr>
+          <tr><th>Location</th><td>—</td></tr>
+          <tr><th>Forensic notes</th><td>Mariner cooperation; MBK/TH production.</td></tr>
+        </table>
       </div>
-    </section>
-  </main>
-  <footer class="footer" style="padding:1rem">IDMAR — v2.2.7-baseline+merge-r3.3</footer>
-  <script src="js/idmar-header-only.r3b.js?v=r3b"></script>
-</body>
-</html>
+    </div>
+    <h4 style="margin-top:16px;">Originais vs Falsificações / Originals vs Fakes</h4>
+    <div class="grid grid-2">
+      <div class="figure" data-figure>
+        <input type="file" accept="image/*" onchange="this.nextElementSibling.src=URL.createObjectURL(this.files[0])">
+        <img alt="Original placeholder">
+        <div class="caption"><span class="auto"></span> — Yamaha — <strong>Original</strong></div>
+      </div>
+      <div class="figure" data-figure>
+        <input type="file" accept="image/*" onchange="this.nextElementSibling.src=URL.createObjectURL(this.files[0])">
+        <img alt="Fake placeholder">
+        <div class="caption"><span class="auto"></span> — Yamaha — <strong>Falso</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="honda" class="card">
+    <h3>Honda</h3>
+    <div class="two-col">
+      <div>
+        <h4>Técnico (PT)</h4>
+        <table>
+          <tr><th>Formato</th><td>Dois números: quadro e motor.</td></tr>
+          <tr><th>Localização</th><td>—</td></tr>
+          <tr><th>Notas forenses</th><td>Atenção: alguns sistemas têm só um.</td></tr>
+        </table>
+      </div>
+      <div>
+        <h4>Technical (EN)</h4>
+        <table>
+          <tr><th>Format</th><td>Two numbers: frame and engine.</td></tr>
+          <tr><th>Location</th><td>—</td></tr>
+          <tr><th>Forensic notes</th><td>Note: some systems store only one.</td></tr>
+        </table>
+      </div>
+    </div>
+    <h4 style="margin-top:16px;">Originais vs Falsificações / Originals vs Fakes</h4>
+    <div class="grid grid-2">
+      <div class="figure" data-figure>
+        <input type="file" accept="image/*" onchange="this.nextElementSibling.src=URL.createObjectURL(this.files[0])">
+        <img alt="Original placeholder">
+        <div class="caption"><span class="auto"></span> — Honda — <strong>Original</strong></div>
+      </div>
+      <div class="figure" data-figure>
+        <input type="file" accept="image/*" onchange="this.nextElementSibling.src=URL.createObjectURL(this.files[0])">
+        <img alt="Fake placeholder">
+        <div class="caption"><span class="auto"></span> — Honda — <strong>Falso</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="suzuki" class="card">
+    <h3>Suzuki</h3>
+    <div class="two-col">
+      <div>
+        <h4>Técnico (PT)</h4>
+        <table>
+          <tr><th>Formato</th><td>Código de modelo + 6 dígitos.</td></tr>
+          <tr><th>Localização</th><td>—</td></tr>
+          <tr><th>Notas forenses</th><td>Japão→autocolante; ≤30hp Tailândia.</td></tr>
+        </table>
+      </div>
+      <div>
+        <h4>Technical (EN)</h4>
+        <table>
+          <tr><th>Format</th><td>Model code + 6 digits.</td></tr>
+          <tr><th>Location</th><td>—</td></tr>
+          <tr><th>Forensic notes</th><td>Japan→sticker; ≤30hp Thailand.</td></tr>
+        </table>
+      </div>
+    </div>
+    <h4 style="margin-top:16px;">Originais vs Falsificações / Originals vs Fakes</h4>
+    <div class="grid grid-2">
+      <div class="figure" data-figure>
+        <input type="file" accept="image/*" onchange="this.nextElementSibling.src=URL.createObjectURL(this.files[0])">
+        <img alt="Original placeholder">
+        <div class="caption"><span class="auto"></span> — Suzuki — <strong>Original</strong></div>
+      </div>
+      <div class="figure" data-figure>
+        <input type="file" accept="image/*" onchange="this.nextElementSibling.src=URL.createObjectURL(this.files[0])">
+        <img alt="Fake placeholder">
+        <div class="caption"><span class="auto"></span> — Suzuki — <strong>Falso</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="tohatsu" class="card">
+    <h3>Tohatsu</h3>
+    <div class="two-col">
+      <div>
+        <h4>Técnico (PT)</h4>
+        <table>
+          <tr><th>Formato</th><td>Model + shaft + 6–7 dígitos.</td></tr>
+          <tr><th>Localização</th><td>—</td></tr>
+          <tr><th>Notas forenses</th><td>Parcerias com Honda/Mercury/Evinrude.</td></tr>
+        </table>
+      </div>
+      <div>
+        <h4>Technical (EN)</h4>
+        <table>
+          <tr><th>Format</th><td>Model + shaft + 6–7 digits.</td></tr>
+          <tr><th>Location</th><td>—</td></tr>
+          <tr><th>Forensic notes</th><td>Cooperations with Honda/Mercury/Evinrude.</td></tr>
+        </table>
+      </div>
+    </div>
+    <h4 style="margin-top:16px;">Originais vs Falsificações / Originals vs Fakes</h4>
+    <div class="grid grid-2">
+      <div class="figure" data-figure>
+        <input type="file" accept="image/*" onchange="this.nextElementSibling.src=URL.createObjectURL(this.files[0])">
+        <img alt="Original placeholder">
+        <div class="caption"><span class="auto"></span> — Tohatsu — <strong>Original</strong></div>
+      </div>
+      <div class="figure" data-figure>
+        <input type="file" accept="image/*" onchange="this.nextElementSibling.src=URL.createObjectURL(this.files[0])">
+        <img alt="Fake placeholder">
+        <div class="caption"><span class="auto"></span> — Tohatsu — <strong>Falso</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="mercury" class="card">
+    <h3>Mercury (Outboard)</h3>
+    <div class="two-col">
+      <div>
+        <h4>Técnico (PT)</h4>
+        <table>
+          <tr><th>Formato</th><td>Etiqueta + core plug (quando existe).</td></tr>
+          <tr><th>Localização</th><td>—</td></tr>
+          <tr><th>Notas forenses</th><td>≤30hp por Tohatsu; países variados.</td></tr>
+        </table>
+      </div>
+      <div>
+        <h4>Technical (EN)</h4>
+        <table>
+          <tr><th>Format</th><td>Sticker + core plug (when present).</td></tr>
+          <tr><th>Location</th><td>—</td></tr>
+          <tr><th>Forensic notes</th><td>≤30hp by Tohatsu; multiple origins.</td></tr>
+        </table>
+      </div>
+    </div>
+    <h4 style="margin-top:16px;">Originais vs Falsificações / Originals vs Fakes</h4>
+    <div class="grid grid-2">
+      <div class="figure" data-figure>
+        <input type="file" accept="image/*" onchange="this.nextElementSibling.src=URL.createObjectURL(this.files[0])">
+        <img alt="Original placeholder">
+        <div class="caption"><span class="auto"></span> — Mercury (Outboard) — <strong>Original</strong></div>
+      </div>
+      <div class="figure" data-figure>
+        <input type="file" accept="image/*" onchange="this.nextElementSibling.src=URL.createObjectURL(this.files[0])">
+        <img alt="Fake placeholder">
+        <div class="caption"><span class="auto"></span> — Mercury (Outboard) — <strong>Falso</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="mercruiser" class="card">
+    <h3>MerCruiser (Inboard)</h3>
+    <div class="two-col">
+      <div>
+        <h4>Técnico (PT)</h4>
+        <table>
+          <tr><th>Formato</th><td>Desde 2010: 7 dígitos 'A…'; também engine/drive/transom.</td></tr>
+          <tr><th>Localização</th><td>—</td></tr>
+          <tr><th>Notas forenses</th><td>Formatos antigos: 10/11 dígitos.</td></tr>
+        </table>
+      </div>
+      <div>
+        <h4>Technical (EN)</h4>
+        <table>
+          <tr><th>Format</th><td>Since 2010: 7 digits 'A…'; also engine/drive/transom.</td></tr>
+          <tr><th>Location</th><td>—</td></tr>
+          <tr><th>Forensic notes</th><td>Older formats: 10/11 digits.</td></tr>
+        </table>
+      </div>
+    </div>
+    <h4 style="margin-top:16px;">Originais vs Falsificações / Originals vs Fakes</h4>
+    <div class="grid grid-2">
+      <div class="figure" data-figure>
+        <input type="file" accept="image/*" onchange="this.nextElementSibling.src=URL.createObjectURL(this.files[0])">
+        <img alt="Original placeholder">
+        <div class="caption"><span class="auto"></span> — MerCruiser (Inboard) — <strong>Original</strong></div>
+      </div>
+      <div class="figure" data-figure>
+        <input type="file" accept="image/*" onchange="this.nextElementSibling.src=URL.createObjectURL(this.files[0])">
+        <img alt="Fake placeholder">
+        <div class="caption"><span class="auto"></span> — MerCruiser (Inboard) — <strong>Falso</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="volvo" class="card">
+    <h3>Volvo Penta (Inboard)</h3>
+    <div class="two-col">
+      <div>
+        <h4>Técnico (PT)</h4>
+        <table>
+          <tr><th>Formato</th><td>Usar engine no. + transmission no.</td></tr>
+          <tr><th>Localização</th><td>—</td></tr>
+          <tr><th>Notas forenses</th><td>Sail/shaft/IPs relevantes.</td></tr>
+        </table>
+      </div>
+      <div>
+        <h4>Technical (EN)</h4>
+        <table>
+          <tr><th>Format</th><td>Use engine no. + transmission no.</td></tr>
+          <tr><th>Location</th><td>—</td></tr>
+          <tr><th>Forensic notes</th><td>Sail/shaft/IPs relevant.</td></tr>
+        </table>
+      </div>
+    </div>
+    <h4 style="margin-top:16px;">Originais vs Falsificações / Originals vs Fakes</h4>
+    <div class="grid grid-2">
+      <div class="figure" data-figure>
+        <input type="file" accept="image/*" onchange="this.nextElementSibling.src=URL.createObjectURL(this.files[0])">
+        <img alt="Original placeholder">
+        <div class="caption"><span class="auto"></span> — Volvo Penta (Inboard) — <strong>Original</strong></div>
+      </div>
+      <div class="figure" data-figure>
+        <input type="file" accept="image/*" onchange="this.nextElementSibling.src=URL.createObjectURL(this.files[0])">
+        <img alt="Fake placeholder">
+        <div class="caption"><span class="auto"></span> — Volvo Penta (Inboard) — <strong>Falso</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="yanmar" class="card">
+    <h3>Yanmar (Inboard)</h3>
+    <div class="two-col">
+      <div>
+        <h4>Técnico (PT)</h4>
+        <table>
+          <tr><th>Formato</th><td>Etiqueta e/ou estampado no bloco.</td></tr>
+          <tr><th>Localização</th><td>—</td></tr>
+          <tr><th>Notas forenses</th><td>Local variado por modelo.</td></tr>
+        </table>
+      </div>
+      <div>
+        <h4>Technical (EN)</h4>
+        <table>
+          <tr><th>Format</th><td>Label and/or stamped on block.</td></tr>
+          <tr><th>Location</th><td>—</td></tr>
+          <tr><th>Forensic notes</th><td>Location varies by model.</td></tr>
+        </table>
+      </div>
+    </div>
+    <h4 style="margin-top:16px;">Originais vs Falsificações / Originals vs Fakes</h4>
+    <div class="grid grid-2">
+      <div class="figure" data-figure>
+        <input type="file" accept="image/*" onchange="this.nextElementSibling.src=URL.createObjectURL(this.files[0])">
+        <img alt="Original placeholder">
+        <div class="caption"><span class="auto"></span> — Yanmar (Inboard) — <strong>Original</strong></div>
+      </div>
+      <div class="figure" data-figure>
+        <input type="file" accept="image/*" onchange="this.nextElementSibling.src=URL.createObjectURL(this.files[0])">
+        <img alt="Fake placeholder">
+        <div class="caption"><span class="auto"></span> — Yanmar (Inboard) — <strong>Falso</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="evinrude" class="card">
+    <h3>Evinrude/Johnson</h3>
+    <div class="two-col">
+      <div>
+        <h4>Técnico (PT)</h4>
+        <table>
+          <tr><th>Formato</th><td>OMC (até 2000) / BRP (depois).</td></tr>
+          <tr><th>Localização</th><td>—</td></tr>
+          <tr><th>Notas forenses</th><td>Rastreabilidade limitada.</td></tr>
+        </table>
+      </div>
+      <div>
+        <h4>Technical (EN)</h4>
+        <table>
+          <tr><th>Format</th><td>OMC (until 2000) / BRP (after).</td></tr>
+          <tr><th>Location</th><td>—</td></tr>
+          <tr><th>Forensic notes</th><td>Limited traceability.</td></tr>
+        </table>
+      </div>
+    </div>
+    <h4 style="margin-top:16px;">Originais vs Falsificações / Originals vs Fakes</h4>
+    <div class="grid grid-2">
+      <div class="figure" data-figure>
+        <input type="file" accept="image/*" onchange="this.nextElementSibling.src=URL.createObjectURL(this.files[0])">
+        <img alt="Original placeholder">
+        <div class="caption"><span class="auto"></span> — Evinrude/Johnson — <strong>Original</strong></div>
+      </div>
+      <div class="figure" data-figure>
+        <input type="file" accept="image/*" onchange="this.nextElementSibling.src=URL.createObjectURL(this.files[0])">
+        <img alt="Fake placeholder">
+        <div class="caption"><span class="auto"></span> — Evinrude/Johnson — <strong>Falso</strong></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+<footer class="app-footer">
+  <p>IDMAR — v2.2.7-baseline+merge-r1 — 2025-09-11</p>
+</footer>
+<script src="js/config.js"></script><script src="js/app.js"></script>
+<script src="js/forense.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/forense-regras.js"></script>
+  <script src="js/forense-adapter.js"></script>
+  <script src="js/lightbox.v1.js"></script>
+  <script src="js/theme.js"></script>
+</body></html>

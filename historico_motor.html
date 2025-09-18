@@ -1,35 +1,107 @@
 <!doctype html>
 <html lang="pt">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>IDMAR — Histórico Motor</title>
-  <link rel="icon" href="img/logo-pm.png">
-  <link rel="stylesheet" href="css/idmar-hotfix-r3b.css?v=1">
-  <script>try{document.documentElement.dataset.theme=localStorage.getItem('IDMAR_THEME')||'light';}catch(e){}</script>
+  <link rel="icon" href="img/logo-pm.png" />
+  <style>
+    :root{--bg:#f8fafc;--fg:#0f172a;--bg-elev:#ffffff;--border:#e5e7eb;--link:#0b6bcb}
+    html,body{height:100%}
+    body{background:var(--bg);color:var(--fg);margin:0;display:flex;flex-direction:column;
+         font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial,sans-serif}
+    main{flex:1}
+    .topbar{display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;border-bottom:1px solid var(--border);background:var(--bg-elev)}
+    .topbar img{height:36px}
+    .topbar .brand{display:flex;flex-direction:column}
+    .topbar .brand .app{font-weight:800}
+    .topbar nav a{margin-right:1rem;color:var(--link);text-decoration:none}
+    .container{max-width:1100px;margin:1.25rem auto;padding:0 1rem}
+    .panel{background:var(--bg-elev);border:1px solid var(--border);border-radius:12px;padding:1rem;margin:.75rem 0}
+    table{width:100%;border-collapse:collapse;margin-top:.5rem}
+    th,td{border-bottom:1px solid var(--border);padding:.6rem .5rem;text-align:left;vertical-align:middle}
+    .filters{display:grid;grid-template-columns:1.4fr 200px 160px 1fr 1fr;gap:.5rem}
+    .actions{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.5rem}
+    .badge{display:inline-block;border-radius:999px;padding:.15rem .55rem;font-weight:600}
+    .good{background:#10b98120;color:#065f46}
+    .bad{background:#ef444420;color:#7f1d1d}
+    .footer{border-top:1px solid var(--border);padding:1rem;text-align:left;opacity:.85;background:var(--bg-elev)}
+    input,select,button{border:1px solid var(--border);background:#fff;border-radius:10px;padding:.5rem .6rem}
+    button{cursor:pointer}
+  </style>
+  <script>
+    (function(){
+      try{
+        var ok = sessionStorage.getItem('IDMAR_SESSION')==='ok' || sessionStorage.getItem('NAV_SESSION')==='ok';
+        if(!ok) location.replace('login.html');
+      }catch(e){}
+    })();
+  </script>
 </head>
 <body>
-  <header id="fallback-topbar"></header>
+  <header class="topbar" id="fallback-topbar">
+    <img src="img/logo-pm.png" alt="Polícia Marítima">
+    <div class="brand">
+      <span class="app">IDMAR</span>
+      <small>Identificação Marítima — Cascos &amp; Motores</small>
+    </div>
+    <nav style="margin-left:auto">
+      <a href="validador.html">Validador</a>
+      <a href="historico_win.html">Histórico WIN</a>
+      <a href="historico_motor.html">Histórico Motor</a>
+      <a href="forense.html">Forense</a>
+      <a href="#" onclick="try{sessionStorage.clear()}catch(e){};location.href='login.html'">Sair</a>
+    </nav>
+  </header>
+
   <main class="container">
     <h1>Histórico — Motores</h1>
+
     <section class="panel">
-      <div style="display:grid;grid-template-columns:1fr 220px 220px auto auto;gap:.5rem">
-        <input id="histSearchMotor" type="search" placeholder="Pesquisar (S/N / marca)">
-        <input id="histFromMotor" type="date" aria-label="De">
-        <input id="histToMotor" type="date" aria-label="Até">
-        <button id="histCsvMotor">Exportar CSV</button>
-        <button id="histClearMotor">Limpar histórico (Motor)</button>
+      <div class="filters">
+        <input id="hist_motor_search" type="search" placeholder="Pesquisar (S/N / marca / modelo / texto)" />
+        <select id="hist_motor_brand" aria-label="Marca">
+          <option value="">Marca (todas)</option>
+          <option>Yamaha</option><option>Honda</option><option>Suzuki</option><option>Tohatsu</option>
+          <option>Mercury</option><option>MerCruiser</option><option>Volvo Penta</option>
+          <option>Yanmar</option><option>Evinrude/Johnson</option>
+        </select>
+        <select id="hist_motor_state" aria-label="Estado">
+          <option value="all">Estado (todos)</option>
+          <option value="ok">Válido</option>
+          <option value="bad">Inválido</option>
+        </select>
+        <input id="hist_motor_from" type="date" placeholder="De" />
+        <input id="hist_motor_to" type="date" placeholder="Até" />
       </div>
-      <table style="margin-top:.75rem">
-        <thead><tr>
-          <th>Quando</th><th>S/N</th><th>Marca</th><th>Modelo</th><th>Estado</th>
-        </tr></thead>
-        <tbody id="histMotorBody"></tbody>
+      <div class="actions">
+        <button id="hist_motor_csv">Exportar CSV</button>
+        <button id="hist_motor_clear">Limpar histórico (Motor)</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <table>
+        <thead>
+          <tr>
+            <th>Quando</th>
+            <th>S/N</th>
+            <th>Marca</th>
+            <th>Modelo</th>
+            <th>Estado</th>
+            <th>Justificação</th>
+            <th>Foto (nome)</th>
+            <th>Miniatura</th>
+          </tr>
+        </thead>
+        <tbody id="hist_motor_tbody"></tbody>
       </table>
     </section>
   </main>
-  <footer class="footer" style="padding:1rem">IDMAR — v2.2.7-baseline+merge-r3.3</footer>
-  <script src="js/idmar-header-only.r3b.js?v=r3b"></script>
-  <script src="js/historico-motor.js"></script>
+
+  <footer class="footer" id="fallback-footer">IDMAR — v2.2.7-baseline+merge-r2.3</footer>
+
+  <script src="js/idmar-layout.r3b.js?v=r3b"></script>
+  <script src="js/historico-motor.r3b.js?v=r3b"></script>
 </body>
 </html>
