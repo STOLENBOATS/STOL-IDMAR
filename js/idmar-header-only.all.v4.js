@@ -100,3 +100,5 @@
   document.head.appendChild(style);
 })();
 
+  })(); // <— fecha o IIFE do header v4
+
