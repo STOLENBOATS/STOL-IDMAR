@@ -4,6 +4,18 @@
     pt: {
       app: { name: "IDMAR", subtitle: "Identificação Marítima — Cascos & Motores" },
       nav: { validator:"Validador", hist_win:"Histórico WIN", hist_motor:"Histórico Motor", forense:"Forense", logout:"Sair" },
+      login: {
+        title: "Entrar",
+        lead: "Aceda com as suas credenciais.",
+        user_label: "Utilizador",
+        user_ph: "nome.apelido",
+        pass_label: "Palavra-passe",
+        pass_ph: "••••••••",
+        remember: "Lembrar sessão",
+        signin: "Iniciar sessão",
+        forgot: "Esqueci-me da palavra-passe",
+        lang: "Idioma"
+      },
       forense: {
         title:"Forense — Índice",
         load:"Carregar evidências",
@@ -28,6 +40,18 @@
     en: {
       app: { name: "IDMAR", subtitle: "Maritime Identification — Hulls & Engines" },
       nav: { validator:"Validator", hist_win:"WIN History", hist_motor:"Engine History", forense:"Forensics", logout:"Sign out" },
+      login: {
+        title: "Sign in",
+        lead: "Access with your credentials.",
+        user_label: "User",
+        user_ph: "name.surname",
+        pass_label: "Password",
+        pass_ph: "••••••••",
+        remember: "Remember me",
+        signin: "Sign in",
+        forgot: "Forgot your password?",
+        lang: "Language"
+      },
       forense: {
         title:"Forensics — Index",
         load:"Load evidence",
@@ -84,14 +108,11 @@
         const v = IDMAR_I18N.t(k); if (v != null) el.setAttribute('aria-label', v);
       });
       document.documentElement.setAttribute('lang', lang);
-      // atualizar botão do header se existir
-      const btn = document.getElementById('idmar-lang-toggle');
-      if (btn) btn.textContent = lang.toUpperCase();
-      // atualizar textos dinâmicos básicos do header
-      const appName = document.querySelector('[data-i18n-appname]');
-      if (appName) appName.textContent = IDMAR_I18N.t('app.name');
-      const appSub = document.querySelector('[data-i18n-appsub]');
-      if (appSub) appSub.textContent = IDMAR_I18N.t('app.subtitle');
+
+      // atualizar header se existir
+      document.getElementById('idmar-lang-toggle')?.textContent = lang.toUpperCase();
+      document.querySelector('[data-i18n-appname]')?.textContent = IDMAR_I18N.t('app.name');
+      document.querySelector('[data-i18n-appsub]')?.textContent = IDMAR_I18N.t('app.subtitle');
       document.querySelectorAll('[data-i18n-nav]').forEach(a=>{
         const key = a.getAttribute('data-i18n-nav'); a.textContent = IDMAR_I18N.t(key);
       });
