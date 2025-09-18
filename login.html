@@ -6,41 +6,29 @@
   <title>IDMAR — Login</title>
   <link rel="icon" href="img/logo-pm.png">
   <link rel="stylesheet" href="css/idmar-hotfix-r3b.css?v=1">
-  <script>
-    // ensure theme + lang before paint
-    try{
-      document.documentElement.dataset.theme = localStorage.getItem('IDMAR_THEME') || 'light';
-      document.documentElement.lang = localStorage.getItem('IDMAR_LANG') || 'pt';
-    }catch(e){}
-  </script>
+  <script>try{document.documentElement.dataset.theme=localStorage.getItem('IDMAR_THEME')||'light';}catch(e){}</script>
 </head>
 <body>
   <header id="fallback-topbar"></header>
   <main class="container">
-    <h1 data-i18n="login.title">Iniciar sessão</h1>
+    <h1>Iniciar sessão</h1>
     <section class="panel" style="max-width:720px">
-      <label for="user"><span data-i18n="login.username">Utilizador</span></label>
+      <label for="user">Utilizador</label>
       <input id="user" type="text" placeholder="admin">
-      <label for="pass"><span data-i18n="login.password">Palavra-passe</span></label>
+      <label for="pass">Palavra-passe</label>
       <input id="pass" type="password" placeholder="Admin2025">
       <div style="margin-top:.75rem;display:flex;gap:.5rem;align-items:center">
-        <button id="doLogin" data-i18n="login.submit">Entrar</button>
+        <button id="doLogin">Entrar</button>
         <span class="small">IDMAR — v2.2.7-baseline+merge-r3.3</span>
       </div>
     </section>
   </main>
   <footer class="footer" style="padding:1rem">IDMAR — v2.2.7-baseline+merge-r3.3</footer>
-
   <script src="js/idmar-header-only.r3b.js?v=r3b"></script>
-  <script src="js/idmar-i18n.r3b.js?v=r3b"></script>
   <script>
-    // simple session gate compatible with NAV/IDMAR legacy
-    document.getElementById('doLogin').addEventListener('click', function(){
-      try{
-        sessionStorage.setItem('IDMAR_SESSION','ok');
-        sessionStorage.setItem('NAV_SESSION','ok');
-      }catch(e){}
-      location.href = 'validador.html';
+    document.getElementById('doLogin').addEventListener('click',function(){
+      try{sessionStorage.setItem('IDMAR_SESSION','ok');sessionStorage.setItem('NAV_SESSION','ok');}catch(e){}
+      location.href='validador.html';
     });
   </script>
 </body>
