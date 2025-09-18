@@ -6,6 +6,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>IDMAR — Forense</title>
   <link rel="icon" href="img/logo-pm.png"/>
+    <!-- forense.html: cola no <head> (ou junta ao teu CSS global) -->
+<style>
+  :root{--bg:#f8fafc;--fg:#0f172a;--bg-elev:#ffffff;--border:#e5e7eb}
+  html,body{height:100%}
+  body{
+    background:var(--bg);
+    color:var(--fg);
+    margin:0;
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial,sans-serif;
+  }
+  .panel{background:var(--bg-elev);border:1px solid var(--border);border-radius:12px;padding:1rem}
+</style>
+
   <script defer src="js/idmar-header-only.all.js?v=1"></script>
 </head>
 <body>
