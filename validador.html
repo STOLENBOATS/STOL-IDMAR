@@ -11,11 +11,6 @@
     body{background:var(--bg);color:var(--fg);margin:0;display:flex;flex-direction:column;
          font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial,sans-serif}
     main{flex:1}
-    .topbar{display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;border-bottom:1px solid var(--border);background:var(--bg-elev)}
-    .topbar img{height:36px}
-    .topbar .brand{display:flex;flex-direction:column}
-    .topbar .brand .app{font-weight:800}
-    .topbar nav a{margin-right:1rem;color:var(--link);text-decoration:none}
     .container{max-width:1100px;margin:1.25rem auto;padding:0 1rem}
     .panel{background:var(--bg-elev);border:1px solid var(--border);border-radius:12px;padding:1rem;margin:.75rem 0}
     .two{display:grid;grid-template-columns:1fr;gap:1rem}
@@ -35,33 +30,22 @@
     .forense-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.5rem;margin-top:.5rem}
     .footer{border-top:1px solid var(--border);padding:1rem;text-align:left;opacity:.85;background:var(--bg-elev)}
   </style>
+
+  <!-- Gate de sessão simples -->
   <script>
-    // Gate de sessão simples
     (function(){
       try{
         var ok = sessionStorage.getItem('IDMAR_SESSION')==='ok' || sessionStorage.getItem('NAV_SESSION')==='ok';
         if(!ok) location.replace('login.html');
       }catch(e){}
     })();
-    <script defer src="js/idmar-header-only.all.js?v=1"></script>
-
   </script>
+
+  <!-- Header only (links à direita junto do toggle de tema) -->
+  <script defer src="js/idmar-header-only.all.js?v=1"></script>
 </head>
 <body>
-  <header class="topbar" id="fallback-topbar">
-    <img src="img/logo-pm.png" alt="Polícia Marítima">
-    <div class="brand">
-      <span class="app">IDMAR</span>
-      <small>Identificação Marítima — Cascos &amp; Motores</small>
-    </div>
-    <nav style="margin-left:auto">
-      <a href="validador.html">Validador</a>
-      <a href="historico_win.html">Histórico WIN</a>
-      <a href="historico_motor.html">Histórico Motor</a>
-      <a href="forense.html">Forense</a>
-      <a href="#" onclick="try{sessionStorage.clear()}catch(e){};location.href='login.html'">Sair</a>
-    </nav>
-  </header>
+  <!-- header é injetado por JS -->
 
   <main class="container">
     <h1>Validador</h1>
@@ -131,7 +115,7 @@
 
   <footer class="footer" id="fallback-footer">IDMAR — v2.2.7-baseline+merge-r3.3</footer>
 
-  <script src="js/idmar-layout.r3b.js?v=r3b"></script>
+  <!-- Removido idmar-layout.r3b.js para não duplicar header -->
   <script src="js/validador-win.r3b.js?v=r3b"></script>
   <script src="js/validador-motor.r3b.js?v=r3b"></script>
 </body>
