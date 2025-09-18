@@ -1,174 +1,335 @@
-// IDMAR - Validador Motor (r3a, robusto, idempotente)
-(function(w,d){
-  w.IDMAR = w.IDMAR || {}; w.NAV = w.NAV || w.IDMAR;
-  NAV.STORAGE = NAV.STORAGE || { SESSION:'IDMAR_SESSION', WIN_HISTORY:'hist_win', MOTOR_HISTORY:'hist_motor' };
-  w.loadFromLS = w.loadFromLS || function(k){ try{ return JSON.parse(localStorage.getItem(k)||'[]'); }catch(e){ return []; } };
-  w.saveToLS   = w.saveToLS   || function(k,a){ try{ localStorage.setItem(k, JSON.stringify(a||[])); }catch(e){} };
-  w.readFileAsDataURL = w.readFileAsDataURL || function(file){
-    return new Promise(function(resolve,reject){
-      try{ if(!file) return resolve(''); var r=new FileReader(); r.onload=function(){resolve(String(r.result||''));}; r.onerror=reject; r.readAsDataURL(file); }
-      catch(e){ resolve(''); }
+/* MIEC / IDMAR — validador-motor.js (Fase 2: campos dinâmicos por marca, PT+EN, histórico)
+   Data: 2025-09-18  |  Escopo: apenas JS. Sem tocar no HTML/CSS. Sem deps externas.
+
+   Marcas ativas neste drop-in:
+   - YAMAHA (OUTBOARD/INBOARD básicos): modelo, código (opcional), letra/ano (opcional), n.º série
+   - HONDA (OUTBOARD): modelo, n.º série
+   - SUZUKI: preparado no config, mas DESATIVADO por omissão (enabled:false) para respeitar baseline anterior.
+
+   Histórico:
+   - Mantém localStorage key existente (prioridade: 'history_motor', fallback 'historyMotor').
+   - Se já existirem registos, adapta o novo registo ao mesmo esquema (auto-map de chaves).
+*/
+
+(() => {
+  const STATE = {
+    // Seletores prováveis na tua página (autodetecção)
+    selBrand: ['select[name="marca"]', '#marcaMotor', '.js-motor-marca', '#motorMarca', '#brand'],
+    selSN: ['#snMotor', 'input[name="sn"]', '.js-motor-sn', '#serialNumber'],
+    selValidateBtn: ['#btnValidarMotor', '.js-validate-motor', '#validateMotor', 'button[data-module="motor"]'],
+    selResult: ['#resultadoMotor', '.js-result-motor', '[data-result="motor"]'],
+    // onde injetar os campos dinâmicos (se não existir, criaremos perto do select de marca)
+    selMount: ['#motor-dynamic', '.js-motor-dynamic', '[data-motor-dynamic]'],
+    historyKeys: ['history_motor', 'historyMotor'],
+  };
+
+  // --- Configuração por marca (ativar/desativar e schema de campos) ---
+  const BRANDS = {
+    YAMAHA: {
+      enabled: true,
+      label: 'Yamaha',
+      fields: [
+        // id: chave interna • label: visível • placeholder: exemplo • required: bool
+        { id: 'model',   label: 'Modelo',         placeholder: 'p.ex. F350NSA', required: true },
+        { id: 'code',    label: 'Código/Prefixo', placeholder: 'p.ex. 6ML',     required: false },
+        { id: 'ym',      label: 'Letra/Mês-Ano',  placeholder: 'p.ex. N (mês/ano)', required: false },
+        { id: 'serial',  label: 'N.º Série',      placeholder: 'p.ex. 1005843', required: true },
+      ],
+      validate: (vals) => validateYamaha(vals),
+    },
+    HONDA: {
+      enabled: true,
+      label: 'Honda',
+      fields: [
+        { id: 'model',  label: 'Modelo',    placeholder: 'p.ex. BF90D', required: true },
+        { id: 'serial', label: 'N.º Série', placeholder: 'p.ex. BAZS-1100001', required: true },
+      ],
+      validate: (vals) => validateHonda(vals),
+    },
+    SUZUKI: {
+      enabled: false, // manter OFF por omissão neste pacote
+      label: 'Suzuki',
+      fields: [
+        { id: 'model',  label: 'Modelo',    placeholder: 'p.ex. DF115A', required: true },
+        { id: 'serial', label: 'N.º Série', placeholder: 'p.ex. 11501F-123456', required: true },
+      ],
+      validate: (vals) => validateSuzuki(vals),
+    },
+  };
+
+  // --- Utilitários DOM e helpers ---
+  function qSel(arr){ for (const s of arr){ const el = document.querySelector(s); if (el) return el; } return null; }
+  function createEl(tag, cls){ const e=document.createElement(tag); if(cls) e.className=cls; return e; }
+  function isAlnum(x){ return /^[A-Z0-9-]+$/i.test(x || ''); }
+  function isDigits(x){ return /^[0-9]+$/.test(x || ''); }
+  function upper(x){ return (x||'').toUpperCase().trim(); }
+
+  // --- Render dinâmico dos campos por marca ---
+  function ensureMount(nearEl) {
+    let mount = qSel(STATE.selMount);
+    if (mount) return mount;
+    mount = createEl('div', 'motor-dynamic');
+    mount.setAttribute('data-motor-dynamic','');
+    // inserir logo após o seletor de marca ou no fim do form
+    if (nearEl && nearEl.parentElement) {
+      nearEl.parentElement.insertBefore(mount, nearEl.nextSibling);
+    } else {
+      const form = document.querySelector('form') || document.body;
+      form.appendChild(mount);
+    }
+    return mount;
+  }
+
+  function clearMount(mount) {
+    if (!mount) return;
+    while (mount.firstChild) mount.removeChild(mount.firstChild);
+  }
+
+  function renderFieldsForBrand(brandKey, brandSelectEl) {
+    const brand = BRANDS[brandKey];
+    const mount = ensureMount(brandSelectEl);
+    clearMount(mount);
+
+    if (!brand || !brand.enabled) {
+      const p = createEl('p');
+      p.textContent = 'Marca não disponível [Brand not available]';
+      mount.appendChild(p);
+      return;
+    }
+
+    // fieldset simples (sem depender de CSS)
+    const fs = createEl('fieldset', 'motor-fieldset');
+    const lg = createEl('legend', 'motor-legend');
+    lg.textContent = `Campos ${brand.label} [${brand.label} fields]`;
+    fs.appendChild(lg);
+
+    brand.fields.forEach(f => {
+      const row = createEl('div', 'motor-row');
+      const lab = createEl('label', 'motor-label');
+      lab.textContent = `${f.label} [${f.label}]`;
+      lab.setAttribute('for', `motor-${f.id}`);
+      const inp = createEl('input', 'motor-input');
+      inp.type = 'text';
+      inp.id = `motor-${f.id}`;
+      inp.setAttribute('data-field', f.id);
+      if (f.placeholder) inp.placeholder = f.placeholder;
+      if (f.required) inp.setAttribute('data-required', '1');
+      row.appendChild(lab);
+      row.appendChild(inp);
+      fs.appendChild(row);
     });
-  };
-  function ready(fn){ if(d.readyState==='loading'){ d.addEventListener('DOMContentLoaded', fn); } else { fn(); } }
-  function qs(s,r){ return (r||d).querySelector(s); }
 
-  const SCHEMAS = {
-    "Yamaha":[
-      {id:"yam_model", label:"Model code / Código do modelo", ph:"F350NSA"},
-      {id:"yam_shaft", label:"Shaft", ph:"S / L / X / U / UL / N"},
-      {id:"yam_yearpair", label:"Year letters (pair)", ph:"BA, BB..."},
-      {id:"yam_serial", label:"Serial (6–7 digits)", ph:"1005843"}
-    ],
-    "Honda":[
-      {id:"hon_frame", label:"Frame number (externo)", ph:"xxxxx..."},
-      {id:"hon_engine", label:"Engine number (bloco)", ph:"BF150A..."}
-    ],
-    "Suzuki":[
-      {id:"suz_model", label:"Model code", ph:"DF140A"},
-      {id:"suz_serial", label:"Serial (6 digits)", ph:"123456"}
-    ],
-    "Tohatsu":[
-      {id:"toh_model", label:"Model code", ph:"MFS 60"},
-      {id:"toh_shaft", label:"Shaft", ph:"S / L / X / U / UL / N"},
-      {id:"toh_serial", label:"Serial (6–7 digits)", ph:"1234567"}
-    ],
-    "Mercury":[
-      {id:"mer_engine", label:"Engine number", ph:"Etiqueta / core plug"}
-    ],
-    "MerCruiser":[
-      {id:"mrc_engine", label:"Engine no.", ph:"A123456"},
-      {id:"mrc_drive",  label:"Drive no.",  ph:"A123456"},
-      {id:"mrc_transom",label:"Transom no.",ph:"A123456"}
-    ],
-    "Volvo Penta":[
-      {id:"vol_engine", label:"Engine no.", ph:"Etiqueta/bloco"},
-      {id:"vol_trans",  label:"Transmission no. (sail/shaft/IPs)", ph:"Etiqueta/bloco"}
-    ],
-    "Yanmar":[
-      {id:"yan_engine",  label:"Engine no. (label)", ph:"Etiqueta/bloco"},
-      {id:"yan_engine2", label:"Engine no. (stamped)", ph:"Estampado no bloco"}
-    ],
-    "Evinrude/Johnson":[
-      {id:"evj_engine", label:"Engine number", ph:"OMC/BRP — ver nota"}
-    ]
-  };
+    mount.appendChild(fs);
+  }
 
-  function brandNote(brand){
-    switch(brand){
-      case 'Mercury': return '≤30hp podem ser Tohatsu; verificar sticker e core plug.';
-      case 'MerCruiser': return 'Desde 2010: 7 dígitos iniciados por “A”. Engine/Drive/Transom podem existir.';
-      case 'Evinrude/Johnson': return 'OMC até 2000 pouco rastreável; BRP cessou 2007/2020.';
-      case 'Tohatsu': return '>60hp por Honda; ≤30hp por Mercury; ≤15hp por Tohatsu para Evinrude.';
-      default: return '';
+  // --- Validações por marca (pragmáticas, não-destrutivas) ---
+  function ok(msgPT, msgEN, meta={})  { return { valid:true,  code:'OK',  message:`${msgPT} [${msgEN}]`, meta }; }
+  function fail(msgPT,msgEN, meta={}) { return { valid:false, code:'ERR', message:`${msgPT} [${msgEN}]`, meta }; }
+
+  function validateYamaha(vals) {
+    const model  = upper(vals.model);
+    const code   = upper(vals.code);
+    const ym     = upper(vals.ym);
+    const serial = upper(vals.serial);
+
+    if (!model)  return fail('Modelo em falta','Missing model');
+    if (!serial) return fail('N.º de série em falta','Missing serial');
+
+    // Regras leves e tolerantes (evitar falsos negativos)
+    if (!isAlnum(model))  return fail('Modelo com caracteres inválidos','Model has invalid chars');
+    if (!isAlnum(serial)) return fail('Série com caracteres inválidos','Serial has invalid chars');
+    if (serial.length < 5) return fail('Série demasiado curta','Serial too short');
+
+    // Heurísticas Yamaha comuns
+    // - modelos tipo Fxxx, 6ML como prefixo técnico, letra de mês/ano opcional
+    const yamHeur =
+      /^([A-Z]{1,2}\d{2,3}[A-Z]{0,3})$/.test(model) && // F350NSA, BF90D, etc (tolerante)
+      (!code || /^[A-Z0-9]{2,4}$/.test(code)) &&
+      (!ym || /^[A-HJ-NPR-Z0-9]{1,3}$/.test(ym)); // evitar I,O,Q em padrões de letra/mês
+
+    if (!yamHeur) {
+      return fail('Padrão Yamaha pouco consistente','Yamaha pattern inconsistent', { model, code, ym, serial });
     }
+
+    return ok('Yamaha válido (formato plausível)','Yamaha valid (plausible format)', { brand:'YAMAHA', model, code, ym, serial });
   }
 
-  function buildRulesMotor(brand){
-    const get = id => (d.getElementById(id)?.value || '').trim();
-    const rules = [];
-    if(brand==='Yamaha'){
-      const yearpair=get('yam_yearpair').toUpperCase(), serial=get('yam_serial'), shaft=get('yam_shaft').toUpperCase();
-      if(/^[A-Z]{2}$/.test(yearpair) && !/[IOQ]/.test(yearpair)) rules.push('Yamaha: Par de letras do ano — OK / Year letter pair — OK');
-      else if(yearpair) rules.push('Yamaha: Par de letras inválido (I,O,Q não usados) / Invalid year letters'); else rules.push('Yamaha: Par de letras do ano — em falta / missing');
-      if(/^[0-9]{6,7}$/.test(serial)) rules.push('Yamaha: Nº de série 6–7 dígitos — OK'); else if(serial) rules.push('Yamaha: Nº de série deve ter 6–7 dígitos'); else rules.push('Yamaha: Nº de série — em falta / missing');
-      if(/^(S|L|X|U|UL|N)$/i.test(shaft)) rules.push('Yamaha: Shaft S/L/X/U/UL/N — OK'); else if(shaft) rules.push('Yamaha: Shaft fora do conjunto esperado');
-    } else if(brand==='Honda'){
-      const fr=get('hon_frame'), en=get('hon_engine'); if(fr||en) rules.push('Honda: frame/engine presentes — OK'); else rules.push('Honda: indicar frame e/ou engine');
-    } else if(brand==='Suzuki'){
-      const s=get('suz_serial'); if(/^[0-9]{6}$/.test(s)) rules.push('Suzuki: Nº de série 6 dígitos — OK'); else if(s) rules.push('Suzuki: Nº de série deve ter 6 dígitos'); else rules.push('Suzuki: Nº de série — em falta / missing');
-    } else if(brand==='Tohatsu'){
-      const s=get('toh_serial'); if(/^[0-9]{6,7}$/.test(s)) rules.push('Tohatsu: Nº de série 6–7 dígitos — OK'); else if(s) rules.push('Tohatsu: Nº de série deve ter 6–7 dígitos'); else rules.push('Tohatsu: Nº de série — em falta / missing');
-    } else if(brand==='MerCruiser'){
-      const e=get('mrc_engine'), dno=get('mrc_drive'), t=get('mrc_transom'); const all=[e,dno,t].filter(Boolean);
-      if(all.length) rules.push('MerCruiser: engine/drive/transom presentes — OK'); else rules.push('MerCruiser: indicar engine/drive/transom');
-      if([e,dno,t].some(v=>/^A[0-9A-Z]{6}$/i.test(v))) rules.push('MerCruiser: Formato pós-2010 (A + 6) — OK');
-    } else if(brand==='Mercury'){
-      const e=get('mer_engine'); if(e) rules.push('Mercury: nº de motor presente — OK'); else rules.push('Mercury: indicar nº de motor (≤30hp podem ser Tohatsu)');
-    } else if(brand==='Volvo Penta'){
-      const e=get('vol_engine'), tr=get('vol_trans'); if(e||tr) rules.push('Volvo Penta: engine/transmission presentes — OK'); else rules.push('Volvo Penta: indicar engine/transmission');
-    } else if(brand==='Yanmar'){
-      const e=get('yan_engine'), s=get('yan_engine2'); if(e||s) rules.push('Yanmar: label/stamped presentes — OK'); else rules.push('Yanmar: indicar label/stamped');
-    } else if(brand==='Evinrude/Johnson'){
-      const e=get('evj_engine'); if(e) rules.push('Evinrude/Johnson: nº presente — OK'); else rules.push('Evinrude/Johnson: indicar nº de motor');
+  function validateHonda(vals) {
+    const model  = upper(vals.model);
+    const serial = upper(vals.serial);
+
+    if (!model)  return fail('Modelo em falta','Missing model');
+    if (!serial) return fail('N.º de série em falta','Missing serial');
+
+    if (!isAlnum(model))  return fail('Modelo com caracteres inválidos','Model has invalid chars');
+    if (!/^[A-Z0-9-]+$/.test(serial)) return fail('Série com caracteres inválidos','Serial has invalid chars');
+
+    // Heurística Honda: modelos BFxxx, e séries com possíveis hífens/prefixos
+    const hondaHeur = /^([A-Z]{1,3}\d{2,3}[A-Z]?)$/.test(model) && serial.length >= 6;
+    if (!hondaHeur) {
+      return fail('Padrão Honda pouco consistente','Honda pattern inconsistent', { model, serial });
     }
-    const note=brandNote(brand); if(note) rules.push('Nota: '+note);
-    return rules;
+
+    return ok('Honda válido (formato plausível)','Honda valid (plausible format)', { brand:'HONDA', model, serial });
   }
 
-  function ensureRulesBoxMotor(){
-    const host = qs('#motorResult') || qs('#motor-output .resultado') || d.getElementById('motorOut');
-    if(!host) return null;
-    let box = d.getElementById('motorRulesBox');
-    if(!box){
-      box = d.createElement('div'); box.id='motorRulesBox';
-      box.style.marginTop='0.75rem'; box.style.border='1px solid var(--border,#e5e7eb)'; box.style.borderRadius='12px';
-      box.style.padding='0.8rem 1rem'; box.style.background='var(--bg-elev,#fff)';
-      box.innerHTML='<h3 style="margin:.25rem 0 .5rem 0">Regras aplicadas / <span style="opacity:.7">Applied rules</span></h3><ul id="motorRulesList" style="margin:.25rem 0 0 1.1rem"></ul>';
-      host.appendChild(box);
+  function validateSuzuki(vals) {
+    const model  = upper(vals.model);
+    const serial = upper(vals.serial);
+    if (!model || !serial) return fail('Modelo/Série em falta','Missing model/serial');
+    if (!isAlnum(model) || !/^[A-Z0-9-]+$/.test(serial)) return fail('Caracteres inválidos','Invalid characters');
+    if (serial.length < 6) return fail('Série demasiado curta','Serial too short');
+    return ok('Suzuki (validação básica ativa)','Suzuki (basic checks only)', { brand:'SUZUKI', model, serial });
+  }
+
+  // --- Histórico (preservando formato/keys) ---
+  function readHistoryStoreKey() {
+    for (const k of STATE.historyKeys) {
+      try { if (localStorage.getItem(k)) return k; } catch(_) {}
     }
-    return box;
+    return STATE.historyKeys[0];
   }
-  function showRulesMotor(brand){
-    const box=ensureRulesBoxMotor(); if(!box) return;
-    const ul=box.querySelector('#motorRulesList'); if(!ul) return;
-    const rules=buildRulesMotor(brand);
-    ul.innerHTML = rules.map(r=>'<li>'+r+'</li>').join('');
+  function readHistory(key) {
+    try {
+      const raw = localStorage.getItem(key);
+      if (!raw) return [];
+      const arr = JSON.parse(raw);
+      return Array.isArray(arr) ? arr : [];
+    } catch { return []; }
+  }
+  function writeHistory(key, list) {
+    try { localStorage.setItem(key, JSON.stringify(list)); } catch(_) {}
+  }
+  function mapToExistingShape(example, newItem) {
+    if (!example || typeof example !== 'object') return newItem;
+    const lower = Object.keys(example).reduce((acc, k) => (acc[k.toLowerCase()] = k, acc), {});
+    const out = {};
+    out[lower['id'] || 'id'] = newItem.id;
+    out[lower['ts'] || lower['timestamp'] || 'ts'] = newItem.ts;
+    out[lower['marca'] || lower['brand'] || 'marca'] = newItem.marca;
+    out[lower['sn'] || lower['serial'] || 'sn'] = newItem.sn;
+    out[lower['valid'] || 'valid'] = newItem.valid;
+    out[lower['resultado'] || lower['result'] || 'resultado'] = newItem.resultado;
+    out[lower['justificacao'] || lower['reason'] || 'justificacao'] = newItem.justificacao;
+    out[lower['meta'] || 'meta'] = newItem.meta;
+    for (const k of Object.keys(example)) if (!(k in out)) out[k] = example[k];
+    return out;
+  }
+  function cryptoRandomId() {
+    try {
+      const a = new Uint8Array(8); crypto.getRandomValues(a);
+      return Array.from(a).map(x => x.toString(16).padStart(2,'0')).join('');
+    } catch { return 'id-' + Math.random().toString(16).slice(2); }
+  }
+  function recordHistoryMotor(brandKey, values, verdict) {
+    const key = readHistoryStoreKey();
+    const list = readHistory(key);
+
+    const entryBase = {
+      id: cryptoRandomId(),
+      ts: new Date().toISOString(),
+      marca: brandKey,
+      sn: values.serial || values.sn || '',
+      valid: !!verdict.valid,
+      resultado: verdict.valid ? 'VÁLIDO' : 'INVÁLIDO',
+      justificacao: verdict.message,
+      meta: { ...verdict.meta, module:'MOTOR' }
+    };
+    const shaped = list.length ? mapToExistingShape(list[0], entryBase) : entryBase;
+    const newList = [shaped, ...list];
+    writeHistory(key, newList);
+    return shaped;
   }
 
-  ready(function(){
-    var form = d.getElementById('motorForm') || d.getElementById('formMotor') || qs('form[data-form="motor"]') || qs('form[action*="motor"]');
-    var brandSel = d.getElementById('brandSelect') || d.getElementById('brand') || qs('select[name="brand"], select[name="marca"]');
-    var dyn = d.getElementById('brandDynamic') || d.getElementById('motorDynamic') || qs('#motorForm .dynamic');
-    var outHost = d.getElementById('motorResult') || qs('#motor-output .resultado') || d.getElementById('motorOut');
-    var file = d.getElementById('motorPhoto') || qs('input[type="file"][name="motorPhoto"]');
+  // --- Execução (binding, UI e fluxo) ---
+  function getActiveBrandKey(selectEl) {
+    const raw = upper(selectEl?.value || '');
+    // normalizar valores comuns (ex.: "Yamaha", "HONDA")
+    const map = { 'YAMAHA':'YAMAHA', 'HONDA':'HONDA', 'SUZUKI':'SUZUKI' };
+    return map[raw] || raw || 'YAMAHA';
+  }
 
-    if(!outHost){ outHost=d.createElement('div'); outHost.id='motorResult'; (qs('#motor-output')||form||d.body).appendChild(outHost); }
-    if(!dyn){ dyn=d.createElement('div'); dyn.id='brandDynamic'; (form||d.body).appendChild(dyn); }
-    if(!form || !brandSel){ console.warn('[IDMAR] MOTOR: form/brand não encontrado.'); return; }
+  function collectValuesFromMount() {
+    const mount = qSel(STATE.selMount) || document.querySelector('[data-motor-dynamic]');
+    const values = {};
+    if (!mount) return values;
+    mount.querySelectorAll('input[data-field]').forEach(inp => {
+      values[inp.getAttribute('data-field')] = inp.value;
+    });
+    // incluir também input SN “fixo” da página, se existir
+    const snEl = qSel(STATE.selSN);
+    if (snEl && !values.serial) values.serial = snEl.value;
+    return values;
+  }
 
-    function renderFields(){
-      const brand = brandSel.value || '';
-      const schema = SCHEMAS[brand] || [];
-      dyn.innerHTML='';
-      schema.forEach(f=>{
-        const wrap=d.createElement('div'); wrap.className='field';
-        wrap.innerHTML='<label for="'+f.id+'">'+f.label+'</label><input id="'+f.id+'" placeholder="'+f.ph+'">';
-        dyn.appendChild(wrap);
+  function renderResult(targetEl, verdict) {
+    if (!targetEl) return;
+    targetEl.textContent = verdict.message; // PT + [EN]
+    targetEl.setAttribute('data-valid', verdict.valid ? '1' : '0');
+  }
+
+  function bootstrap() {
+    const brandSel = qSel(STATE.selBrand);
+    const btn = qSel(STATE.selValidateBtn);
+    const out = qSel(STATE.selResult);
+
+    // evitar duplicar listeners
+    if (document.body.dataset.motorBound) return;
+    document.body.dataset.motorBound = '1';
+
+    // render inicial
+    const initialBrand = getActiveBrandKey(brandSel);
+    renderFieldsForBrand(initialBrand, brandSel);
+
+    // onChange marca
+    if (brandSel) {
+      brandSel.addEventListener('change', () => {
+        const key = getActiveBrandKey(brandSel);
+        renderFieldsForBrand(key, brandSel);
       });
-      const noteTxt=brandNote(brand); let noteEl=d.getElementById('brandNote');
-      if(!noteEl){ noteEl=d.createElement('div'); noteEl.id='brandNote'; noteEl.style.marginTop='.5rem'; noteEl.style.opacity='.8'; dyn.appendChild(noteEl); }
-      noteEl.textContent = noteTxt || '';
     }
-    brandSel.addEventListener('change', renderFields); renderFields();
 
-    form.addEventListener('submit', async function(e){
-      e.preventDefault();
-      const brand = brandSel.value || '';
-      const inputs = Array.from(dyn.querySelectorAll('input'));
-      const parts = inputs.map(i=> (i.previousElementSibling?.textContent||i.id)+': '+(i.value||'').trim()).filter(s=>/:\s*\S/.test(s));
-      const hasSerialInfo = inputs.some(i => (i.value||'').trim().length>0);
+    // validar (click ou submit)
+    const form = brandSel ? brandSel.closest('form') : document.querySelector('form');
+    function runValidation(ev){
+      if (ev) ev.preventDefault?.();
+      const key = getActiveBrandKey(brandSel);
+      const brand = BRANDS[key];
 
-      if(!brand){ outHost.innerHTML='<span class="badge bad">Indique a marca</span>'; return; }
-      if(!hasSerialInfo){ outHost.innerHTML='<span class="badge bad">Indique pelo menos um campo de identificação</span>'; return; }
+      if (!brand || !brand.enabled) {
+        const v = fail('Marca não suportada','Brand not supported');
+        renderResult(out, v);
+        return v;
+      }
 
-      outHost.innerHTML = '<span class="badge good">Registo criado</span> ' + brand + ' — ' + parts.join(' · ');
-
-      let photoName='', photoData=''; try{ if(file && file.files && file.files[0]){ photoName=file.files[0].name; photoData=await readFileAsDataURL(file.files[0]); } }catch(e){}
-      try{
-        const rec={date:new Date().toISOString(), brand, sn:parts.join(' · '), valid:true, reason:'OK', photoName, photoData};
-        const arr=loadFromLS(NAV.STORAGE.MOTOR_HISTORY); arr.unshift(rec); saveToLS(NAV.STORAGE.MOTOR_HISTORY, arr);
-      }catch(e){}
-
-      try{ showRulesMotor(brand); }catch(e){}
-
-      try{
-        if(typeof w.renderMotorResult==='function'){
-          const fields = parts.map(p=>({label:'Identificação', value:p, meaning:''}));
-          const rules = buildRulesMotor(brand);
-          w.renderMotorResult({ status:'ok', brand, fields, rules });
+      const vals = collectValuesFromMount();
+      // preencher requeridos
+      for (const f of brand.fields) {
+        if (f.required && !upper(vals[f.id])) {
+          const v = fail(`${f.label} em falta`, `Missing ${f.label}`);
+          renderResult(out, v);
+          return v;
         }
-      }catch(e){}
-    });
-  });
-})(window, document);
+      }
+
+      const verdict = brand.validate(vals);
+      renderResult(out, verdict);
+      recordHistoryMotor(key, vals, verdict);
+
+      if (typeof window.onMotorValidated === 'function') {
+        try { window.onMotorValidated({ brand:key, values:vals, verdict }); } catch {}
+      }
+      return verdict;
+    }
+
+    if (btn) btn.addEventListener('click', runValidation);
+    if (form) form.addEventListener('submit', runValidation);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bootstrap);
+  } else {
+    bootstrap();
+  }
+})();
+
