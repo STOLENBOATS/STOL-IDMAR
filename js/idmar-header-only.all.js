@@ -1,148 +1,52 @@
-/* IDMAR — Header Only (todas as páginas) • 2025-09-18
-   - Injeta header igual ao do login.
-   - Links de navegação alinhados à direita, junto do botão/ícone do tema (se existir).
-   - Marca link ativo com [data-active="1"].
-   - Se já existir um header IDMAR (data-idmar="header-only"), não duplica.
-*/
+/* IDMAR header-only (compact v3) */
 (() => {
-  const LINKS = [
-    { href: 'validador.html',       text: 'Validador' },
-    { href: 'historico_win.html',   text: 'Histórico WIN' },
-    { href: 'historico_motor.html', text: 'Histórico Motor' },
-    { href: 'forense.html',         text: 'Forense' },
-    { href: '#logout',              text: 'Sair', isLogout: true },
+  if (document.querySelector('.app-header[data-idmar="header-only"]')) return;
+
+  const HREFS = [
+    ['validador.html','Validador'],
+    ['historico_win.html','Histórico WIN'],
+    ['historico_motor.html','Histórico Motor'],
+    ['forense.html','Forense'],
+    ['#logout','Sair'],
   ];
+  const here = (location.pathname.split('/').pop() || '').toLowerCase();
 
-  function el(tag, cls, text){
-    const e = document.createElement(tag);
-    if (cls) e.className = cls;
-    if (text) e.textContent = text;
-    return e;
-  }
+  const head = document.createElement('header');
+  head.className = 'app-header';
+  head.setAttribute('data-idmar','header-only');
+  Object.assign(head.style, {display:'flex',alignItems:'center',justifyContent:'space-between',gap:'1rem',padding:'.75rem 1rem',borderBottom:'1px solid #e5e7eb',background:'#fff'});
 
-  function buildHeader(){
-    const header = el('header', 'app-header'); // usa a tua classe existente
-    header.setAttribute('data-idmar','header-only');
-    // inline styles mínimos para alinhar (sem mexer no teu CSS)
-    header.style.display = 'flex';
-    header.style.alignItems = 'center';
-    header.style.justifyContent = 'space-between';
-    header.style.gap = '1rem';
+  const left = document.createElement('div');
+  Object.assign(left.style,{display:'flex',alignItems:'center',gap:'.75rem'});
+  const img = new Image(); img.src='img/logo-pm.png'; img.alt='Polícia Marítima'; img.style.height='32px';
+  const t = document.createElement('div');
+  const a = document.createElement('div'); a.textContent='IDMAR'; a.style.fontWeight='800'; a.style.fontSize='1.6rem'; a.style.lineHeight='1';
+  const b = document.createElement('div'); b.innerHTML='Identificação Marítima — Cascos &amp; Motores'; b.style.opacity='.8';
+  t.append(a,b); left.append(img,t);
 
-    // — left: brand (logo + títulos)
-    const left = el('div', 'brand');
-    left.style.display = 'flex';
-    left.style.alignItems = 'center';
-    left.style.gap = '0.75rem';
+  const right = document.createElement('div');
+  Object.assign(right.style,{display:'flex',alignItems:'center',gap:'1rem'});
+  const nav = document.createElement('nav');
+  Object.assign(nav.style,{display:'flex',alignItems:'center',gap:'1rem'});
 
-    const logo = el('img', 'logo');
-    logo.src = 'images/logo-pm.jpg';
-    logo.alt = 'Polícia Marítima';
-
-    const titles = el('div', 'titles');
-    const h1 = el('h1', null, 'IDMAR');
-    const sub = el('p', 'subtitle', 'Identificação Marítima — Cascos & Motores');
-    titles.appendChild(h1);
-    titles.appendChild(sub);
-
-    left.appendChild(logo);
-    left.appendChild(titles);
-
-    // — right: nav + theme toggle (se existir)
-    const right = el('div', 'header-right');
-    right.style.display = 'flex';
-    right.style.alignItems = 'center';
-    right.style.gap = '1rem';
-
-    const nav = el('nav', 'app-nav');
-    nav.style.display = 'flex';
-    nav.style.alignItems = 'center';
-    nav.style.gap = '1rem';
-
-    const here = (location.pathname.split('/').pop() || '').toLowerCase();
-
-    LINKS.forEach(item => {
-      const a = document.createElement('a');
-      a.href = item.href;
-      a.textContent = item.text;
-      if (!item.isLogout && here === item.href.toLowerCase()) {
-        a.setAttribute('data-active','1');
-        a.setAttribute('aria-current','page');
-      }
-      if (item.isLogout) {
-        a.addEventListener('click', (e) => {
-          e.preventDefault();
-          // tenta signOut se existir; caso contrário, redireciona para login
-          let done = false;
-          try {
-            if (window.SupaAuth?.signOut) {
-              window.SupaAuth.signOut().finally(() => location.href = 'login.html');
-              done = true;
-            } else if (window.logout) {
-              window.logout(); done = true;
-            }
-          } catch {}
-          if (!done) location.href = 'login.html';
-        });
-      }
-      nav.appendChild(a);
-    });
-
-    // procurar o botão/ícone de tema já existente na página e “mover” para a direita
-    const themeBtn =
-      document.querySelector('[data-theme-toggle]') ||
-      document.querySelector('.theme-toggle') ||
-      document.querySelector('#themeToggle');
-    if (themeBtn) {
-      // garantir que ocupa o lado direito, perto do nav
-      right.appendChild(nav);
-      right.appendChild(themeBtn);
-    } else {
-      right.appendChild(nav);
+  HREFS.forEach(([href,txt])=>{
+    const el = document.createElement('a'); el.href=href; el.textContent=txt;
+    if (href !== '#logout' && here === href.toLowerCase()) { el.setAttribute('data-active','1'); el.style.fontWeight='700'; }
+    if (href === '#logout') {
+      el.addEventListener('click', (e)=>{ e.preventDefault();
+        try { if (window.SupaAuth?.signOut) return void window.SupaAuth.signOut().finally(()=>location.href='login.html'); } catch(_) {}
+        location.href='login.html';
+      });
     }
+    nav.appendChild(el);
+  });
 
-    header.appendChild(left);
-    header.appendChild(right);
-    return header;
-  }
+  const themeBtn = document.querySelector('#idmar-theme-toggle') ||
+                   document.querySelector('[data-theme-toggle]') ||
+                   document.querySelector('.theme-toggle') ||
+                   document.querySelector('#themeToggle');
 
-  function inject(){
-    // não duplicar
-    if (document.querySelector('.app-header[data-idmar="header-only"]')) return;
-
-    // se já houver um header com logo/títulos no LOGIN, não mexer (a menos que falte nav)
-    const existingHeader = document.querySelector('.app-header');
-    if (existingHeader && !existingHeader.dataset.idmar) {
-      // garantir que nav + alinhamento à direita existem
-      const here = (location.pathname.split('/').pop() || '').toLowerCase();
-      // cluster right
-      let right = existingHeader.querySelector('.header-right');
-      if (!right) {
-        right = el('div','header-right');
-        right.style.display = 'flex';
-        right.style.alignItems = 'center';
-        right.style.gap = '1rem';
-        existingHeader.appendChild(right);
-      }
-      // nav
-      let nav = existingHeader.querySelector('.app-nav');
-      if (!nav) {
-        nav = el('nav','app-nav');
-        nav.style.display = 'flex';
-        nav.style.alignItems = 'center';
-        nav.style.gap = '1rem';
-        right.appendChild(nav);
-      }
-      if (!nav.childElementCount){
-        LINKS.forEach(item => {
-          const a = document.createElement('a');
-          a.href = item.href;
-          a.textContent = item.text;
-          if (!item.isLogout && here === item.href.toLowerCase()) {
-            a.setAttribute('data-active','1');
-            a.setAttribute('aria-current','page');
-          }
-          if (item.isLogout) {
-            a.addEventListener('click', (e) => {
-              e.preventDefault();
-              let done = false;
+  right.append(nav); if (themeBtn && themeBtn.parentElement !== right) right.append(themeBtn);
+  head.append(left,right);
+  document.body.insertBefore(head, document.body.firstChild);
+})();
