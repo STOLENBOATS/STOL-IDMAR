@@ -69,4 +69,34 @@
 
   // Aplicar traduções ao header recém-injetado
   window.IDMAR_I18N?.apply(head);
+  // === IDMAR layout normalize (margens/containers homogéneas) ===
+(function injectIdmarNormalize(){
+  if (document.getElementById('idmar-normalize')) return;
+  const css = `
+  :root{
+    --idmar-max:1100px; --idmar-pad:16px; --idmar-top:1.25rem; --idmar-gap:.75rem;
+  }
+  /* header fica full-bleed */
+  .app-header{max-width:none !important;margin:0 !important;padding:.75rem 1rem}
+  /* conteúdo alinhado */
+  body>main, body>.container, main .container:first-child{
+    max-width:var(--idmar-max) !important;
+    margin:var(--idmar-top) auto !important;
+    padding-left:var(--idmar-pad) !important;
+    padding-right:var(--idmar-pad) !important;
+    box-sizing:border-box;
+  }
+  /* painéis/blocks */
+  .panel{margin:var(--idmar-gap) 0 !important}
+  /* footer com mesma largura do conteúdo */
+  footer{
+    max-width:var(--idmar-max); margin:var(--idmar-top) auto 0 auto;
+    padding-left:var(--idmar-pad); padding-right:var(--idmar-pad); width:100%;
+    box-sizing:border-box;
+  }`;
+  const style = document.createElement('style');
+  style.id = 'idmar-normalize';
+  style.textContent = css;
+  document.head.appendChild(style);
 })();
+
