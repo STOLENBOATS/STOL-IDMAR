@@ -1,101 +1,44 @@
 <!doctype html>
-<html lang="pt" data-theme="light">
+<html lang="pt">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>IDMAR — Iniciar sessão</title>
-
-  <!-- CSS base + tema claro sóbrio -->
-  <link rel="icon" href="img/favicon.png"/>
-  <link rel="stylesheet" href="css/styles.css"/>
-  <link rel="stylesheet" href="css/idmar-theme.css"/>
-
-  <!-- One-file opcional (tema/i18n). Se não usas, podes remover esta linha. -->
-  <script src="js/idmar-one.r3.js"></script>
-
-  <style>
-    /* layout: footer no fundo */
-    html, body { height: 100%; }
-    body { display: flex; flex-direction: column; }
-    main { flex: 1 0 auto; }
-
-    /* header compacto */
-    .brandbar{display:flex;align-items:center;gap:.75rem;padding:1rem 1.25rem;border-bottom:1px solid var(--border);background:var(--bg-elev)}
-    .brandbar img{height:40px}
-    .brandbar .title{display:flex;flex-direction:column}
-    .brandbar .title .app{font-size:2rem; line-height:1.1; font-weight:800;} /* nome da app maior */
-    .brandbar .title .sub{opacity:.8}
-
-    /* cartão de login */
-    .login-wrap{max-width:720px;margin:3rem auto;padding:0 1rem}
-    .login-card{background:var(--bg-elev);border:1px solid var(--border);border-radius:14px;padding:2rem}
-    .login-card h1{margin:0 0 1rem 0; font-size:2.25rem}
-    .field{display:flex;flex-direction:column;gap:.4rem;margin:.8rem 0}
-    .field input{width:100%}
-    .actions{margin-top:1rem}
-    .hint{margin-top:.5rem; color:var(--muted); font-size:.9rem}
-
-    /* footer fixo ao fim */
-    footer.footer{flex-shrink:0; margin-top:auto; text-align:left}
-  </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IDMAR — Login</title>
+  <link rel="icon" href="img/logo-pm.png">
+  <link rel="stylesheet" href="css/idmar-hotfix-r3b.css?v=1">
+  <script>
+    // ensure theme + lang before paint
+    try{
+      document.documentElement.dataset.theme = localStorage.getItem('IDMAR_THEME') || 'light';
+      document.documentElement.lang = localStorage.getItem('IDMAR_LANG') || 'pt';
+    }catch(e){}
+  </script>
 </head>
 <body>
-  <header class="brandbar">
-    <img src="img/logo-pm.png" alt="Polícia Marítima">
-    <div class="title">
-      <div class="app">IDMAR</div>
-      <div class="sub">Identificação Marítima — Cascos & Motores</div>
-    </div>
-    <div style="margin-left:auto">
-      <!-- toggle de tema (opcional) -->
-      <button id="idmar-theme-toggle" class="ghost" title="Dia/Noite">🌗</button>
-    </div>
-  </header>
-
-  <main>
-    <div class="login-wrap">
-      <div class="login-card">
-        <h1>Iniciar sessão</h1>
-
-        <form id="loginForm" autocomplete="on">
-          <div class="field">
-            <label for="user">Utilizador</label>
-            <input id="user" name="user" placeholder="Utilizador" autofocus>
-          </div>
-          <div class="field">
-            <label for="pass">Palavra-passe</label>
-            <input id="pass" name="pass" type="password" placeholder="Palavra-passe">
-          </div>
-          <div class="actions">
-            <button type="submit" class="btn">Entrar</button>
-          </div>
-          <div class="hint">Após entrar, será redirecionado para o Validador.</div>
-          <!-- opcional: credenciais demo -->
-          <!-- <div class="hint">Credenciais: <code>admin</code> / <code>Admin2025</code></div> -->
-        </form>
+  <header id="fallback-topbar"></header>
+  <main class="container">
+    <h1 data-i18n="login.title">Iniciar sessão</h1>
+    <section class="panel" style="max-width:720px">
+      <label for="user"><span data-i18n="login.username">Utilizador</span></label>
+      <input id="user" type="text" placeholder="admin">
+      <label for="pass"><span data-i18n="login.password">Palavra-passe</span></label>
+      <input id="pass" type="password" placeholder="Admin2025">
+      <div style="margin-top:.75rem;display:flex;gap:.5rem;align-items:center">
+        <button id="doLogin" data-i18n="login.submit">Entrar</button>
+        <span class="small">IDMAR — v2.2.7-baseline+merge-r3.3</span>
       </div>
-    </div>
+    </section>
   </main>
+  <footer class="footer" style="padding:1rem">IDMAR — v2.2.7-baseline+merge-r3.3</footer>
 
-  <footer class="footer">IDMAR — v2.2.7-baseline+merge-r2.3</footer>
-
+  <script src="js/idmar-header-only.r3b.js?v=r3b"></script>
+  <script src="js/idmar-i18n.r3b.js?v=r3b"></script>
   <script>
-    // Garantir light por defeito (caso exista preferência antiga)
-    (function(){
-      try{
-        if(!localStorage.getItem('idmar-theme')){
-          localStorage.setItem('idmar-theme','light');
-          document.documentElement.setAttribute('data-theme','light');
-        }
-      }catch(e){}
-    })();
-
-    // Login simples: cria sessões para retrocompatibilidade e segue para validador
-    document.getElementById('loginForm').addEventListener('submit', function(e){
-      e.preventDefault();
+    // simple session gate compatible with NAV/IDMAR legacy
+    document.getElementById('doLogin').addEventListener('click', function(){
       try{
         sessionStorage.setItem('IDMAR_SESSION','ok');
-        sessionStorage.setItem('NAV_SESSION','ok'); // retrocompatibilidade
+        sessionStorage.setItem('NAV_SESSION','ok');
       }catch(e){}
       location.href = 'validador.html';
     });
