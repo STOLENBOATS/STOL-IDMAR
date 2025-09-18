@@ -1,18 +1,16 @@
 <!doctype html>
 <html lang="pt">
 <head>
-  <script defer src="js/header-historico-win.js?v=1"></script>
-  <script defer src="js/idmar-i18n.js?v=1"></script>
-  <script defer src="js/idmar-header-only.all.v4.js?v=4"></script>
-
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>IDMAR — Histórico WIN</title>
   <link rel="icon" href="img/logo-pm.png" />
+
   <style>
     :root{--bg:#f8fafc;--fg:#0f172a;--bg-elev:#ffffff;--border:#e5e7eb;--link:#0b6bcb}
     html,body{height:100%}
-    body{background:var(--bg);color:var(--fg);margin:0;display:flex;flex-direction:column;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial,sans-serif}
+    body{background:var(--bg);color:var(--fg);margin:0;display:flex;flex-direction:column;
+         font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial,sans-serif}
     main{flex:1}
     .container{max-width:1100px;margin:1.25rem auto;padding:0 1rem}
     .panel{background:var(--bg-elev);border:1px solid var(--border);border-radius:12px;padding:1rem;margin:.75rem 0}
@@ -38,9 +36,14 @@
     })();
   </script>
 
-  <!-- Header only -->
-  <script defer src="js/idmar-header-only.all.js?v=1"></script>
+  <!-- i18n + header (apenas estes dois) -->
+  <script defer src="js/idmar-i18n.js?v=1"></script>
+  <script defer src="js/idmar-header-only.all.v4.js?v=4"></script>
+
+  <!-- scripts específicos da página (se tiveres) -->
+  <!-- <script defer src="js/historico-win.js?v=..."></script> -->
 </head>
+
 <body>
   <!-- header é injetado por JS -->
 
