@@ -1,126 +1,191 @@
+/* IDMAR — histórico WIN (Fase 3)
+   - Ordena mais recente → mais antigo
+   - Filtros: estado (Todos/Válido/Inválido) + data (de/até) + pesquisa (WIN/justificação)
+   - Export CSV (UTF-8 + BOM)
+   - Sem mexer no HTML/CSS original; injeta uma toolbar e uma listagem própria
+*/
+(() => {
+  const LS_KEYS = ['history_win','historyWin'];
 
-// IDMAR — Histórico WIN (r3a) — filtros, ordenação, CSV, foto/miniatura, razão e forense hint
-(function(w,d){
-  w.IDMAR=w.IDMAR||{}; w.NAV=w.NAV||w.IDMAR;
-  NAV.STORAGE = NAV.STORAGE || { SESSION:'IDMAR_SESSION', WIN_HISTORY:'hist_win', MOTOR_HISTORY:'hist_motor' };
+  // ===== util =====
+  const $ = (s,root=document)=>root.querySelector(s);
+  const el = (t,cls,txt)=>{const e=document.createElement(t); if(cls) e.className=cls; if(txt) e.textContent=txt; return e;};
+  const parseTS = s => { const d = new Date(s); return isNaN(d) ? null : d; };
+  const pad = n => String(n).padStart(2,'0');
+  const fmt = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  const isTrue = v => v===true || v===1 || v==='1' || v==='true' || v==='VÁLIDO';
 
-  function ready(fn){ if(d.readyState==='loading'){ d.addEventListener('DOMContentLoaded', fn); } else { fn(); } }
-  function load(key){ try{ return JSON.parse(localStorage.getItem(key)||'[]'); }catch(e){ return []; } }
-  function save(key, val){ try{ localStorage.setItem(key, JSON.stringify(val||[])); }catch(e){} }
-  function ts(x){ if(x==null) return 0; if(typeof x==='number') return x; if(/^[0-9]+$/.test(String(x))) return Number(x); var t=Date.parse(x); return isNaN(t)?0:t; }
+  function readStoreKey(){
+    for (const k of LS_KEYS){ try{ if(localStorage.getItem(k)) return k; }catch{} }
+    return LS_KEYS[0];
+  }
+  function readAll(){
+    const key = readStoreKey();
+    try{
+      const arr = JSON.parse(localStorage.getItem(key) || '[]');
+      return Array.isArray(arr) ? arr : [];
+    }catch{ return []; }
+  }
 
-  function findInput(){ return d.getElementById('hist_win_search') || d.querySelector('input[placeholder*="Pesquisar"], input[type="search"]'); }
-  function findState(){ return d.getElementById('hist_win_state') || d.querySelector('select'); }
-  function findFrom(){ return d.getElementById('hist_win_from') || d.querySelector('input[type="date"]:not([id$="to"]), input[placeholder*="dd"]'); }
-  function findTo(){ return d.getElementById('hist_win_to') || d.querySelectorAll('input[type="date"]')[1] || d.querySelectorAll('input[placeholder*="dd"]')[1]; }
-  function findTableBody(){ return d.getElementById('hist_win_tbody') || d.querySelector('table tbody') || (function(){var t=d.createElement('table');t.innerHTML='<thead><tr><th>Quando</th><th>WIN/HIN</th><th>Estado</th><th>Justificação</th><th>Foto (nome)</th><th>Miniatura</th></tr></thead><tbody id="hist_win_tbody"></tbody>'; (d.querySelector('.container')||d.body).appendChild(t); return t.tBodies[0];})() }
-  function findCSV(){ return d.getElementById('hist_win_csv') || Array.from(d.querySelectorAll('button,input[type="button"]')).find(b=>/exportar/i.test(b.textContent||b.value||'')); }
-  function findClear(){ return d.getElementById('hist_win_clear') || Array.from(d.querySelectorAll('button,input[type="button"]')).find(b=>/limpar/i.test(b.textContent||b.value||'')); }
+  // ===== toolbar + mount =====
+  function ensureMount(){
+    let wrap = $('[data-hist-win-wrap]');
+    if (wrap) return wrap;
+    wrap = el('section', 'hist-win-wrap');
+    wrap.setAttribute('data-hist-win-wrap','');
+    // inserir após o header
+    const hdr = document.querySelector('.app-header') || document.body.firstChild;
+    if (hdr && hdr.nextSibling) document.body.insertBefore(wrap, hdr.nextSibling);
+    else document.body.insertBefore(wrap, document.body.firstChild);
+    return wrap;
+  }
 
-  function applyFilters(data, q, state, from, to){
-    const qn = (q||'').trim().toLowerCase();
-    const fts = from? ts(from + (from.length<12?'T00:00:00':'')) : null;
-    const tts = to?   ts(to   + (to.length<12?'T23:59:59':'')) : null;
-    return data.filter(r=>{
-      if(qn){
-        const blob = (r.win||'') + ' ' + (r.reason||'');
-        if(blob.toLowerCase().indexOf(qn)===-1) return false;
-      }
-      if(state==='ok' && !r.valid) return false;
-      if(state==='bad' && r.valid) return false;
-      const dt = ts(r.date||r.dt||r.time||r.when||r.timestamp||r.createdAt);
-      if(fts!=null && dt<fts) return false;
-      if(tts!=null && dt>tts) return false;
-      return true;
+  function buildToolbar(onApply, onClear, onExport){
+    const bar = el('div','hist-toolbar');
+    bar.style.display='flex'; bar.style.flexWrap='wrap'; bar.style.gap='0.5rem'; bar.style.alignItems='center';
+
+    const status = el('select'); status.setAttribute('data-filter-status','');
+    ['Todos','Válido','Inválido'].forEach(v=>{ const o=el('option',null,v); o.value=v.toLowerCase(); status.appendChild(o); });
+
+    const from = el('input'); from.type='date'; from.setAttribute('data-filter-from','');
+    const to   = el('input'); to.type='date';   to.setAttribute('data-filter-to','');
+
+    const q = el('input'); q.type='search'; q.placeholder='Pesquisar WIN/justificação…'; q.setAttribute('data-filter-q','');
+
+    const btnA = el('button',null,'Aplicar'); btnA.addEventListener('click', onApply);
+    const btnC = el('button',null,'Limpar');  btnC.addEventListener('click', ()=>{
+      status.value='todos'; from.value=''; to.value=''; q.value=''; onClear();
+    });
+    const btnX = el('button',null,'Export CSV'); btnX.addEventListener('click', onExport);
+
+    bar.append(el('strong',null,'Filtros:'), status, from, to, q, btnA, btnC, btnX);
+    return {bar, refs:{status,from,to,q}};
+  }
+
+  function buildList(){
+    const box = el('div','hist-list');
+    box.setAttribute('data-hist-list','');
+    return box;
+  }
+
+  // ===== render =====
+  function applyFilters(rows, f){
+    let out = rows.slice();
+    // estado
+    if (f.status && f.status!=='todos'){
+      const wantValid = f.status==='válido';
+      out = out.filter(r => isTrue(r.valid) === wantValid);
+    }
+    // datas (compara com YYYY-MM-DD limites 00:00 / 23:59)
+    if (f.from){
+      const d = new Date(f.from+'T00:00:00');
+      out = out.filter(r => { const dt = parseTS(r.ts) || new Date(0); return dt >= d; });
+    }
+    if (f.to){
+      const d = new Date(f.to+'T23:59:59');
+      out = out.filter(r => { const dt = parseTS(r.ts) || new Date(0); return dt <= d; });
+    }
+    // query
+    if (f.q){
+      const needle = f.q.toUpperCase();
+      out = out.filter(r => {
+        const win = (r.win || r.hin || '').toString().toUpperCase();
+        const just = (r.justificacao || r.reason || '').toString().toUpperCase();
+        return win.includes(needle) || just.includes(needle);
+      });
+    }
+    return out;
+  }
+
+  function sortDesc(rows){
+    return rows.slice().sort((a,b)=>{
+      const da = parseTS(a.ts) || new Date(0);
+      const db = parseTS(b.ts) || new Date(0);
+      return db - da;
     });
   }
 
-  function render(){
-    const key = NAV.STORAGE.WIN_HISTORY;
-    const raw = load(key);
-    const tbody = findTableBody();
-    if(!tbody) return;
-
-    // controls
-    const input = findInput();
-    const stateSel = findState();
-    const from = findFrom();
-    const to = findTo();
-    const q = input && input.value || '';
-    let state = stateSel && stateSel.value || 'all';
-    if(/válido/i.test(state) || /valid/i.test(state)) state = 'ok';
-    if(/inválido/i.test(state) || /invalid/i.test(state)) state = 'bad';
-
-    // order newest first regardless of storage order
-    const sorted = [...raw].sort((a,b)=> ts(b.date||b.dt||b.time||b.timestamp)-ts(a.date||a.dt||a.time||a.timestamp));
-    const data = applyFilters(sorted, q, state, from && from.value, to && to.value);
-
-    // render rows
-    tbody.innerHTML='';
-    data.forEach(r=>{
-      const dtxt = new Date(ts(r.date||r.dt||r.time||r.timestamp)).toLocaleString();
-      const state = r.valid ? '<span class="badge good">Válido</span>' : '<span class="badge bad">Inválido</span>';
-      const reason = r.reason || '';
-      const photo = r.photoName || '';
-      const thumb = r.photoData ? '<img src="'+r.photoData+'" alt="" style="height:44px;border-radius:6px;border:1px solid var(--border)">' : '';
-      const forIcon = r.forense ? ' 🔍' : '';
-      const tr = d.createElement('tr');
-      tr.innerHTML = '<td>'+dtxt+'</td>'
-                   + '<td>'+ (r.win||'') + forIcon + '</td>'
-                   + '<td>'+state+'</td>'
-                   + '<td>'+reason+'</td>'
-                   + '<td>'+photo+'</td>'
-                   + '<td>'+thumb+'</td>';
-      if(r.forense){
-        tr.title = 'Forense: ' + JSON.stringify(r.forense);
-      }
-      tbody.appendChild(tr);
-    });
-  }
-
-  function toCSV(rows){
-    const esc=v=>(''+(v==null?'':v)).replace(/"/g,'""');
-    const header=['date','win','valid','reason','photoName','forense.hash','forense.flags','forense.notes'];
-    const lines=[header.join(',')];
+  function renderItems(listEl, rows){
+    listEl.innerHTML = '';
+    if (!rows.length){
+      const p = el('p',null,'Sem registos.');
+      listEl.appendChild(p);
+      return;
+    }
     rows.forEach(r=>{
-      const line=[
-        r.date||r.dt||r.time||r.timestamp||'',
-        r.win||'',
-        r.valid?'1':'0',
-        r.reason||'',
-        r.photoName||'',
-        (r.forense && r.forense.hash)||'',
-        (r.forense && Array.isArray(r.forense.flags)? r.forense.flags.join('|') : ''),
-        (r.forense && r.forense.notes)||''
-      ].map(esc).map(v=>'"'+v+'"').join(',');
-      lines.push(line);
-    });
-    return lines.join('\r\n');
-  }
+      const card = el('div','hist-card');
+      card.style.border='1px solid #e5e7eb'; card.style.borderRadius='8px'; card.style.padding='0.75rem'; card.style.margin='0.25rem 0';
 
-  function wire(){
-    const input = findInput(); const stateSel = findState(); const from = findFrom(); const to = findTo();
-    if(input) input.addEventListener('input', render);
-    if(stateSel) stateSel.addEventListener('change', render);
-    if(from) from.addEventListener('change', render);
-    if(to) to.addEventListener('change', render);
-    const csvBtn = findCSV();
-    if(csvBtn) csvBtn.addEventListener('click', function(e){
-      e.preventDefault();
-      const all = load(NAV.STORAGE.WIN_HISTORY);
-      const sorted = [...all].sort((a,b)=> ts(b.date||b.dt||b.time||b.timestamp)-ts(a.date||a.dt||a.time||a.timestamp));
-      const csv = toCSV(sorted);
-      const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
-      const url = URL.createObjectURL(blob);
-      const a = d.createElement('a'); a.href=url; a.download='historico_win.csv'; a.click();
-      URL.revokeObjectURL(url);
-    });
-    const clrBtn = findClear();
-    if(clrBtn) clrBtn.addEventListener('click', function(e){
-      e.preventDefault();
-      if(confirm('Limpar histórico WIN? Esta ação é irreversível.')){ save(NAV.STORAGE.WIN_HISTORY, []); render(); }
+      const dt = parseTS(r.ts) || new Date(0);
+      const top = el('div'); top.style.display='flex'; top.style.justifyContent='space-between'; top.style.gap='1rem';
+
+      const left = el('div');
+      const t1 = el('div',null,(r.win || r.hin || '(sem WIN)'));
+      const t2 = el('small',null, fmt(dt));
+      left.append(t1,t2);
+
+      const badge = el('strong',null, isTrue(r.valid) ? 'VÁLIDO' : 'INVÁLIDO');
+      badge.setAttribute('data-valid', isTrue(r.valid)?'1':'0');
+
+      const just = el('div'); just.style.marginTop='0.25rem';
+      just.textContent = r.justificacao || r.reason || '';
+
+      top.append(left,badge);
+      card.append(top, just);
+      listEl.appendChild(card);
     });
   }
 
-  ready(function(){ wire(); render(); });
-})(window, document);
+  // ===== CSV =====
+  function toCSV(rows){
+    const headers = ['id','ts','win','valid','resultado','justificacao'];
+    const esc = v => `"${String(v ?? '').replace(/"/g,'""')}"`;
+    const lines = [headers.map(h=>esc(h)).join(',')];
+    rows.forEach(r=>{
+      const row = [
+        r.id, r.ts, (r.win || r.hin || ''), isTrue(r.valid)?1:0,
+        (r.resultado || (isTrue(r.valid)?'VÁLIDO':'INVÁLIDO')),
+        (r.justificacao || r.reason || '')
+      ];
+      lines.push(row.map(esc).join(','));
+    });
+    const blob = new Blob(["\uFEFF" + lines.join('\r\n')], {type:'text/csv;charset=utf-8;'});
+    const a = el('a'); a.href = URL.createObjectURL(blob);
+    a.download = `historico_win_${new Date().toISOString().slice(0,19).replace(/[:T]/g,'-')}.csv`;
+    document.body.appendChild(a); a.click(); a.remove();
+  }
+
+  // ===== boot =====
+  function boot(){
+    if (document.body.dataset.histWinBound) return;
+    document.body.dataset.histWinBound = '1';
+
+    const wrap = ensureMount();
+    const {bar, refs} = buildToolbar(apply, clear, () => toCSV(current));
+    const list = buildList();
+    wrap.append(bar, list);
+
+    let full = sortDesc(readAll());
+    let current = full.slice();
+
+    function refresh(){
+      current = sortDesc(applyFilters(full, {
+        status: refs.status.value,
+        from: refs.from.value,
+        to: refs.to.value,
+        q: refs.q.value.trim()
+      }));
+      renderItems(list, current);
+    }
+    function apply(){ refresh(); }
+    function clear(){ refs.status.value='todos'; refs.from.value=''; refs.to.value=''; refs.q.value=''; refresh(); }
+
+    // primeira renderização
+    refresh();
+
+    // expõe API mínima (opcional)
+    window.IDMAR_HIST_WIN = { refresh, export:()=>toCSV(current) };
+  }
+
+  if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+})();
