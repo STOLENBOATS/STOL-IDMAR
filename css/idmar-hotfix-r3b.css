@@ -61,3 +61,22 @@ th{font-weight:800}
 
 /* footer */
 .footer{opacity:.9;color:#334155}
+
+/* === IDMAR: normalização de margens/containers === */
+:root{
+  --idmar-container-max: 1100px;
+  --idmar-container-pad: 16px;
+  --idmar-block-gap: .75rem;
+}
+main{
+  max-width: var(--idmar-container-max);
+  margin: 1.25rem auto;
+  padding: 0 var(--idmar-container-pad);
+}
+.container{
+  max-width: var(--idmar-container-max);
+  margin: 1.25rem auto;
+  padding: 0 var(--idmar-container-pad);
+}
+.panel{ margin: var(--idmar-block-gap) 0; }
+
