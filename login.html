@@ -12,7 +12,7 @@
 
   <!-- One-file opcional (tema/i18n). Se não usas, podes remover esta linha. -->
   <script src="js/idmar-one.r3.js"></script>
-  <script defer src="js/idmar-header-only.all.js?v=1"></script>
+  <!-- REMOVIDO: <script defer src="js/idmar-header-only.all.js?v=1"></script> -->
 
   <style>
     /* layout: footer no fundo */
@@ -24,7 +24,7 @@
     .brandbar{display:flex;align-items:center;gap:.75rem;padding:1rem 1.25rem;border-bottom:1px solid var(--border);background:var(--bg-elev)}
     .brandbar img{height:40px}
     .brandbar .title{display:flex;flex-direction:column}
-    .brandbar .title .app{font-size:2rem; line-height:1.1; font-weight:800;} /* nome da app maior */
+    .brandbar .title .app{font-size:2rem; line-height:1.1; font-weight:800;}
     .brandbar .title .sub{opacity:.8}
 
     /* cartão de login */
@@ -48,7 +48,6 @@
       <div class="sub">Identificação Marítima — Cascos & Motores</div>
     </div>
     <div style="margin-left:auto">
-      <!-- toggle de tema (opcional) -->
       <button id="idmar-theme-toggle" class="ghost" title="Dia/Noite">🌗</button>
     </div>
   </header>
@@ -71,8 +70,6 @@
             <button type="submit" class="btn">Entrar</button>
           </div>
           <div class="hint">Após entrar, será redirecionado para o Validador.</div>
-          <!-- opcional: credenciais demo -->
-          <!-- <div class="hint">Credenciais: <code>admin</code> / <code>Admin2025</code></div> -->
         </form>
       </div>
     </div>
@@ -81,7 +78,6 @@
   <footer class="footer">IDMAR — v2.2.7-baseline+merge-r2.3</footer>
 
   <script>
-    // Garantir light por defeito (caso exista preferência antiga)
     (function(){
       try{
         if(!localStorage.getItem('idmar-theme')){
@@ -91,12 +87,11 @@
       }catch(e){}
     })();
 
-    // Login simples: cria sessões para retrocompatibilidade e segue para validador
     document.getElementById('loginForm').addEventListener('submit', function(e){
       e.preventDefault();
       try{
         sessionStorage.setItem('IDMAR_SESSION','ok');
-        sessionStorage.setItem('NAV_SESSION','ok'); // retrocompatibilidade
+        sessionStorage.setItem('NAV_SESSION','ok');
       }catch(e){}
       location.href = 'validador.html';
     });
