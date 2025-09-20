@@ -32,6 +32,7 @@
     .footer{border-top:1px solid var(--border);padding:1rem;text-align:left;opacity:.85;background:var(--bg-elev)}
   </style>
 
+  <!-- Gate de sessão simples -->
   <script>
     (function(){
       try{
@@ -41,16 +42,18 @@
     })();
   </script>
 
-  <!-- i18n + header -->
+  <!-- i18n + header (apenas estes dois) -->
   <script defer src="js/idmar-i18n.js?v=1"></script>
-  <script defer src="js/idmar-header-only.all.v5.js?v=5"></script>
+  <script defer src="js/idmar-header-only.all.v4.js?v=4"></script>
 
-  <!-- Validador JS (r1) -->
-  <script defer src="js/validador-win.r1.js?v=r1"></script>
-  <script defer src="js/validador-motor.r1.js?v=r1"></script>
+  <!-- scripts específicos do Validador (se existirem) -->
+  <!-- <script defer src="js/validador-win.js?v=..."></script> -->
+  <!-- <script defer src="js/validador-motor.js?v=..."></script> -->
 </head>
 
 <body>
+  <!-- header é injetado por JS -->
+
   <main class="container">
     <h1>Validador</h1>
 
@@ -64,7 +67,14 @@
           <div style="margin:.5rem 0">
             <button id="btnWin" type="submit">Validar WIN</button>
           </div>
-          <div id="winOut" data-result style="margin-top:.75rem"></div>
+
+          <div style="margin-top:.5rem">
+            <label for="winPhoto">Foto opcional / Optional photo</label>
+            <input id="winPhoto" type="file" accept="image/*"/>
+          </div>
+
+          <div id="winOut" style="margin-top:.75rem"></div>
+
           <table>
             <thead>
               <tr><th>Campo / Field</th><th>Valor / Value</th><th>Interpretação / Meaning</th></tr>
@@ -79,24 +89,41 @@
         <h2>Validador Motor</h2>
         <form id="formMotor">
           <label for="brand">Marca</label>
-          <select id="brand" name="marca">
+          <select id="brand">
             <option>Yamaha</option><option>Honda</option><option>Suzuki</option><option>Tohatsu</option>
             <option>Mercury</option><option>MerCruiser</option><option>Volvo Penta</option>
             <option>Yanmar</option><option>Evinrude/Johnson</option>
           </select>
 
-          <div id="brandDynamic" data-motor-dynamic></div>
+          <div id="brandDynamic"></div>
 
-          <div style="margin:.5rem 0">
-            <button id="btnMotor" type="submit" data-module="motor">Validar Motor</button>
+          <div style="margin-top:.5rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.5rem">
+            <div><label>Modelo (pesquisa)</label><input id="srch_model" type="text" placeholder="Ex.: DF140A"/></div>
+            <div><label>Potência (hp)</label><input id="srch_power" type="text" placeholder="Ex.: 150"/></div>
+            <div><label>Cilindrada (cc)</label><input id="srch_disp" type="text" placeholder="Ex.: 2670"/></div>
+            <div><label>Ano</label><input id="srch_year" type="text" placeholder="Ex.: 2017"/></div>
+            <div><label>Origem</label><input id="srch_origin" type="text" placeholder="Ex.: Japão"/></div>
           </div>
 
-          <div id="motorOut" data-result="motor" style="margin-top:.75rem"></div>
+          <div style="margin:.5rem 0">
+            <button id="btnMotor" type="submit">Validar Motor</button>
+          </div>
+
+          <div style="margin-top:.5rem">
+            <label for="motorPhoto">Foto opcional / Optional photo</label>
+            <input id="motorPhoto" type="file" accept="image/*"/>
+          </div>
+
+          <div id="motorOut" style="margin-top:.75rem"></div>
         </form>
       </div>
     </section>
   </main>
 
   <footer class="footer" id="fallback-footer">IDMAR — v2.2.7-baseline+merge-r3.3</footer>
+
+  <!-- Removido idmar-layout.r3b.js para não duplicar header -->
+  <script src="js/validador-win.r3b.js?v=r3b"></script>
+  <script src="js/validador-motor.r3b.js?v=r3b"></script>
 </body>
 </html>
