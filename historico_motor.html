@@ -26,7 +26,6 @@
     button{cursor:pointer}
   </style>
 
-  <!-- Gate -->
   <script>
     (function(){
       try{
@@ -36,19 +35,15 @@
     })();
   </script>
 
-  <!-- i18n + header (apenas estes dois) -->
+  <!-- i18n + header -->
   <script defer src="js/idmar-i18n.js?v=1"></script>
   <script defer src="js/idmar-header-only.all.v5.js?v=5"></script>
 
-  <!-- scripts específicos da página, se houver (ex.: historico-motor.js) -->
-  <!-- <script defer src="js/historico-motor.js?v=..."></script> -->
+  <!-- Histórico Motor (r1.2) -->
   <script defer src="js/historico-motor.r1.2.js?v=r1.2"></script>
-
 </head>
 
 <body>
-  <!-- header é injetado por JS -->
-
   <main class="container">
     <h1>Histórico — Motores</h1>
 
@@ -61,17 +56,17 @@
           <option>Mercury</option><option>MerCruiser</option><option>Volvo Penta</option>
           <option>Yanmar</option><option>Evinrude/Johnson</option>
         </select>
-        <select id="hist_motor_state" aria-label="Estado">
-          <option value="all">Estado (todos)</option>
+        <select id="hist_motor_state" data-filter="estado" aria-label="Estado">
+          <option value="">Estado (todos)</option>
           <option value="ok">Válido</option>
-          <option value="bad">Inválido</option>
+          <option value="erro">Inválido</option>
         </select>
-        <input id="hist_motor_from" type="date" placeholder="De" />
-        <input id="hist_motor_to" type="date" placeholder="Até" />
+        <input id="hist_motor_from" type="date" data-filter="from" placeholder="De" />
+        <input id="hist_motor_to" type="date" data-filter="to" placeholder="Até" />
       </div>
       <div class="actions">
-        <button id="hist_motor_csv">Exportar CSV</button>
-        <button id="hist_motor_clear">Limpar histórico (Motor)</button>
+        <button id="hist_motor_csv" data-export="csv">Exportar CSV</button>
+        <button id="hist_motor_clear" type="button">Limpar histórico (Motor)</button>
       </div>
     </section>
 
@@ -85,8 +80,7 @@
             <th>Modelo</th>
             <th>Estado</th>
             <th>Justificação</th>
-            <th>Foto (nome)</th>
-            <th>Miniatura</th>
+            <th>Anexos</th>
           </tr>
         </thead>
         <tbody id="hist_motor_tbody"></tbody>
@@ -96,7 +90,15 @@
 
   <footer class="footer" id="fallback-footer">IDMAR — v2.2.7-baseline+merge-r2.3</footer>
 
-  <!-- Removido idmar-layout.r3b.js -->
- 
+  <script>
+    document.getElementById('hist_motor_clear')?.addEventListener('click', () => {
+      if (!confirm('Apagar histórico de Motores neste navegador?')) return;
+      try {
+        localStorage.removeItem('history_motor');
+        localStorage.removeItem('historyMotor');
+      } catch (e) {}
+      location.reload();
+    });
+  </script>
 </body>
 </html>
