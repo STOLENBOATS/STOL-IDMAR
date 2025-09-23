@@ -14,20 +14,14 @@
 <!-- 🔁 COMPAT primeiro -->
 <script defer src="js/history-compat.r1.js?v=1"></script>
 
-<!-- anexos + thumbnail -->
+<!-- anexos + thumbnail (antes do forense-r5) -->
 <script defer src="js/forense-attach.compat.r1b.js?v=1.6"></script>
 <script defer src="js/forense-thumb.r1.js?v=1.58"></script>
 
-<!-- forense (consolidado) DEPOIS dos anexos -->
+<!-- forense consolidado SÓ DEPOIS -->
 <script defer src="js/forense-r5.js?v=r5"></script>
 
-<!-- (opcional) preview imediato no workspace -->
-<!-- <script defer src="js/forense-enable-uploader.r1.js?v=1"></script> -->
-
-
-<!-- NÃO carregar forense-r1.js -->
-
-
+  
   <!-- estilos rápidos (podes manter aqui ou no teu CSS global) -->
   <style>
     :root{--bg:#f8fafc;--fg:#0f172a;--bg-elev:#ffffff;--border:#e5e7eb}
@@ -47,10 +41,10 @@
       <h2>Carregar evidências</h2>
       <div class="row" style="display:flex;gap:.5rem;flex-wrap:wrap">
         <input id="evPhotos" type="file" accept="image/*" multiple />
-        <select id="evContexto">
-          <option value="win">Contexto: WIN/HIN</option>
-          <option value="motor">Contexto: Motor</option>
-        </select>
+        <select id="contexto">
+        <option value="win">Contexto: WIN/HIN</option>
+        <option value="motor">Contexto: Motor</option>
+    </select>
         <button id="evAttach">Anexar ao histórico mais recente</button>
       </div>
       <div id="evMeta" class="meta" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:.5rem;margin-top:.5rem"></div>
