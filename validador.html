@@ -125,20 +125,21 @@
   <footer class="footer" id="fallback-footer">IDMAR — v2.2.7-baseline+merge-r3.3</footer>
 
 <!-- compat: garante estrutura de histórico igual em todas as chaves -->
-<script defer src="js/history-compat.r1.js?v=1"></script>
 
-<!-- attach compat: regista anexo (nome + meta.forense[]) no histórico -->
-<script defer src="js/forense-attach.compat.r1b.js?v=1"></script>
+  <!-- normaliza as keys dos históricos (win/motor) -->
+  <script defer src="js/history-compat.r1.js?v=1"></script>
 
-<!-- (opcional) thumb: gera miniatura base64 e guarda em meta.forense[].thumb -->
-<script defer src="js/forense-thumb.r1.js?v=1"></script>
+  <!-- liga os inputs #winPhoto e #motorPhoto ao histórico + cria miniaturas -->
+  <script defer src="js/forense-attach.compat.r1b.js?v=1.6"></script>
+  <script defer src="js/forense-thumb.r1.js?v=1.58"></script>
 
-<!-- patch do validador: apanha winPhoto/motorPhoto e chama o attach -->
-<script defer src="js/patch-validador-foto.r1.js?v=1"></script>
+  <!-- (opcional) patch que garante ids corretos nos inputs, se a página mudar -->
+  <script defer src="js/patch-validador-foto.r1.js?v=1"></script>
 
-<!-- scripts legacy existentes -->
-<script src="js/validador-win.r3b.js?v=r3b"></script>
-<script src="js/validador-motor.r3b.js?v=r3b"></script>
+  <!-- validadores “r3b” originais (ficam no fim) -->
+  <script src="js/validador-win.r3b.js?v=r3b"></script>
+  <script src="js/validador-motor.r3b.js?v=r3b"></script>
+
 
   
 </body>
