@@ -6,29 +6,27 @@
   <title>IDMAR — Validador</title>
   <link rel="icon" href="img/logo-pm.png" />
 
+  <!-- Estilos base (iguais ao resto do site) -->
   <style>
     :root{--bg:#f8fafc;--fg:#0f172a;--bg-elev:#ffffff;--border:#e5e7eb;--link:#0b6bcb}
     html,body{height:100%}
-    body{background:var(--bg);color:var(--fg);margin:0;display:flex;flex-direction:column;
-         font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial,sans-serif}
+    body{
+      background:var(--bg); color:var(--fg); margin:0;
+      display:flex; flex-direction:column;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial,sans-serif
+    }
     main{flex:1}
     .container{max-width:1100px;margin:1.25rem auto;padding:0 1rem}
     .panel{background:var(--bg-elev);border:1px solid var(--border);border-radius:12px;padding:1rem;margin:.75rem 0}
     .two{display:grid;grid-template-columns:1fr;gap:1rem}
     @media(min-width:980px){ .two{grid-template-columns:1fr 1fr} }
     label{display:block;margin:.35rem 0 .25rem}
-    input[type="text"], input[type="search"], input[type="file"], select, textarea{
+    input[type="text"],input[type="search"],input[type="file"],select,textarea{
       width:100%;border:1px solid var(--border);background:#fff;border-radius:10px;padding:.5rem .6rem;
     }
     button{background:#0b6bcb;color:#fff;border:none;border-radius:10px;padding:.55rem .9rem;cursor:pointer}
     table{width:100%;border-collapse:collapse;margin-top:.5rem}
     th,td{border-bottom:1px solid var(--border);padding:.6rem .5rem;text-align:left}
-    .small{opacity:.75;font-size:.9em}
-    .badge{display:inline-block;border-radius:999px;padding:.15rem .55rem;font-weight:600}
-    .good{background:#10b98120;color:#065f46}
-    .bad{background:#ef444420;color:#7f1d1d}
-    details.forense-box{margin-top:.75rem;border:1px dashed var(--border);border-radius:10px;padding:.5rem}
-    .forense-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.5rem;margin-top:.5rem}
     .footer{border-top:1px solid var(--border);padding:1rem;text-align:left;opacity:.85;background:var(--bg-elev)}
   </style>
 
@@ -42,15 +40,23 @@
     })();
   </script>
 
-  <!-- i18n + header (apenas estes dois) -->
+  <!-- i18n + header -->
   <script defer src="js/idmar-i18n.js?v=1"></script>
   <script defer src="js/idmar-header-only.all.v4.js?v=4"></script>
 
-  <!-- scripts específicos do Validador (se existirem) -->
-  <!-- <script defer src="js/validador-win.js?v=..."></script> -->
+  <!-- ORDEM CRÍTICA (para anexos funcionarem no histórico):
+       1) compat das chaves de histórico
+       2) capturar fotos + salvar nome/base64/meta (forense attach)
+       3) gerar miniatura (base64) a partir do ficheiro selecionado
+       4) só depois os validadores WIN/MOTOR
+  -->
+  <script defer src="js/history-compat.r1.js?v=1"></script>
+  <script defer src="js/forense-attach.compat.r1b.js?v=1.6"></script>
+  <script defer src="js/forense-thumb.r1.js?v=1.58"></script>
 
-  <!-- <script defer src="js/validador-motor.js?v=..."></script> -->
-    <script defer src="js/compat-motor-injector.r0.js?v=0"></script>
+  <!-- Validadores (mantém os teus .r3b) -->
+  <script defer src="js/validador-win.r3b.js?v=r3b"></script>
+  <script defer src="js/validador-motor.r3b.js?v=r3b"></script>
 </head>
 
 <body>
@@ -66,6 +72,7 @@
         <form id="formWin">
           <label for="win">WIN / HIN</label>
           <input id="win" type="text" placeholder="Ex.: PT-ABC12345D404"/>
+
           <div style="margin:.5rem 0">
             <button id="btnWin" type="submit">Validar WIN</button>
           </div>
@@ -97,8 +104,7 @@
             <option>Yanmar</option><option>Evinrude/Johnson</option>
           </select>
 
-          <div id="brandDynamic"></div>
-
+          <!-- Campos de pesquisa/auxiliares (mantidos) -->
           <div style="margin-top:.5rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.5rem">
             <div><label>Modelo (pesquisa)</label><input id="srch_model" type="text" placeholder="Ex.: DF140A"/></div>
             <div><label>Potência (hp)</label><input id="srch_power" type="text" placeholder="Ex.: 150"/></div>
@@ -122,25 +128,6 @@
     </section>
   </main>
 
-  <footer class="footer" id="fallback-footer">IDMAR — v2.2.7-baseline+merge-r3.3</footer>
-
-<!-- compat: garante estrutura de histórico igual em todas as chaves -->
-
-  <!-- normaliza as keys dos históricos (win/motor) -->
-  <script defer src="js/history-compat.r1.js?v=1"></script>
-
-  <!-- liga os inputs #winPhoto e #motorPhoto ao histórico + cria miniaturas -->
-  <script defer src="js/forense-attach.compat.r1b.js?v=1.6"></script>
-  <script defer src="js/forense-thumb.r1.js?v=1.58"></script>
-
-  <!-- (opcional) patch que garante ids corretos nos inputs, se a página mudar -->
-  <script defer src="js/patch-validador-foto.r1.js?v=1"></script>
-
-  <!-- validadores “r3b” originais (ficam no fim) -->
-  <script src="js/validador-win.r3b.js?v=r3b"></script>
-  <script src="js/validador-motor.r3b.js?v=r3b"></script>
-
-
-  
+  <footer class="footer" id="fallback-footer">IDMAR — v2.2.7</footer>
 </body>
 </html>
