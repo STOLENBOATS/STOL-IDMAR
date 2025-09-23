@@ -6,21 +6,25 @@
   <title>IDMAR — Forense</title>
   <link rel="icon" href="img/logo-pm.png"/>
 
-  
-  <!-- i18n + header -->
-  <script defer src="js/idmar-i18n.js?v=1"></script>
-  <script defer src="js/idmar-header-only.all.v4.js?v=4"></script>
 
-<!-- forense consolidado -->
-<script defer src="js/forense-r5.js?v=r5"></script>
+<!-- i18n + header -->
+<script defer src="js/idmar-i18n.js?v=1"></script>
+<script defer src="js/idmar-header-only.all.v4.js?v=4"></script>
 
 <!-- 🔁 COMPAT primeiro -->
 <script defer src="js/history-compat.r1.js?v=1"></script>
 
-<!-- depois o attach -->
-<script defer src="js/forense-attach.compat.r1b.js?v=1"></script>
-<script defer src="js/forense-thumb.r1.js?v=1"></script>
-  
+<!-- anexos + thumbnail -->
+<script defer src="js/forense-attach.compat.r1b.js?v=1.6"></script>
+<script defer src="js/forense-thumb.r1.js?v=1.58"></script>
+
+<!-- forense (consolidado) DEPOIS dos anexos -->
+<script defer src="js/forense-r5.js?v=r5"></script>
+
+<!-- (opcional) preview imediato no workspace -->
+<!-- <script defer src="js/forense-enable-uploader.r1.js?v=1"></script> -->
+
+
 <!-- NÃO carregar forense-r1.js -->
 
 
@@ -43,7 +47,7 @@
       <h2>Carregar evidências</h2>
       <div class="row" style="display:flex;gap:.5rem;flex-wrap:wrap">
         <input id="evPhotos" type="file" accept="image/*" multiple />
-        <select id="evContext">
+        <select id="evContexto">
           <option value="win">Contexto: WIN/HIN</option>
           <option value="motor">Contexto: Motor</option>
         </select>
