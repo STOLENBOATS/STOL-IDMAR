@@ -36,20 +36,12 @@
     })();
   </script>
 
-<!-- i18n + header -->
-<script defer src="js/idmar-i18n.js?v=1"></script>
-<script defer src="js/idmar-header-only.all.v4.js?v=4"></script>
+  <!-- i18n + header (apenas estes dois) -->
+  <script defer src="js/idmar-i18n.js?v=1"></script>
+  <script defer src="js/idmar-header-only.all.v4.js?v=4"></script>
 
-<!-- 🔁 COMPAT antes de tudo o resto -->
-
-<!-- sanitização e script da página -->
-
-  <script defer src="js/history-compat.r1.js?v=1"></script>
-<script defer src="js/sanitize-historico-motor.r1.js?v=1"></script>
-<script defer src="js/historico-motor.r3b.js?v=r3b"></script>
-
-
-
+  <!-- scripts específicos da página, se houver (ex.: historico-motor.js) -->
+  <!-- <script defer src="js/historico-motor.js?v=..."></script> -->
 </head>
 
 <body>
@@ -103,6 +95,6 @@
   <footer class="footer" id="fallback-footer">IDMAR — v2.2.7-baseline+merge-r2.3</footer>
 
   <!-- Removido idmar-layout.r3b.js -->
-
+  <script src="js/historico-motor.r3b.js?v=r3b"></script>
 </body>
 </html>
