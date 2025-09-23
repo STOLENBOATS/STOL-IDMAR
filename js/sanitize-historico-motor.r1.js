@@ -1,39 +1,26 @@
-/* IDMAR — Sanitize histórico MOTOR r1
-   - Remove thumbs base64 gigantes de meta.forense
-   - Preenche 'foto' com o primeiro anexo se estiver vazio
-   - Executa uma vez ao abrir historico_motor.html
-*/
-(function(){
-  try{
-    function read(k){ try{ const r=localStorage.getItem(k); return r?JSON.parse(r):[] }catch(_){ return [] } }
-    function write(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(_){} }
-    function compact(arr){
-      return (arr||[]).map(function(x){
-        if (x && typeof x==='object'){
-          if (x.thumb_dataurl && x.thumb_dataurl.length > 100) delete x.thumb_dataurl;
-        }
-        return x;
-      });
+// Normaliza histórico Motor: garante .foto e .thumb no nível raiz
+(() => {
+  const K1 = 'history_motor', K2 = 'historyMotor';
+  const raw = localStorage.getItem(K1) || localStorage.getItem(K2) || '[]';
+  let list; try { list = JSON.parse(raw) || []; } catch { list = []; }
+
+  let changed = false;
+  list = list.map(x => {
+    const foto  = x.foto  || x.fotoNome || x.meta?.foto  || '';
+    const thumb = x.thumb || x.meta?.thumb || x.meta?.thumbnail || '';
+    if (foto !== x.foto || thumb !== x.thumb) {
+      changed = true;
+      return { ...x, foto, thumb };
     }
-    function runPair(K1,K2){
-      const A = read(K1), B = read(K2);
-      if (!A.length && !B.length) return;
-      const base = A.length ? A : B;
-      const out = base.map(function(rec){
-        try{
-          rec.meta = rec.meta || {};
-          if (Array.isArray(rec.meta.forense)) {
-            rec.meta.forense = compact(rec.meta.forense);
-            if (!rec.foto && rec.meta.forense[0] && rec.meta.forense[0].file) {
-              rec.foto = rec.meta.forense[0].file;
-            }
-          }
-        }catch(_){}
-        return rec;
-      });
-      write(K1,out); write(K2,out);
-    }
-    runPair('history_motor','historyMotor');
-    console.log('[sanitize-motor.r1] OK');
-  }catch(e){ console.error('[sanitize-motor.r1]', e); }
+    return x;
+  });
+
+  if (changed) {
+    try {
+      const s = JSON.stringify(list);
+      localStorage.setItem(K1, s);
+      localStorage.setItem(K2, s);
+    } catch (_) {}
+  }
+  console.log('[sanitize-motor.r1] OK');
 })();
