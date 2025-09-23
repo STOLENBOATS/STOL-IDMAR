@@ -1,3 +1,5 @@
+
+// IDMAR — sanitize-historico-win.r1
 // Normaliza histórico WIN: garante .foto e .thumb no nível raiz
 (() => {
   const K1 = 'history_win', K2 = 'historyWin';
@@ -6,8 +8,8 @@
 
   let changed = false;
   list = list.map(x => {
-    const foto  = x.foto  || x.fotoNome || x.meta?.foto  || '';
-    const thumb = x.thumb || x.meta?.thumb || x.meta?.thumbnail || '';
+    const foto  = x.foto  || x.fotoNome || x.meta?.foto  || (x.meta?.forense && x.meta.forense[0]?.file) || '';
+    const thumb = x.thumb || x.meta?.thumb || x.meta?.thumbnail || (x.meta?.forense && x.meta.forense[0]?.thumb) || '';
     if (foto !== x.foto || thumb !== x.thumb) {
       changed = true;
       return { ...x, foto, thumb };

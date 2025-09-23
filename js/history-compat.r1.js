@@ -1,3 +1,4 @@
+
 /* IDMAR — history-compat.r1
    - Sincroniza (history_win <-> historyWin) e (history_motor <-> historyMotor)
    - Normaliza shape: id, ts, valid/estado/estadoLabel/resultado, foto, meta.forense
@@ -38,6 +39,7 @@
         return fx;
       });
       if (!rec.foto && rec.meta.forense[0] && rec.meta.forense[0].file) rec.foto = rec.meta.forense[0].file;
+      if (!rec.thumb && rec.meta.forense[0] && rec.meta.forense[0].thumb) rec.thumb = rec.meta.forense[0].thumb;
     }
 
     if (kind==='WIN'){ if (!rec.win && rec.hin) rec.win = rec.hin; }
