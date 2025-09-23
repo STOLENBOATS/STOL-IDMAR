@@ -1,63 +1,44 @@
-/* IDMAR — patch-validador-foto.r1
-   - Se houver inputs de ficheiro no Validador, preenche `foto` do registo recém criado
-   - WIN: #win, botão #btnWin, ficheiro #winPhoto
-   - Motor: form #formMotor, select #brand, ficheiro #motorPhoto
+/* IDMAR — patch-validador-foto.r1.js
+   Após validares WIN/Motor, se houver ficheiro nos inputs #winPhoto/#motorPhoto,
+   chama o ForenseAttachCompat para anexar ao registo mais recente.
 */
 (function(){
-  function read(k){ try{ const r=localStorage.getItem(k); return r?JSON.parse(r):[] }catch(_){return[]} }
-  function write(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(_){ } }
+  const wait = (ms)=>new Promise(r=>setTimeout(r,ms));
+  function byId(id){ return document.getElementById(id); }
 
-  function syncBoth(keyA,keyB,list){ write(keyA,list); write(keyB,list); }
-
-  function onWin(){
-    const inp = document.getElementById('win');
-    const file = document.getElementById('winPhoto');
-    if (!inp || !file) return;
-
-    const btn = document.getElementById('btnWin') || document.querySelector('#formWin button[type="submit"]');
-    if (!btn) return;
-
-    btn.addEventListener('click', ()=> setTimeout(()=>{
-      const list = read('history_win').length ? read('history_win') : read('historyWin');
-      if (!list.length) return;
-      const top = list[0];
-      // só se corresponder ao que acabámos de validar
-      if (top && top.win && inp.value && top.win.toUpperCase() === inp.value.toUpperCase()){
-        if (!top.foto && file.files && file.files[0]) {
-          top.foto = file.files[0].name;
-          const updated = [top, ...list.slice(1)];
-          syncBoth('history_win','historyWin', updated);
-          console.log('[patch-validador-foto.r1] win foto:', top.foto);
-        }
-      }
-    }, 0));
+  async function afterWinSubmit(){
+    const inp = byId('winPhoto');
+    if (inp && inp.files && inp.files[0]){
+      await wait(30); // dá tempo ao r3b para escrever o histórico
+      window.ForenseAttachCompat?.attachWIN(inp.files[0]);
+    }
+  }
+  async function afterMotorSubmit(){
+    const inp = byId('motorPhoto');
+    if (inp && inp.files && inp.files[0]){
+      await wait(30);
+      window.ForenseAttachCompat?.attachMotor(inp.files[0]);
+    }
   }
 
-  function onMotor(){
-    const form = document.getElementById('formMotor');
-    const brandSel = document.getElementById('brand');
-    const file = document.getElementById('motorPhoto');
-    if (!form || !brandSel || !file) return;
+  function bind(){
+    // WIN
+    const fWin = byId('formWin');
+    const btnW = byId('btnWin');
+    if (fWin) fWin.addEventListener('submit', ()=> setTimeout(afterWinSubmit, 0));
+    if (btnW) btnW.addEventListener('click', ()=> setTimeout(afterWinSubmit, 0));
 
-    form.addEventListener('submit', ()=> setTimeout(()=>{
-      const list = read('history_motor').length ? read('history_motor') : read('historyMotor');
-      if (!list.length) return;
-      const top = list[0];
-      // se for a mesma marca que acabámos de validar (heurística simples)
-      if (top && top.marca && brandSel.value && top.marca.toLowerCase() === brandSel.value.toLowerCase()){
-        if (!top.foto && file.files && file.files[0]) {
-          top.foto = file.files[0].name;
-          const updated = [top, ...list.slice(1)];
-          syncBoth('history_motor','historyMotor', updated);
-          console.log('[patch-validador-foto.r1] motor foto:', top.foto);
-        }
-      }
-    }, 0));
+    // Motor
+    const fM = byId('formMotor');
+    const btnM = byId('btnMotor');
+    if (fM) fM.addEventListener('submit', ()=> setTimeout(afterMotorSubmit, 0));
+    if (btnM) btnM.addEventListener('click', ()=> setTimeout(afterMotorSubmit, 0));
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', ()=>{ onWin(); onMotor(); });
+  if (document.readyState==='loading') {
+    document.addEventListener('DOMContentLoaded', bind);
   } else {
-    onWin(); onMotor();
+    bind();
   }
 })();
+
