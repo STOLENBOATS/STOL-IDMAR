@@ -67,3 +67,5 @@ a.nav-ribbon[data-section="logout"]{
   header nav, .nav, .top-nav, .menu{ gap:.4rem; }
   header nav a.nav-ribbon{ width:100%; justify-content:flex-start; border-radius:14px; }
 }
+
+.nav-ribbon.is-active{ box-shadow:0 12px 24px var(--pm-shadow); filter:saturate(1.05); }
