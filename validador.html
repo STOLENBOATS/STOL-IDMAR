@@ -1,114 +1,12 @@
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>IDMAR — Validador</title>
-  <link rel="icon" href="img/logo-pm.png" />
+<!doctype html><html lang='pt'><head><meta charset='utf-8'/><meta name='viewport' content='width=device-width, initial-scale=1'/><title>IDMAR — Validador</title>  <link rel="stylesheet" href="css/styles.css">
 
-  <!-- CSS base -->
-  <link rel="stylesheet" href="css/styles.css">
-  <link rel="stylesheet" href="css/theme-soft-light.v1.css"><!-- tema claro -->
-  <link rel="stylesheet" href="css/nav-ribbon.v5.css"><!-- botões "ribbon" v5 -->
-
-  <!-- (opcional) o teu <style> inline pode vir aqui, como já tens -->
-
-  <!-- Gate de sessão simples -->
-  <script>
-    (function(){
-      try{
-        var ok = sessionStorage.getItem('IDMAR_SESSION')==='ok' || sessionStorage.getItem('NAV_SESSION')==='ok';
-        if(!ok) location.replace('login.html');
-      }catch(e){}
-    })();
-  </script>
-
-  <!-- Versão + branding -->
-  <script>window.IDMAR_VERSION="Vs 1.3";</script>
+  <link rel="stylesheet" href="css/theme-soft-light.v1.css">
+  <link rel="stylesheet" href="css/nav-ribbon.v5.css">
+  <script>window.IDMAR_VERSION="Vs 1.3"; window.IDMAR_FOOTER_TEXT="IDMAR · Identificação Marítima — Cascos & Motores";</script>
   <script defer src="js/idmar-config.v4.js"></script>
-
-  <!-- Core: i18n + header -->
-  <script defer src="js/idmar-i18n.js"></script>
-  <script defer src="js/idmar-header-only.all.v4.js"></script>
-
-  <!-- Overrides (aplicam labels, ribbons e rodapé) -->
+  <script defer src="js/idmar-i18n.js?v=1"></script>
+  <script defer src="js/idmar-header-only.all.v4.js?v=4"></script>
   <script defer src="js/header-override.v4.js"></script>
-  <script defer src="js/i18n-boot.js"></script>
-  <script defer src="js/idmar-version.v4.js"></script>
-</head>
-
-
-<body>
-  <!-- header é injetado por JS -->
-
-  <main class="container">
-    <h1>Validador</h1>
-
-    <section class="two">
-      <!-- WIN -->
-      <div class="panel">
-        <h2>Validador WIN</h2>
-        <form id="formWin">
-          <label for="win">WIN / HIN</label>
-          <input id="win" type="text" placeholder="Ex.: PT-ABC12345D404"/>
-          <div style="margin:.5rem 0">
-            <button id="btnWin" type="submit">Validar WIN</button>
-          </div>
-
-          <div style="margin-top:.5rem">
-            <label for="winPhoto">Foto opcional / Optional photo</label>
-            <input id="winPhoto" type="file" accept="image/*"/>
-          </div>
-
-          <div id="winOut" style="margin-top:.75rem"></div>
-
-          <table>
-            <thead>
-              <tr><th>Campo / Field</th><th>Valor / Value</th><th>Interpretação / Meaning</th></tr>
-            </thead>
-            <tbody id="interpWinBody"></tbody>
-          </table>
-        </form>
-      </div>
-
-      <!-- MOTOR -->
-      <div class="panel">
-        <h2>Validador Motor</h2>
-        <form id="formMotor">
-          <label for="brand">Marca</label>
-          <select id="brand">
-            <option>Yamaha</option><option>Honda</option><option>Suzuki</option><option>Tohatsu</option>
-            <option>Mercury</option><option>MerCruiser</option><option>Volvo Penta</option>
-            <option>Yanmar</option><option>Evinrude/Johnson</option>
-          </select>
-
-          <div id="brandDynamic"></div>
-
-          <div style="margin-top:.5rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.5rem">
-            <div><label>Modelo (pesquisa)</label><input id="srch_model" type="text" placeholder="Ex.: DF140A"/></div>
-            <div><label>Potência (hp)</label><input id="srch_power" type="text" placeholder="Ex.: 150"/></div>
-            <div><label>Cilindrada (cc)</label><input id="srch_disp" type="text" placeholder="Ex.: 2670"/></div>
-            <div><label>Ano</label><input id="srch_year" type="text" placeholder="Ex.: 2017"/></div>
-            <div><label>Origem</label><input id="srch_origin" type="text" placeholder="Ex.: Japão"/></div>
-          </div>
-
-          <div style="margin:.5rem 0">
-            <button id="btnMotor" type="submit">Validar Motor</button>
-          </div>
-
-          <div style="margin-top:.5rem">
-            <label for="motorPhoto">Foto opcional / Optional photo</label>
-            <input id="motorPhoto" type="file" accept="image/*"/>
-          </div>
-
-          <div id="motorOut" style="margin-top:.75rem"></div>
-        </form>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer" id="fallback-footer">IDMAR — v2.2.7-baseline+merge-r3.3</footer>
-
-  <!-- Removido idmar-layout.r3b.js para não duplicar header -->
-  <script src="js/validador-win.r3b.js?v=r3b"></script>
-  <script src="js/validador-motor.r3b.js?v=r3b"></script>
-</body>
-</html>
+  <script defer src="js/i18n-boot.js?v=1"></script>
+  <script defer src="js/idmar-version.v5.js"></script>
+</head><body><header id='app-header'></header><main class='container'><h1>Validador</h1></main><footer id='app-footer'>2.2.7</footer></body></html>
