@@ -1,40 +1,22 @@
-# Import automático de issues no GitHub (IDMAR)
+# Kit de labels para GitHub (IDMAR)
 
-Este kit cria **milestones** e **issues** a partir do `IDMAR-backlog.csv` usando o **GitHub CLI (`gh`)**.
+Script para criar/atualizar **labels** no repositório GitHub usando o **GitHub CLI (`gh`)**.
+
+## O que cria
+- **Priority:** `Priority:P0` (vermelho), `Priority:P1` (amarelo), `Priority:P2` (verde).
+- **Epic:** `Epic:Reconstruction`, `Epic:Graph`, `Epic:Checklists`, `Epic:Offline`, `Epic:Forensics`, `Epic:Gateway LEA`, `Epic:Photo Reuse`, `Epic:Intel`, `Epic:Passport`, `Epic:Security`, `Epic:QA`, `Epic:DevOps` (com cores distintas e descrições).
 
 ## Pré-requisitos
 - GitHub CLI instalado: https://cli.github.com/
 - Autenticação ativa: `gh auth login`
-- Permissões para criar milestones e issues no repositório-alvo.
 
-## Ficheiros
-- `IDMAR-backlog.csv` — backlog com Epics, prioridade, estimativa e milestone.
-- `create_github_issues.py` — script que chama o `gh` e cria tudo.
-- `.env.example` — exemplo de variáveis de ambiente.
-
-## Como correr
+## Como usar
 ```bash
-# 1) entrar na pasta
-cd idmar_gh_import
+# opção A: via variável de ambiente
+REPO=owner/nome-do-repo ./create_labels.sh
 
-# 2) autenticar no gh (se ainda não estiver)
-gh auth login
-
-# 3) dry-run (opcional: só mostra comandos)
-DRY_RUN=1 REPO=owner/nome-do-repo python3 create_github_issues.py
-
-# 4) executar a criação
-REPO=owner/nome-do-repo python3 create_github_issues.py
-
-# ou especificando CSV por argumento
-REPO=owner/nome-do-repo python3 create_github_issues.py owner/nome-do-repo IDMAR-backlog.csv
+# opção B: como argumento
+./create_labels.sh owner/nome-do-repo
 ```
 
-## Notas
-- O script cria **milestones**: Phase 1, Phase 2, Phase 3 (se não existirem).
-- Cada issue recebe **labels**: `Epic:<nome>` e `Priority:<Px>`.
-- O campo **Estimate** vai no corpo da issue (podes ligar com Projects depois).
-- Usa `DRY_RUN=1` para testar sem criar nada.
-
-## Dica
-- Para ver resultados: `gh issue list --repo owner/nome-do-repo`
+> Podes correr isto **antes** do kit de importação de issues, para os labels já existirem no repositório.
