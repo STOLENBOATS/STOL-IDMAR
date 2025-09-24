@@ -1,36 +1,15 @@
-<!doctype html>
-<html lang="pt">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>IDMAR — Validador</title>
   <link rel="icon" href="img/logo-pm.png" />
 
-  <style>
-    :root{--bg:#f8fafc;--fg:#0f172a;--bg-elev:#ffffff;--border:#e5e7eb;--link:#0b6bcb}
-    html,body{height:100%}
-    body{background:var(--bg);color:var(--fg);margin:0;display:flex;flex-direction:column;
-         font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial,sans-serif}
-    main{flex:1}
-    .container{max-width:1100px;margin:1.25rem auto;padding:0 1rem}
-    .panel{background:var(--bg-elev);border:1px solid var(--border);border-radius:12px;padding:1rem;margin:.75rem 0}
-    .two{display:grid;grid-template-columns:1fr;gap:1rem}
-    @media(min-width:980px){ .two{grid-template-columns:1fr 1fr} }
-    label{display:block;margin:.35rem 0 .25rem}
-    input[type="text"], input[type="search"], input[type="file"], select, textarea{
-      width:100%;border:1px solid var(--border);background:#fff;border-radius:10px;padding:.5rem .6rem;
-    }
-    button{background:#0b6bcb;color:#fff;border:none;border-radius:10px;padding:.55rem .9rem;cursor:pointer}
-    table{width:100%;border-collapse:collapse;margin-top:.5rem}
-    th,td{border-bottom:1px solid var(--border);padding:.6rem .5rem;text-align:left}
-    .small{opacity:.75;font-size:.9em}
-    .badge{display:inline-block;border-radius:999px;padding:.15rem .55rem;font-weight:600}
-    .good{background:#10b98120;color:#065f46}
-    .bad{background:#ef444420;color:#7f1d1d}
-    details.forense-box{margin-top:.75rem;border:1px dashed var(--border);border-radius:10px;padding:.5rem}
-    .forense-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.5rem;margin-top:.5rem}
-    .footer{border-top:1px solid var(--border);padding:1rem;text-align:left;opacity:.85;background:var(--bg-elev)}
-  </style>
+  <!-- CSS base -->
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/theme-soft-light.v1.css"><!-- tema claro -->
+  <link rel="stylesheet" href="css/nav-ribbon.v5.css"><!-- botões "ribbon" v5 -->
+
+  <!-- (opcional) o teu <style> inline pode vir aqui, como já tens -->
 
   <!-- Gate de sessão simples -->
   <script>
@@ -42,15 +21,20 @@
     })();
   </script>
 
-  <!-- i18n + header (apenas estes dois) -->
-  <script defer src="js/idmar-i18n.js?v=1"></script>
-  <script defer src="js/idmar-header-only.all.v4.js?v=4"></script>
+  <!-- Versão + branding -->
+  <script>window.IDMAR_VERSION="Vs 1.3";</script>
+  <script defer src="js/idmar-config.v4.js"></script>
 
-  <!-- scripts específicos do Validador (se existirem) -->
-  <!-- <script defer src="js/validador-win.js?v=..."></script> -->
-  <!-- <script defer src="js/validador-motor.js?v=..."></script> -->
-  <link rel="stylesheet" href="css/nav-ribbon.v5.css">
+  <!-- Core: i18n + header -->
+  <script defer src="js/idmar-i18n.js"></script>
+  <script defer src="js/idmar-header-only.all.v4.js"></script>
+
+  <!-- Overrides (aplicam labels, ribbons e rodapé) -->
+  <script defer src="js/header-override.v4.js"></script>
+  <script defer src="js/i18n-boot.js"></script>
+  <script defer src="js/idmar-version.v4.js"></script>
 </head>
+
 
 <body>
   <!-- header é injetado por JS -->
