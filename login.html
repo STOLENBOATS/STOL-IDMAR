@@ -7,9 +7,10 @@
   <link rel="icon" href="img/logo-pm.png"/>
 
   <!-- i18n + header com toggle PT/EN -->
-  \1
-  <script defer src="js/i18n-boot.js"></script>
+
+  <script defer src="js/i18n-boot.js"></script><script>window.IDMAR_HIDE_NAV=true; window.IDMAR_APP_NAME="IDMAR"; window.IDMAR_APP_SUB="Identificação Marítima — Cascos & Motores";</script>
   <script defer src="js/idmar-header-only.all.v4.js?v=4"></script>
+  <script defer src="js/header-override.js"></script>
 
   <!-- Estilos simples (segue o baseline) -->
   <style>
@@ -57,7 +58,7 @@
     })();
   </script>
   <link rel="stylesheet" href="css/soft-anim.css"/>
-\1
+
 <body>
   <main>
     <section class="card">
@@ -104,7 +105,7 @@
       // Enter para submeter
       document.getElementById('pass')?.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); go(); }});
     })();
-  </script>
+  </script><script>window.IDMAR_VERSION = "Vs 1.3";</script>
   <script defer src="js/idmar-version.js"></script>
-\1
+
 </html>
