@@ -1,24 +1,13 @@
 #!/usr/bin/env bash
-# Create or update GitHub labels for the IDMAR project using GitHub CLI (gh).
-# Usage:
-#   REPO=owner/name ./create_labels.sh
-#   ./create_labels.sh owner/name
-#
-# Requires: gh auth login
-
 set -euo pipefail
-
 REPO_ENV="${REPO:-}"
 REPO_ARG="${1:-}"
 REPO="${REPO_ENV:-$REPO_ARG}"
-
 if [[ -z "$REPO" ]]; then
   echo "Usage: REPO=owner/name $0  OR  $0 owner/name" >&2
   exit 1
 fi
-
-# Helper: create or update a label
-# args: name color description
+gh auth status -h github.com >/dev/null || { echo "Please run: gh auth login"; exit 1; }
 ensure_label () {
   local NAME="$1"; local COLOR="$2"; local DESC="$3"
   if gh label view "$NAME" --repo "$REPO" >/dev/null 2>&1; then
@@ -29,16 +18,12 @@ ensure_label () {
     gh label create "$NAME" --repo "$REPO" --color "$COLOR" --description "$DESC" >/dev/null
   fi
 }
-
 echo "==> Using repository: $REPO"
-gh auth status -h github.com || { echo "Please run: gh auth login"; exit 1; }
-
-# Priority labels
+# Priority
 ensure_label "Priority:P0" "d73a4a" "Crítico / alta prioridade"
 ensure_label "Priority:P1" "fbca04" "Prioridade média"
 ensure_label "Priority:P2" "0e8a16" "Prioridade baixa"
-
-# Epic labels (theme-based colors)
+# Epics
 ensure_label "Epic:Reconstruction" "1d76db" "Reconstrução HIN/WIN de parciais"
 ensure_label "Epic:Graph"          "0366d6" "Grafo casco⇄motor⇄trailer/partes"
 ensure_label "Epic:Checklists"     "0b6bcb" "Checklists por tipo de embarcação"
@@ -51,5 +36,4 @@ ensure_label "Epic:Passport"       "ff7b72" "EU Boat Passport (QR/NFC)"
 ensure_label "Epic:Security"       "24292e" "Logs imutáveis, assinaturas"
 ensure_label "Epic:QA"             "cfd3d7" "Testes de aceitação / qualidade"
 ensure_label "Epic:DevOps"         "2c974b" "CI/CD, pipelines, bundles"
-
-echo "Done."
+echo "Labels done."

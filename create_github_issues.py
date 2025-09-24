@@ -20,14 +20,14 @@ def run(cmd):
         raise SystemExit(res.returncode)
     return res.stdout.strip()
 
-# 1) Ensure auth available
+# Auth check
 try:
     run("gh auth status -h github.com")
 except SystemExit:
-    print("Erro: o GitHub CLI ('gh') não está autenticado. Corre 'gh auth login' primeiro.", file=sys.stderr)
+    print("Erro: 'gh' não autenticado. Corre 'gh auth login' primeiro.", file=sys.stderr)
     sys.exit(1)
 
-# 2) Ensure milestones exist
+# Milestones set from CSV
 milestones = set()
 with open(CSV_PATH, newline='', encoding='utf-8') as f:
     r = csv.DictReader(f)
@@ -42,7 +42,7 @@ for m in milestones:
     if m not in existing_set:
         run(f"gh api repos/{REPO}/milestones -X POST -F title={shlex.quote(m)}")
 
-# 3) Create issues
+# Issues
 with open(CSV_PATH, newline='', encoding='utf-8') as f:
     r = csv.DictReader(f)
     for row in r:
@@ -52,17 +52,8 @@ with open(CSV_PATH, newline='', encoding='utf-8') as f:
         prio = row["Priority"].strip()
         est  = row["Estimate (pts)"].strip()
         ms   = row["Milestone"].strip()
-
         labels = [f"Epic:{epic}", f"Priority:{prio}"]
-        body = f"""{desc}
-
----
-**Epic:** {epic}  
-**Priority:** {prio}  
-**Estimate:** {est} pts  
-**Milestone:** {ms}
-"""
-
+        body = desc + "\\n\\n---\\n**Epic:** " + epic + "  \\n**Priority:** " + prio + "  \\n**Estimate:** " + est + " pts  \\n**Milestone:** " + ms + "\\n"
         cmd = ["gh", "issue", "create",
                "--repo", REPO,
                "--title", shlex.quote(title),

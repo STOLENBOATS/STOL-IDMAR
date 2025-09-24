@@ -1,22 +1,35 @@
-# Kit de labels para GitHub (IDMAR)
+# IDMAR — All-in-one GitHub setup (labels → milestones → issues)
 
-Script para criar/atualizar **labels** no repositório GitHub usando o **GitHub CLI (`gh`)**.
-
-## O que cria
-- **Priority:** `Priority:P0` (vermelho), `Priority:P1` (amarelo), `Priority:P2` (verde).
-- **Epic:** `Epic:Reconstruction`, `Epic:Graph`, `Epic:Checklists`, `Epic:Offline`, `Epic:Forensics`, `Epic:Gateway LEA`, `Epic:Photo Reuse`, `Epic:Intel`, `Epic:Passport`, `Epic:Security`, `Epic:QA`, `Epic:DevOps` (com cores distintas e descrições).
+Scripts para preparar o repositório com **labels**, **milestones** e **issues** do backlog, usando o **GitHub CLI (`gh`)**.
 
 ## Pré-requisitos
-- GitHub CLI instalado: https://cli.github.com/
-- Autenticação ativa: `gh auth login`
+- `gh` instalado (https://cli.github.com/)
+- `gh auth login` efetuado
+- Permissões no repositório alvo
 
-## Como usar
+## Uso rápido
 ```bash
-# opção A: via variável de ambiente
-REPO=owner/nome-do-repo ./create_labels.sh
+# 1) Entrar na pasta do kit
+cd idmar_all_in_one_fixed2
 
-# opção B: como argumento
-./create_labels.sh owner/nome-do-repo
+# 2) Autenticar (se necessário)
+gh auth login
+
+# 3) Criar labels, milestones e issues (num só comando)
+REPO=owner/nome-do-repo make all
+# ou, sem make:
+REPO=owner/nome-do-repo bash create_labels.sh
+REPO=owner/nome-do-repo python3 create_github_issues.py
 ```
 
-> Podes correr isto **antes** do kit de importação de issues, para os labels já existirem no repositório.
+## Ficheiros
+- `create_labels.sh` — cria/atualiza labels (Priority e Epics).
+- `create_github_issues.py` — cria milestones e issues a partir de `IDMAR-backlog.csv`.
+- `IDMAR-backlog.csv` — backlog inicial (épico, prioridade, estimativa, milestone).
+- `Makefile` — atalho `make all` (labels → issues).
+
+## Dica
+- Testa em modo “dry-run” das issues:
+```bash
+DRY_RUN=1 REPO=owner/nome-do-repo python3 create_github_issues.py
+```
