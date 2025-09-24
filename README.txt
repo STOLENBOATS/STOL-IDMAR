@@ -1,17 +1,15 @@
-IDMAR — i18n + Forense r5 pack
-Arquivos incluídos (colocar em /js):
-- idmar-i18n.js        → motor de traduções PT/EN
-- idmar-header-only.all.v4.js → header com toggle de idioma (usa i18n)
-- forense-r5.js        → versão consolidada do Forense (r1a+r2+r3+r4)
 
-Como integrar (ordem no <head>):
-1) <script defer src="js/idmar-i18n.js?v=1"></script>
-2) <script defer src="js/idmar-header-only.all.v4.js?v=4"></script>
-3) (na forense.html) <script defer src="js/forense-r5.js?v=r5"></script>
+# IDMAR — Soft Light Theme (override)
+Ficheiro único para clarear as páginas (Histórico WIN, Histórico Motor, Forense).
 
-No HTML, opcionalmente marca elementos com:
-- data-i18n="forense.title" (texto)
-- data-i18n-placeholder="forense.notes" (placeholder de inputs/textarea)
-- data-i18n-aria="..." (aria-label)
+## 1) Colocar o ficheiro
+Copie `css/theme-soft-light.v1.css` para a pasta `css/` do repositório.
 
-A navegação e o título/subtítulo do header são traduzidos automaticamente.
+## 2) Adicionar uma linha nas páginas alvo (antes de </head>)
+```
+<link rel="stylesheet" href="css/theme-soft-light.v1.css">
+```
+
+## 3) Hard refresh
+Abra a página e faça Ctrl+F5. 
+Se usar GitHub Pages, aguarde o deploy (~1 min) e refaça o Ctrl+F5.
