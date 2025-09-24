@@ -26,11 +26,11 @@
       {href:'login.html', label:'Terminar sessão', id:'logout'} // fallback if a logout goes to login
     ];
 
-    $all('nav a, .nav a, .menu a, header a').forEach(function(a){
+    $all('nav a, .nav a, .menu a, header a').forEach(function(a){ /*RIBBON_APPLY*/
       try{
         var u = (a.getAttribute('href')||'').toLowerCase();
         var m = map.find(it=> u.indexOf(it.href)>=0);
-        if(m){ a.textContent = m.label; a.title = m.label; a.setAttribute('aria-label', m.label); }
+        if(m){ a.textContent = m.label; a.title = m.label; a.setAttribute('aria-label', m.label); a.classList.add('nav-ribbon'); a.dataset.section=(m.id||m.label).toLowerCase().replace(/\s+/g,'_').replace('histórico_','hist_'); }
       }catch(e){}
     });
 
