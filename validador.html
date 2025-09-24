@@ -43,14 +43,16 @@
   </script>
 
   <!-- i18n + header (apenas estes dois) -->
-  <script defer src="js/idmar-i18n.js?v=1"></script>
+  \1
+  <script defer src="js/i18n-boot.js"></script>
   <script defer src="js/idmar-header-only.all.v4.js?v=4"></script>
   <script defer src="js/validador-ui.js"></script>
 
   <!-- scripts específicos do Validador (se existirem) -->
   <!-- <script defer src="js/validador-win.js?v=..."></script> -->
   <!-- <script defer src="js/validador-motor.js?v=..."></script> -->
-</head>
+  <link rel="stylesheet" href="css/soft-anim.css"/>
+\1
 
 <body>
   <!-- header é injetado por JS -->
@@ -125,6 +127,7 @@
 
   <!-- Removido idmar-layout.r3b.js para não duplicar header -->
   <script src="js/validador-win.r3b.js?v=r3b"></script>
-  <script src="js/validador-motor.r3b.js?v=r3b"></script>
-</body>
+  <script src="js/validador-motor.r3b.js?v=r3b"></script><script>window.IDMAR_VERSION = "Vs 1.3";</script>
+  <script defer src="js/idmar-version.js"></script>
+\1
 </html>
