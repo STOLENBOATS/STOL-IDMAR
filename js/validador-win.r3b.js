@@ -6,7 +6,39 @@
   function $id(id){ return d.getElementById(id); }
   function load(key){ try{ return JSON.parse(localStorage.getItem(key)||'[]'); }catch(e){ return []; } }
   function save(key, val){ try{ localStorage.setItem(key, JSON.stringify(val||[])); }catch(e){} }
-  function readFileAsDataURL(file){ return new Promise((res,rej)=>{ if(!file){ res(''); return; } const r=new FileReader(); r.onload=()=>res(r.result||''); r.onerror=rej; r.readAsDataURL(file); }); }
+  function readFileAsDataURL(file){ return new Promise((res,rej)=>{ if(!file){ res(''); return; }
+  async function compressImageFile(file, maxW=1024, maxH=768, quality=0.72){
+    try{
+      const blob = file;
+      const fr = new FileReader();
+      const dataURL = await new Promise((res,rej)=>{ fr.onload=()=>res(fr.result); fr.onerror=rej; fr.readAsDataURL(blob); });
+      const img = new Image();
+      const imgData = await new Promise((res,rej)=>{ img.onload=()=>res(); img.onerror=rej; img.src=dataURL; });
+      const w = img.width, h = img.height;
+      let nw=w, nh=h;
+      if(w>maxW || h>maxH){
+        const ratio = Math.min(maxW/w, maxH/h);
+        nw = Math.round(w*ratio); nh = Math.round(h*ratio);
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = nw; canvas.height = nh;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, nw, nh);
+      const out = canvas.toDataURL('image/jpeg', quality);
+      // safety cap ~300KB: if still huge, reduce quality
+      if(out.length > 400000){
+        return canvas.toDataURL('image/jpeg', 0.6);
+      }
+      return out;
+    }catch(e){
+      // fallback to raw dataURL if anything fails
+      try{
+        const fr2 = new FileReader();
+        return await new Promise((res,rej)=>{ fr2.onload=()=>res(fr2.result); fr2.onerror=rej; fr2.readAsDataURL(file); });
+      }catch(e2){ return ''; }
+    }
+  }
+ const r=new FileReader(); r.onload=()=>res(r.result||''); r.onerror=rej; r.readAsDataURL(file); }); }
 
   function interpretWIN(win){
     const c = String(win||'').replace(/\s|-/g,'').toUpperCase().trim();
@@ -76,7 +108,7 @@
     else{ out.innerHTML='<span class="badge good">Válido</span> Estrutura conforme regras básicas.'; renderInterpretation(info); }
     // foto + gravação
     let photoName='', photoData='';
-    if(file && file.files && file.files[0]){ photoName=file.files[0].name; try{ photoData=await readFileAsDataURL(file.files[0]); }catch(e){} }
+    if(file && file.files && file.files[0]){ photoName=file.files[0].name; try{ photoData=await compressImageFile(file.files[0]); }catch(e){} }
     const rec={date:new Date().toISOString(), win, valid:!!info.valid, reason:info.reason|| (info.valid?'OK':''), photoName, photoData};
     const arr=load(NAV.STORAGE.WIN_HISTORY); arr.unshift(rec); save(NAV.STORAGE.WIN_HISTORY, arr);
   }
