@@ -62,6 +62,24 @@
 <body>
   <!-- header é injetado por JS -->
 
+  <div class="lang-switch">
+  <label for="langSel" data-i18n="app.language">Idioma</label>
+  <select id="langSel" aria-label="Language">
+    <option value="pt" data-i18n="app.portuguese">Português</option>
+    <option value="en" data-i18n="app.english">Inglês</option>
+  </select>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const sel = document.getElementById("langSel");
+    if (!sel) return;
+    sel.value = window.I18N.lang;
+    sel.addEventListener("change", () => window.I18N.use(sel.value));
+  });
+</script>
+
+
   <main class="container">
     <h1>Histórico — Motores</h1>
 
