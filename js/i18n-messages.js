@@ -1,6 +1,11 @@
-
-// js/i18n-messages.js
-window.I18N.load({
+// js/i18n-messages.js (patched loader)
+(function queueLoad(dict){
+  function doLoad() {
+    if (!window.I18N) return setTimeout(doLoad, 0); // wait for core
+    window.I18N.load(dict);
+  }
+  doLoad();
+})({
   pt: {
     app: {
       name: "IDMAR",
