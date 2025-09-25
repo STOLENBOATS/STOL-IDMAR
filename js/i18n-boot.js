@@ -1,29 +1,103 @@
-// i18n boot shim: persists and applies language choice
-(function(w,d){
-  w.IDMAR = w.IDMAR || {}; var NAV=w.IDMAR;
-  function applyLang(lang){
-    try{
-      if(lang){ localStorage.setItem('IDMAR_LANG', lang); }
-      var L = lang || localStorage.getItem('IDMAR_LANG') || d.documentElement.getAttribute('lang') || 'pt';
-      d.documentElement.setAttribute('lang', L);
-      // If official i18n is available, call it
-      if(w.IDMAR && IDMAR.i18n && typeof IDMAR.i18n.setLanguage==='function'){
-        IDMAR.i18n.setLanguage(L);
+
+// js/i18n-boot.js — DROP-IN REPLACEMENT
+(function(){
+  const LS_KEY = "IDMAR_LANG";
+
+  function bindLangSelector(){
+    const sel = document.getElementById("langSel");
+    if (!sel) return;
+    const saved = (localStorage.getItem(LS_KEY) || "pt").toLowerCase();
+    if (sel.value !== saved) sel.value = saved;
+    sel.addEventListener("change", () => {
+      localStorage.setItem(LS_KEY, sel.value);
+      if (sel.value === "en") {
+        document.documentElement.setAttribute("lang","en");
+        applyTranslations();
       } else {
-        // lightweight fallback: replace text of [data-i18n] if there is a dataset source (no-op otherwise)
+        location.reload();
       }
-      // Dispatch a custom event so other modules can react
-      var ev = new CustomEvent('idmar:langchange', {detail:{lang:L}});
-      d.dispatchEvent(ev);
-    }catch(e){}
+    });
   }
-  // Listen to clicks on [data-lang] toggles (header dropdowns/buttons)
-  d.addEventListener('click', function(ev){
-    var el = ev.target.closest('[data-lang]');
-    if(!el) return;
-    var L = el.getAttribute('data-lang'); if(!L) return;
-    applyLang(L);
+
+  const D_EN = {
+    "app.name": "IDMAR",
+    "app.subtitle": "Maritime Identification & Engine Checker",
+    "app.language": "Language",
+    "app.portuguese": "Portuguese",
+    "app.english": "English",
+    "nav.validator": "Validator",
+    "nav.forensics": "Forensics",
+    "nav.history": "History",
+    "validator.title": "HIN/WIN Validator",
+    "validator.inputPlaceholder": "Enter HIN/WIN here",
+    "validator.validateBtn": "Validate",
+    "validator.ok": "Valid number.",
+    "validator.nok": "Invalid number: {reason}",
+    "validator.saved": "Record saved to history.",
+    "engine.title": "Engine Validator",
+    "engine.brand": "Brand",
+    "engine.serialPlaceholder": "Engine serial number",
+    "engine.validateBtn": "Validate Engine",
+    "engine.nok": "Invalid S/N: {reason}",
+    "forensics.title": "Visual Forensic Validation",
+    "forensics.drop": "Drop a photo here or click to select…",
+    "forensics.analyzing": "Analyzing image…",
+    "forensics.result_ok": "Patterns and layout consistent.",
+    "forensics.result_nok": "Inconsistencies found: {reason}",
+    "history.title": "Verification History",
+    "history.empty": "No records yet.",
+    "history.winTab": "HIN/WIN",
+    "history.motorTab": "Engines",
+    "history.back": "Back to Validator"
+  };
+
+  function t(key, vars){
+    let s = D_EN[key] || key;
+    if (vars) s = s.replace(/\{(\w+)\}/g, (_,k)=> (k in vars)? vars[k] : "{"+k+"}");
+    return s;
+  }
+
+  function applyTranslations(root=document){
+    const lang = (localStorage.getItem(LS_KEY) || "pt").toLowerCase();
+    if (lang !== "en") return;
+    root.querySelectorAll("[data-i18n]").forEach(el=>{
+      const key = el.getAttribute("data-i18n");
+      const txt = t(key);
+      if (el.hasAttribute("placeholder")) el.setAttribute("placeholder", txt);
+      else el.textContent = txt;
+    });
+    root.querySelectorAll("[data-i18n-attr]").forEach(el=>{
+      const pairs = el.getAttribute("data-i18n-attr").split(",").map(s=>s.trim()).filter(Boolean);
+      pairs.forEach(p=>{
+        const [attr, key] = p.split(":").map(s=>s.trim());
+        if (attr && key) el.setAttribute(attr, t(key));
+      });
+    });
+  }
+
+  window.IDMAR_I18N_APPLY = applyTranslations;
+  document.addEventListener("idmar:ui-updated", () => applyTranslations());
+
+  const mo = new MutationObserver((mutations) => {
+    const lang = (localStorage.getItem(LS_KEY) || "pt").toLowerCase();
+    if (lang !== "en") return;
+    for (const m of mutations) {
+      if (m.addedNodes && m.addedNodes.length) { applyTranslations(); break; }
+    }
   });
-  // Apply on boot
-  if(d.readyState==='loading') d.addEventListener('DOMContentLoaded', function(){ applyLang(); }); else applyLang();
-})(window, document);
+
+  function startObserver(){
+    try { mo.observe(document.body, { childList: true, subtree: true }); } catch(e){}
+  }
+
+  function boot(){
+    const saved = (localStorage.getItem(LS_KEY) || "pt").toLowerCase();
+    if (saved === "en") document.documentElement.setAttribute("lang","en");
+    bindLangSelector();
+    applyTranslations();
+    startObserver();
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
+  else boot();
+})();
