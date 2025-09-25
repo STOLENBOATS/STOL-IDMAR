@@ -1,18 +1,16 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="pt">
-
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>IDMAR — Histórico Win</title>
-  <link rel="icon" href="img/logo-pm.png" />
-
-  <!-- CSS base -->
-  <link rel="stylesheet" href="css/styles.css">
-  <link rel="stylesheet" href="css/theme-soft-light.v1.css"><!-- tema claro -->
-  <link rel="stylesheet" href="css/nav-ribbon.v5.css"><!-- botões ribbon v5 -->
-
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>IDMAR — Histórico Win</title>
+<link href="img/logo-pm.png" rel="icon"/>
+<!-- CSS base -->
+<link href="css/styles.css" rel="stylesheet"/>
+<link href="css/theme-soft-light.v1.css" rel="stylesheet"/><!-- tema claro -->
+<link href="css/nav-ribbon.v5.css" rel="stylesheet"/><!-- botões ribbon v5 -->
+<style>
     :root{--bg:#f8fafc;--fg:#0f172a;--bg-elev:#ffffff;--border:#e5e7eb;--link:#0b6bcb}
     html,body{height:100%}
     body{background:var(--bg);color:var(--fg);margin:0;display:flex;flex-direction:column;
@@ -31,10 +29,8 @@
     input,select,button{border:1px solid var(--border);background:#fff;border-radius:10px;padding:.5rem .6rem}
     button{cursor:pointer}
   </style>
-
-
-  <!-- Gate -->
-  <script>
+<!-- Gate -->
+<script>
     (function(){
       try{
         var ok = sessionStorage.getItem('IDMAR_SESSION')==='ok' || sessionStorage.getItem('NAV_SESSION')==='ok';
@@ -42,67 +38,57 @@
       }catch(e){}
     })();
   </script>
-
-  <!-- Versão + branding (antes do header) -->
-  <script>window.IDMAR_VERSION="Vs 1.3";</script>
-  <script defer src="js/idmar-config.v4.js"></script>
-
-  <!-- Core: i18n + header -->
-  <script defer src="js/idmar-i18n.js?v=1"></script>
-  <script defer src="js/idmar-header-only.all.v4.js?v=4"></script>
-
-  <!-- Overrides -->
-  <script defer src="js/header-override.v4.js"></script>
-  <script defer src="js/i18n-boot.js?v=1"></script>
-  <script defer src="js/idmar-version.v4.js"></script>
+<!-- Versão + branding (antes do header) -->
+<script>window.IDMAR_VERSION="Vs 1.3";</script>
+<script defer="" src="js/idmar-config.v4.js"></script>
+<!-- Core: i18n + header -->
+<script defer="" src="js/idmar-i18n.js?v=1"></script>
+<script defer="" src="js/idmar-header-only.all.v4.js?v=4"></script>
+<!-- Overrides -->
+<script defer="" src="js/header-override.v4.js"></script>
+<script defer="" src="js/i18n-boot.js?v=1"></script>
+<script defer="" src="js/idmar-version.v4.js"></script>
 </head>
+<body><header class="app-header"></header>
+<!-- header é injetado por JS -->
+<main class="container">
+<h1>Histórico — WIN</h1>
+<section class="panel">
+<div class="row">
+<input id="hist_win_search" placeholder="Pesquisar (WIN / texto)" type="search"/>
+<select aria-label="Estado" id="hist_win_state">
+<option value="all">Estado (todos)</option>
+<option value="ok">Válido</option>
+<option value="bad">Inválido</option>
+</select>
+<input id="hist_win_from" placeholder="De" type="date"/>
+<input id="hist_win_to" placeholder="Até" type="date"/>
+</div>
+<div class="actions">
+<button id="hist_win_csv">Exportar CSV</button>
+<button id="hist_win_clear">Limpar histórico (WIN)</button>
+</div>
+</section>
+<section class="panel">
+<table>
+<thead>
+<tr>
+<th>Quando</th>
+<th>WIN/HIN</th>
+<th>Estado</th>
+<th>Justificação</th>
+<th>Foto (nome)</th>
+<th>Miniatura</th>
+</tr>
+</thead>
+<tbody id="hist_win_tbody"></tbody>
+</table>
+</section>
+</main>
 
-<body>
-  <!-- header é injetado por JS -->
-
-  <main class="container">
-    <h1>Histórico — WIN</h1>
-
-    <section class="panel">
-      <div class="row">
-        <input id="hist_win_search" type="search" placeholder="Pesquisar (WIN / texto)" />
-        <select id="hist_win_state" aria-label="Estado">
-          <option value="all">Estado (todos)</option>
-          <option value="ok">Válido</option>
-          <option value="bad">Inválido</option>
-        </select>
-        <input id="hist_win_from" type="date" placeholder="De" />
-        <input id="hist_win_to" type="date" placeholder="Até" />
-      </div>
-      <div class="actions">
-        <button id="hist_win_csv">Exportar CSV</button>
-        <button id="hist_win_clear">Limpar histórico (WIN)</button>
-      </div>
-    </section>
-
-    <section class="panel">
-      <table>
-        <thead>
-          <tr>
-            <th>Quando</th>
-            <th>WIN/HIN</th>
-            <th>Estado</th>
-            <th>Justificação</th>
-            <th>Foto (nome)</th>
-            <th>Miniatura</th>
-          </tr>
-        </thead>
-        <tbody id="hist_win_tbody"></tbody>
-      </table>
-    </section>
-  </main>
-
-  <footer class="footer" id="fallback-footer">IDMAR — Identificação Marítima</footer>
-
-  <!-- Removido idmar-layout.r3b.js -->
-  <script src="js/historico-win.r3b.js?v=r3b"></script>
-  <script defer src="../js/i18n-overlay.js"></script>
-  <script defer src="../js/sync-bootstrap.js"></script>
-  <script defer src="../js/hotfix-history-inject.js"></script>
-</body>
+<!-- Removido idmar-layout.r3b.js -->
+<script src="js/historico-win.r3b.js?v=r3b"></script>
+<footer>
+<div class="small">IDMAR · <span data-i18n="app.subtitle">Identificação Marítima — Cascos &amp; Motores</span></div>
+</footer><script defer="True" src="js/i18n-overlay.js"></script><script defer="True" src="js/sync-bootstrap.js"></script><script defer="True" src="js/hotfix-history-inject.js"></script></body>
 </html>
