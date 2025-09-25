@@ -1,1 +1,2 @@
-const NAV={BUILD:'N.A.V 2.2.2 FALLBACK',STORAGE:{SESSION:'nav_session',WIN_HISTORY:'winHistory',MOTOR_HISTORY:'motorHistory'},THEME_KEY:'nav_theme'};
+// IDMAR config stub — replace with your real config if needed
+window.IDMAR_CONFIG = window.IDMAR_CONFIG || {};

@@ -1,8 +1,9 @@
+
 // js/i18n-messages.js
 window.I18N.load({
   pt: {
     app: {
-      name: "M.I.E.C.",
+      name: "IDMAR",
       subtitle: "Maritime Identification & Engine Checker",
       language: "Idioma",
       portuguese: "Português",
@@ -51,7 +52,7 @@ window.I18N.load({
 
   en: {
     app: {
-      name: "M.I.E.C.",
+      name: "IDMAR",
       subtitle: "Maritime Identification & Engine Checker",
       language: "Language",
       portuguese: "Portuguese",

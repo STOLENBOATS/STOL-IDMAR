@@ -1,136 +1,70 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>IDMAR — Histórico Motor</title>
-  <link rel="icon" href="img/logo-pm.png" />
-
-  <!-- CSS base -->
+  <title>IDMAR • Histórico Motor</title>
   <link rel="stylesheet" href="css/styles.css">
-  <link rel="stylesheet" href="css/theme-soft-light.v1.css"><!-- tema claro -->
-  <link rel="stylesheet" href="css/nav-ribbon.v5.css"><!-- botões ribbon v5 -->
-
-  <style>
-    :root{--bg:#f8fafc;--fg:#0f172a;--bg-elev:#ffffff;--border:#e5e7eb;--link:#0b6bcb}
-    html,body{height:100%}
-    body{background:var(--bg);color:var(--fg);margin:0;display:flex;flex-direction:column;
-         font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial,sans-serif}
-    main{flex:1}
-    .container{max-width:1100px;margin:1.25rem auto;padding:0 1rem}
-    .panel{background:var(--bg-elev);border:1px solid var(--border);border-radius:12px;padding:1rem;margin:.75rem 0}
-    table{width:100%;border-collapse:collapse;margin-top:.5rem}
-    th,td{border-bottom:1px solid var(--border);padding:.6rem .5rem;text-align:left;vertical-align:middle}
-    .filters{display:grid;grid-template-columns:1.4fr 200px 160px 1fr 1fr;gap:.5rem}
-    .actions{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.5rem}
-    .badge{display:inline-block;border-radius:999px;padding:.15rem .55rem;font-weight:600}
-    .good{background:#10b98120;color:#065f46}
-    .bad{background:#ef444420;color:#7f1d1d}
-    .footer{border-top:1px solid var(--border);padding:1rem;text-align:left;opacity:.85;background:var(--bg-elev)}
-    input,select,button{border:1px solid var(--border);background:#fff;border-radius:10px;padding:.5rem .6rem}
-    button{cursor:pointer}
-  </style>
-
-  <!-- Gate -->
-  <script>
-    (function(){
-      try{
-        var ok = sessionStorage.getItem('IDMAR_SESSION')==='ok' || sessionStorage.getItem('NAV_SESSION')==='ok';
-        if(!ok) location.replace('login.html');
-      }catch(e){}
-    })();
-  </script>
-
-  <!-- Versão + branding (antes do header) -->
-  <script>window.IDMAR_VERSION="Vs 1.3";</script>
-  <script defer src="js/idmar-config.v4.js"></script>
-
-  <!-- Core: i18n + header -->
-  <script defer src="js/idmar-i18n.js?v=1"></script>
-  <script defer src="js/idmar-header-only.all.v4.js?v=4"></script>
-
-  <!-- Overrides -->
-  <script defer src="js/header-override.v4.js"></script>
-  <script defer src="js/i18n-boot.js?v=1"></script>
-  <script defer src="js/idmar-version.v4.js"></script>
-
+  <!-- Optional Supabase client (safe if unused) -->
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.56.0"></script>
+  <!-- Neutral config/auth stubs -->
+  <script defer src="js/config.js"></script>
+  <script defer src="js/auth-stub.js"></script>
+  <!-- i18n -->
   <script defer src="js/i18n-core.js?v=1"></script>
   <script defer src="js/i18n-messages.js?v=1"></script>
-
 </head>
-
 <body>
-  <!-- header é injetado por JS -->
+<header class="app-header">
+  <div class="brand">
+    <img src="images/logo-pm.jpg" alt="Polícia Marítima" class="logo">
+    <div class="titles">
+      <h1 data-i18n="app.name">IDMAR</h1>
+      <p class="subtitle" data-i18n="app.subtitle">Maritime Identification &amp; Engine Checker</p>
+    </div>
+  </div>
+  
+    <nav class="main-nav">
+      <a href="validador.html" class="">Validador</a>
+      <a href="forense.html" class="">Forense</a>
+      <a href="historico_win.html" class="">Histórico WIN</a>
+      <a href="historico_motor.html" class="active">Histórico Motor</a>
+      <div class="lang-switch">
+        <label for="langSel" data-i18n="app.language">Idioma</label>
+        <select id="langSel" aria-label="Language">
+          <option value="pt" data-i18n="app.portuguese">Português</option>
+          <option value="en" data-i18n="app.english">English</option>
+        </select>
+      </div>
+    </nav>
+    
+</header>
+<div class="container">
 
-  <div class="lang-switch">
-  <label for="langSel" data-i18n="app.language">Idioma</label>
-  <select id="langSel" aria-label="Language">
-    <option value="pt" data-i18n="app.portuguese">Português</option>
-    <option value="en" data-i18n="app.english">Inglês</option>
-  </select>
+  <h2 data-i18n="history.title">Histórico de Verificações</h2>
+  <nav class="tabs">
+    <a href="historico_win.html"><button data-i18n="history.winTab">HIN/WIN</button></a>
+    <button class="active" data-i18n="history.motorTab">Motores</button>
+    <a href="validador.html" class="back" data-i18n="history.back">Voltar ao Validador</a>
+  </nav>
+  <div id="histEmpty" data-i18n="history.empty">Sem registos ainda.</div>
+  <div id="histTable"></div>
+
+  <script defer src="js/historico-motor-page.js?v=1"></script>
+
 </div>
-
+<footer class="app-footer">
+  <div>© Polícia Marítima • <span data-i18n="app.name">IDMAR</span> — IDMAR — versão atual • 2025-09-18</div>
+</footer>
+<!-- Sync + History hotfix (post-login pages) -->
+<script defer src="js/sync-bootstrap.js?v=1"></script>
+<script defer src="js/hotfix-history-inject.js?v=1"></script>
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const sel = document.getElementById("langSel");
-    if (!sel) return;
-    sel.value = window.I18N.lang;
-    sel.addEventListener("change", () => window.I18N.use(sel.value));
+    if (sel) { sel.value = (window.I18N && window.I18N.lang) || "pt";
+      sel.addEventListener("change", () => window.I18N && window.I18N.use(sel.value)); }
   });
 </script>
-
-
-  <main class="container">
-    <h1>Histórico — Motores</h1>
-
-    <section class="panel">
-      <div class="filters">
-        <input id="hist_motor_search" type="search" placeholder="Pesquisar (S/N / marca / modelo / texto)" />
-        <select id="hist_motor_brand" aria-label="Marca">
-          <option value="">Marca (todas)</option>
-          <option>Yamaha</option><option>Honda</option><option>Suzuki</option><option>Tohatsu</option>
-          <option>Mercury</option><option>MerCruiser</option><option>Volvo Penta</option>
-          <option>Yanmar</option><option>Evinrude/Johnson</option>
-        </select>
-        <select id="hist_motor_state" aria-label="Estado">
-          <option value="all">Estado (todos)</option>
-          <option value="ok">Válido</option>
-          <option value="bad">Inválido</option>
-        </select>
-        <input id="hist_motor_from" type="date" placeholder="De" />
-        <input id="hist_motor_to" type="date" placeholder="Até" />
-      </div>
-      <div class="actions">
-        <button id="hist_motor_csv">Exportar CSV</button>
-        <button id="hist_motor_clear">Limpar histórico (Motor)</button>
-      </div>
-    </section>
-
-    <section class="panel">
-      <table>
-        <thead>
-          <tr>
-            <th>Quando</th>
-            <th>S/N</th>
-            <th>Marca</th>
-            <th>Modelo</th>
-            <th>Estado</th>
-            <th>Justificação</th>
-            <th>Foto (nome)</th>
-            <th>Miniatura</th>
-          </tr>
-        </thead>
-        <tbody id="hist_motor_tbody"></tbody>
-      </table>
-    </section>
-  </main>
-
-  <footer class="footer" id="fallback-footer">IDMAR — Identificação Marítima</footer>
-
-  <!-- Removido idmar-layout.r3b.js -->
-  <script src="js/historico-motor.r3b.js?v=r3b"></script>
-  <script defer src="js/sync-bootstrap.js?v=1"></script>
-<script defer src="js/hotfix-history-inject.js?v=1"></script>
-
 </body>
 </html>

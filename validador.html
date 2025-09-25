@@ -1,165 +1,79 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt">
-
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>IDMAR — Validador</title>
-  <link rel="icon" href="img/logo-pm.png" />
-
-  <!-- CSS base -->
+  <title>IDMAR • Validador</title>
   <link rel="stylesheet" href="css/styles.css">
-  <link rel="stylesheet" href="css/theme-soft-light.v1.css"><!-- tema claro -->
-  <link rel="stylesheet" href="css/nav-ribbon.v5.css"><!-- botões "ribbon" v5 -->
-
-   <style>
-    :root{--bg:#f8fafc;--fg:#0f172a;--bg-elev:#ffffff;--border:#e5e7eb;--link:#0b6bcb}
-    html,body{height:100%}
-    body{background:var(--bg);color:var(--fg);margin:0;display:flex;flex-direction:column;
-         font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial,sans-serif}
-    main{flex:1}
-    .container{max-width:1100px;margin:1.25rem auto;padding:0 1rem}
-    .panel{background:var(--bg-elev);border:1px solid var(--border);border-radius:12px;padding:1rem;margin:.75rem 0}
-    .two{display:grid;grid-template-columns:1fr;gap:1rem}
-    @media(min-width:980px){ .two{grid-template-columns:1fr 1fr} }
-    label{display:block;margin:.35rem 0 .25rem}
-    input[type="text"], input[type="search"], input[type="file"], select, textarea{
-      width:100%;border:1px solid var(--border);background:#fff;border-radius:10px;padding:.5rem .6rem;
-    }
-    button{background:#0b6bcb;color:#fff;border:none;border-radius:10px;padding:.55rem .9rem;cursor:pointer}
-    table{width:100%;border-collapse:collapse;margin-top:.5rem}
-    th,td{border-bottom:1px solid var(--border);padding:.6rem .5rem;text-align:left}
-    .small{opacity:.75;font-size:.9em}
-    .badge{display:inline-block;border-radius:999px;padding:.15rem .55rem;font-weight:600}
-    .good{background:#10b98120;color:#065f46}
-    .bad{background:#ef444420;color:#7f1d1d}
-    details.forense-box{margin-top:.75rem;border:1px dashed var(--border);border-radius:10px;padding:.5rem}
-    .forense-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.5rem;margin-top:.5rem}
-    .footer{border-top:1px solid var(--border);padding:1rem;text-align:left;opacity:.85;background:var(--bg-elev)}
-  </style>
-  
-  <!-- Gate de sessão simples -->
-  <script>
-    (function(){
-      try{
-        var ok = sessionStorage.getItem('IDMAR_SESSION')==='ok' || sessionStorage.getItem('NAV_SESSION')==='ok';
-        if(!ok) location.replace('login.html');
-      }catch(e){}
-    })();
-  </script>
-
-  <!-- Versão + branding -->
-  <script>window.IDMAR_VERSION="Vs 1.3";</script>
-  <script defer src="js/idmar-config.v4.js"></script>
-
-  <!-- Core: i18n + header -->
-  <script defer src="js/idmar-i18n.js"></script>
-  <script defer src="js/idmar-header-only.all.v4.js"></script>
-
-  <!-- Overrides (aplicam labels, ribbons e rodapé) -->
-  <script defer src="js/header-override.v4.js"></script>
-  <script defer src="js/i18n-boot.js"></script>
-  <script defer src="js/idmar-version.v4.js"></script>
+  <!-- Optional Supabase client (safe if unused) -->
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.56.0"></script>
+  <!-- Neutral config/auth stubs -->
+  <script defer src="js/config.js"></script>
+  <script defer src="js/auth-stub.js"></script>
+  <!-- i18n -->
   <script defer src="js/i18n-core.js?v=1"></script>
   <script defer src="js/i18n-messages.js?v=1"></script>
-
 </head>
-
 <body>
-  <!-- header é injetado por JS -->
+<header class="app-header">
+  <div class="brand">
+    <img src="images/logo-pm.jpg" alt="Polícia Marítima" class="logo">
+    <div class="titles">
+      <h1 data-i18n="app.name">IDMAR</h1>
+      <p class="subtitle" data-i18n="app.subtitle">Maritime Identification &amp; Engine Checker</p>
+    </div>
+  </div>
+  
+    <nav class="main-nav">
+      <a href="validador.html" class="active">Validador</a>
+      <a href="forense.html" class="">Forense</a>
+      <a href="historico_win.html" class="">Histórico WIN</a>
+      <a href="historico_motor.html" class="">Histórico Motor</a>
+      <div class="lang-switch">
+        <label for="langSel" data-i18n="app.language">Idioma</label>
+        <select id="langSel" aria-label="Language">
+          <option value="pt" data-i18n="app.portuguese">Português</option>
+          <option value="en" data-i18n="app.english">English</option>
+        </select>
+      </div>
+    </nav>
+    
+</header>
+<div class="container">
 
-  <div class="lang-switch">
-  <label for="langSel" data-i18n="app.language">Idioma</label>
-  <select id="langSel" aria-label="Language">
-    <option value="pt" data-i18n="app.portuguese">Português</option>
-    <option value="en" data-i18n="app.english">Inglês</option>
+  <h2 data-i18n="validator.title">Validador de HIN/WIN</h2>
+
+  <input id="hinwin" type="text" placeholder="Introduz o HIN/WIN aqui" data-i18n="validator.inputPlaceholder" />
+  <button id="btnValidate" data-i18n="validator.validateBtn">Validar</button>
+  <div id="valMsg" class="status" aria-live="polite"></div>
+
+  <hr>
+
+  <h3 data-i18n="engine.title">Validador de Motor</h3>
+  <label for="brand" data-i18n="engine.brand">Marca</label>
+  <select id="brand">
+    <option value="yamaha">Yamaha</option>
+    <option value="honda">Honda</option>
   </select>
-</div>
+  <input id="engineSN" type="text" placeholder="N.º de série do motor" data-i18n="engine.serialPlaceholder" />
+  <button id="btnEngine" data-i18n="engine.validateBtn">Validar Motor</button>
+  <div id="engMsg" class="status" aria-live="polite"></div>
 
+  <script defer src="js/validador-page.js?v=1"></script>
+
+</div>
+<footer class="app-footer">
+  <div>© Polícia Marítima • <span data-i18n="app.name">IDMAR</span> — IDMAR — versão atual • 2025-09-18</div>
+</footer>
+<!-- Sync + History hotfix (post-login pages) -->
+<script defer src="js/sync-bootstrap.js?v=1"></script>
+<script defer src="js/hotfix-history-inject.js?v=1"></script>
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const sel = document.getElementById("langSel");
-    if (!sel) return;
-    sel.value = window.I18N.lang;
-    sel.addEventListener("change", () => window.I18N.use(sel.value));
+    if (sel) { sel.value = (window.I18N && window.I18N.lang) || "pt";
+      sel.addEventListener("change", () => window.I18N && window.I18N.use(sel.value)); }
   });
 </script>
-
-
-  <main class="container">
-    <h1>Validador</h1>
-
-    <section class="two">
-      <!-- WIN -->
-      <div class="panel">
-        <h2>Validador WIN</h2>
-        <form id="formWin">
-          <label for="win">WIN / HIN</label>
-          <input id="win" type="text" placeholder="Ex.: PT-ABC12345D404"/>
-          <div style="margin:.5rem 0">
-            <button id="btnWin" type="submit">Validar WIN</button>
-          </div>
-
-          <div style="margin-top:.5rem">
-            <label for="winPhoto">Foto opcional / Optional photo</label>
-            <input id="winPhoto" type="file" accept="image/*"/>
-          </div>
-
-          <div id="winOut" style="margin-top:.75rem"></div>
-
-          <table>
-            <thead>
-              <tr><th>Campo / Field</th><th>Valor / Value</th><th>Interpretação / Meaning</th></tr>
-            </thead>
-            <tbody id="interpWinBody"></tbody>
-          </table>
-        </form>
-      </div>
-
-      <!-- MOTOR -->
-      <div class="panel">
-        <h2>Validador Motor</h2>
-        <form id="formMotor">
-          <label for="brand">Marca</label>
-          <select id="brand">
-            <option>Yamaha</option><option>Honda</option><option>Suzuki</option><option>Tohatsu</option>
-            <option>Mercury</option><option>MerCruiser</option><option>Volvo Penta</option>
-            <option>Yanmar</option><option>Evinrude/Johnson</option>
-          </select>
-
-          <div id="brandDynamic"></div>
-
-          <div style="margin-top:.5rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.5rem">
-            <div><label>Modelo (pesquisa)</label><input id="srch_model" type="text" placeholder="Ex.: DF140A"/></div>
-            <div><label>Potência (hp)</label><input id="srch_power" type="text" placeholder="Ex.: 150"/></div>
-            <div><label>Cilindrada (cc)</label><input id="srch_disp" type="text" placeholder="Ex.: 2670"/></div>
-            <div><label>Ano</label><input id="srch_year" type="text" placeholder="Ex.: 2017"/></div>
-            <div><label>Origem</label><input id="srch_origin" type="text" placeholder="Ex.: Japão"/></div>
-          </div>
-
-          <div style="margin:.5rem 0">
-            <button id="btnMotor" type="submit">Validar Motor</button>
-          </div>
-
-          <div style="margin-top:.5rem">
-            <label for="motorPhoto">Foto opcional / Optional photo</label>
-            <input id="motorPhoto" type="file" accept="image/*"/>
-          </div>
-
-          <div id="motorOut" style="margin-top:.75rem"></div>
-        </form>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer" id="fallback-footer">IDMAR — Identificação Marítima</footer>
-
-  <!-- Removido idmar-layout.r3b.js para não duplicar header -->
-  <script src="js/validador-win.r3b.js?v=r3b"></script>
-  <script src="js/validador-motor.r3b.js?v=r3b"></script>
-  <!-- Auto-sync + history hotfix (carregar só em páginas pós-login) -->
-  <script defer src="js/sync-bootstrap.js?v=1"></script>
-  <script defer src="js/hotfix-history-inject.js?v=1"></script>
-
 </body>
 </html>

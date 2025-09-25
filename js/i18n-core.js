@@ -1,6 +1,7 @@
+
 // js/i18n-core.js
 (function () {
-  const LS_KEY = "MIEC_LANG";
+  const LS_KEY = "IDMAR_LANG";
   const DEFAULT = "pt";
 
   const I18N = {
@@ -21,7 +22,6 @@
     },
 
     apply(root = document) {
-      // data-i18n="namespace.key"
       root.querySelectorAll("[data-i18n]").forEach(el => {
         const key = el.getAttribute("data-i18n");
         const txt = this.t(key);
@@ -33,7 +33,6 @@
         }
       });
 
-      // data-i18n-attr="title:namespace.key,aria-label:namespace.key2"
       root.querySelectorAll("[data-i18n-attr]").forEach(el => {
         const pairs = el.getAttribute("data-i18n-attr").split(",").map(s => s.trim());
         pairs.forEach(p => {
@@ -45,6 +44,5 @@
   };
 
   window.I18N = I18N;
-
   document.addEventListener("DOMContentLoaded", () => I18N.apply());
 })();
