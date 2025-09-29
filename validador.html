@@ -86,6 +86,35 @@
 <body>
   <!-- header é injetado por JS -->
 
+  <!-- HEADER ESTÁTICO (igual ao login) -->
+<header class="app-header">
+  <div class="brand">
+    <img src="images/logo-pm.jpg" alt="Polícia Marítima" class="logo" />
+    <div class="titles">
+      <h1 data-en="IDMAR">IDMAR</h1>
+      <p class="subtitle" data-en="Maritime Identification &amp; Engine Checker">
+        Maritime Identification &amp; Engine Checker
+      </p>
+    </div>
+  </div>
+
+  <nav class="main-nav">
+    <a href="validador.html" data-en="Validator">Validador</a>
+    <a href="forense.html" data-en="Forensics">Forense</a>
+    <a href="historico_win.html" data-en="WIN History">Histórico WIN</a>
+    <a href="historico_motor.html" data-en="Engine History">Histórico Motor</a>
+
+    <div class="lang-switch" style="margin-left: 12px; display:flex; align-items:center; gap:6px">
+      <label for="langSel" data-en="Language">Idioma</label>
+      <select id="langSel" aria-label="Language">
+        <option value="pt" data-en="Portuguese">Português</option>
+        <option value="en" data-en="English">English</option>
+      </select>
+    </div>
+  </nav>
+</header>
+
+
   <main class="container">
     <h1>Validador</h1>
 
