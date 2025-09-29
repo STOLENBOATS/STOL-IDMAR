@@ -1,25 +1,21 @@
 <!doctype html>
 <html lang="pt">
-
 <head>
-
-  <!-- DEMO GUARD: bypass auth + block redirects when ?demo=1 -->
+  <!-- DEMO GUARD: abrir com ?demo=1 para evitar redirect de sessão -->
   <script>
     (function(){
       const demo = /[?&]demo=1\b/.test(location.search);
       if (!localStorage.getItem('IDMAR_LANG')) localStorage.setItem('IDMAR_LANG','pt');
       if (!demo) return;
       window.IDMAR_DEMO = true;
-      // Mock minimal auth session so auth checks pass
+      sessionStorage.setItem('IDMAR_SESSION','ok'); // marcar sessão ok em demo
+      // Mock mínimo de sessão (se algum script pedir)
       window.IDMAR_AUTH = window.IDMAR_AUTH || {};
       window.IDMAR_AUTH.getSession = async () => ({ user:{ id: "demo-user" }, access_token: "demo" });
-      // Block redirects while in demo
+      // Bloquear redirects agressivos em demo
       const log = console.warn.bind(console, "[demo] blocked redirect:");
       const noop = (url)=> log(url);
-      try {
-        window.location.replace = noop;
-        window.location.assign = noop;
-      } catch(e){}
+      try { window.location.replace = noop; window.location.assign = noop; } catch(e){}
     })();
   </script>
 
@@ -28,12 +24,13 @@
   <title>IDMAR — Validador</title>
   <link rel="icon" href="img/logo-pm.png" />
 
-  <!-- CSS base -->
+  <!-- CSS base do projeto -->
   <link rel="stylesheet" href="css/styles.css">
-  <link rel="stylesheet" href="css/theme-soft-light.v1.css"><!-- tema claro -->
-  <link rel="stylesheet" href="css/nav-ribbon.v5.css"><!-- botões "ribbon" v5 -->
+  <link rel="stylesheet" href="css/theme-soft-light.v1.css">
+  <link rel="stylesheet" href="css/nav-ribbon.v5.css">
 
-   <style>
+  <!-- Estilos mínimos para layout (não colidem com os teus) -->
+  <style>
     :root{--bg:#f8fafc;--fg:#0f172a;--bg-elev:#ffffff;--border:#e5e7eb;--link:#0b6bcb}
     html,body{height:100%}
     body{background:var(--bg);color:var(--fg);margin:0;display:flex;flex-direction:column;
@@ -57,80 +54,75 @@
     details.forense-box{margin-top:.75rem;border:1px dashed var(--border);border-radius:10px;padding:.5rem}
     .forense-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.5rem;margin-top:.5rem}
     .footer{border-top:1px solid var(--border);padding:1rem;text-align:left;opacity:.85;background:var(--bg-elev)}
+    header.app-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid #eee;background:#fff}
+    .brand{display:flex;gap:12px;align-items:center}
+    .brand .titles h1{margin:0;font-size:18px}
+    .brand .titles .subtitle{margin:0;font-size:12px;opacity:.75}
+    .logo{height:28px;width:auto}
+    nav.main-nav{display:flex;gap:10px;align-items:center}
+    nav.main-nav a{padding:8px 10px;border-radius:8px;text-decoration:none;color:#111;border:1px solid #eee;background:#fff}
+    nav.main-nav a.active{border-color:#ddd;background:#f7f7f7}
   </style>
-  
-  <!-- Gate de sessão simples -->
-  <script>
-    (function(){
-      try{
-        var ok = sessionStorage.getItem('IDMAR_SESSION')==='ok' || sessionStorage.getItem('NAV_SESSION')==='ok';
-        if(!ok) location.replace('login.html');
-      }catch(e){}
-    })();
-  </script>
 
-  <!-- Versão + branding -->
+  <!-- Versão + branding (mantidos) -->
   <script>window.IDMAR_VERSION="Vs 1.3";</script>
   <script defer src="js/idmar-config.v4.js"></script>
 
-  <!-- Core: i18n + header -->
+  <!-- (Opcional) Se o teu header for injetado por JS, podes manter estes dois.
+       Se preferires só o header estático abaixo, comenta-os. -->
   <script defer src="js/idmar-i18n.js"></script>
   <script defer src="js/idmar-header-only.all.v4.js"></script>
 
-  <!-- Overrides (aplicam labels, ribbons e rodapé) -->
+  <!-- Overrides do projeto -->
   <script defer src="js/header-override.v4.js"></script>
   <script defer src="js/i18n-boot.js"></script>
   <script defer src="js/idmar-version.v4.js"></script>
 </head>
 
 <body>
-  <!-- header é injetado por JS -->
-
   <!-- HEADER ESTÁTICO (igual ao login) -->
-<header class="app-header">
-  <div class="brand">
-    <img src="images/logo-pm.jpg" alt="Polícia Marítima" class="logo" />
-    <div class="titles">
-      <h1 data-en="IDMAR">IDMAR</h1>
-      <p class="subtitle" data-en="Maritime Identification &amp; Engine Checker">
-        Maritime Identification &amp; Engine Checker
-      </p>
+  <header class="app-header">
+    <div class="brand">
+      <img src="images/logo-pm.jpg" alt="Polícia Marítima" class="logo" />
+      <div class="titles">
+        <h1 data-en="IDMAR">IDMAR</h1>
+        <p class="subtitle" data-en="Maritime Identification &amp; Engine Checker">Maritime Identification &amp; Engine Checker</p>
+      </div>
     </div>
-  </div>
-
-  <nav class="main-nav">
-    <a href="validador.html" data-en="Validator">Validador</a>
-    <a href="forense.html" data-en="Forensics">Forense</a>
-    <a href="historico_win.html" data-en="WIN History">Histórico WIN</a>
-    <a href="historico_motor.html" data-en="Engine History">Histórico Motor</a>
-
-    <div class="lang-switch" style="margin-left: 12px; display:flex; align-items:center; gap:6px">
-      <label for="langSel" data-en="Language">Idioma</label>
-      <select id="langSel" aria-label="Language">
-        <option value="pt" data-en="Portuguese">Português</option>
-        <option value="en" data-en="English">English</option>
-      </select>
-    </div>
-  </nav>
-</header>
-
+    <nav class="main-nav">
+      <a href="validador.html" data-en="Validator" class="active">Validador</a>
+      <a href="forense.html" data-en="Forensics">Forense</a>
+      <a href="historico_win.html" data-en="WIN History">Histórico WIN</a>
+      <a href="historico_motor.html" data-en="Engine History">Histórico Motor</a>
+      <div class="lang-switch" style="margin-left: 12px; display:flex; align-items:center; gap:6px">
+        <label for="langSel" data-en="Language">Idioma</label>
+        <select id="langSel" aria-label="Language">
+          <option value="pt" data-en="Portuguese">Português</option>
+          <option value="en" data-en="English">English</option>
+        </select>
+      </div>
+    </nav>
+  </header>
 
   <main class="container">
-    <h1>Validador</h1>
+    <h1 data-en="Validator">Validador</h1>
 
     <section class="two">
-      <!-- WIN -->
+      <!-- WIN/HIN -->
       <div class="panel">
-        <h2>Validador WIN</h2>
+        <h2 data-en="HIN/WIN Validator">Validador WIN</h2>
         <form id="formWin">
-          <label for="win">WIN / HIN</label>
-          <input id="win" type="text" placeholder="Ex.: PT-ABC12345D404"/>
+          <label for="win" data-en="HIN / WIN">WIN / HIN</label>
+          <input id="win" type="text"
+                 placeholder="Ex.: PT-ABC12345D404"
+                 data-en-placeholder="E.g.: PT-ABC12345D404"/>
+
           <div style="margin:.5rem 0">
-            <button id="btnWin" type="submit">Validar WIN</button>
+            <button id="btnWin" type="submit" data-en="Validate WIN">Validar WIN</button>
           </div>
 
           <div style="margin-top:.5rem">
-            <label for="winPhoto">Foto opcional / Optional photo</label>
+            <label for="winPhoto" data-en="Optional photo">Foto opcional</label>
             <input id="winPhoto" type="file" accept="image/*"/>
           </div>
 
@@ -138,7 +130,11 @@
 
           <table>
             <thead>
-              <tr><th>Campo / Field</th><th>Valor / Value</th><th>Interpretação / Meaning</th></tr>
+              <tr>
+                <th data-en="Field">Campo</th>
+                <th data-en="Value">Valor</th>
+                <th data-en="Meaning">Interpretação</th>
+              </tr>
             </thead>
             <tbody id="interpWinBody"></tbody>
           </table>
@@ -147,10 +143,11 @@
 
       <!-- MOTOR -->
       <div class="panel">
-        <h2>Validador Motor</h2>
+        <h2 data-en="Engine Validator">Validador Motor</h2>
         <form id="formMotor">
-          <label for="brand">Marca</label>
+          <label for="brand" data-en="Brand">Marca</label>
           <select id="brand">
+            <option data-en="Select">Selecionar</option>
             <option>Yamaha</option><option>Honda</option><option>Suzuki</option><option>Tohatsu</option>
             <option>Mercury</option><option>MerCruiser</option><option>Volvo Penta</option>
             <option>Yanmar</option><option>Evinrude/Johnson</option>
@@ -159,19 +156,34 @@
           <div id="brandDynamic"></div>
 
           <div style="margin-top:.5rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.5rem">
-            <div><label>Modelo (pesquisa)</label><input id="srch_model" type="text" placeholder="Ex.: DF140A"/></div>
-            <div><label>Potência (hp)</label><input id="srch_power" type="text" placeholder="Ex.: 150"/></div>
-            <div><label>Cilindrada (cc)</label><input id="srch_disp" type="text" placeholder="Ex.: 2670"/></div>
-            <div><label>Ano</label><input id="srch_year" type="text" placeholder="Ex.: 2017"/></div>
-            <div><label>Origem</label><input id="srch_origin" type="text" placeholder="Ex.: Japão"/></div>
+            <div>
+              <label data-en="Model (search)">Modelo (pesquisa)</label>
+              <input id="srch_model" type="text" placeholder="Ex.: DF140A" data-en-placeholder="E.g.: DF140A"/>
+            </div>
+            <div>
+              <label data-en="Power (hp)">Potência (hp)</label>
+              <input id="srch_power" type="text" placeholder="Ex.: 150" data-en-placeholder="E.g.: 150"/>
+            </div>
+            <div>
+              <label data-en="Displacement (cc)">Cilindrada (cc)</label>
+              <input id="srch_disp" type="text" placeholder="Ex.: 2670" data-en-placeholder="E.g.: 2670"/>
+            </div>
+            <div>
+              <label data-en="Year">Ano</label>
+              <input id="srch_year" type="text" placeholder="Ex.: 2017" data-en-placeholder="E.g.: 2017"/>
+            </div>
+            <div>
+              <label data-en="Origin">Origem</label>
+              <input id="srch_origin" type="text" placeholder="Ex.: Japão" data-en-placeholder="E.g.: Japan"/>
+            </div>
           </div>
 
           <div style="margin:.5rem 0">
-            <button id="btnMotor" type="submit">Validar Motor</button>
+            <button id="btnMotor" type="submit" data-en="Validate Engine">Validar Motor</button>
           </div>
 
           <div style="margin-top:.5rem">
-            <label for="motorPhoto">Foto opcional / Optional photo</label>
+            <label for="motorPhoto" data-en="Optional photo">Foto opcional</label>
             <input id="motorPhoto" type="file" accept="image/*"/>
           </div>
 
@@ -181,131 +193,96 @@
     </section>
   </main>
 
-  <footer class="footer" id="fallback-footer">IDMAR — Identificação Marítima</footer>
+  <footer class="footer">IDMAR — Identificação Marítima</footer>
 
-  <!-- Removido idmar-layout.r3b.js para não duplicar header -->
+  <!-- Lógica do Validador (mantida) -->
   <script src="js/validador-win.r3b.js?v=r3b"></script>
   <script src="js/validador-motor.r3b.js?v=r3b"></script>
 
+  <!-- Runtime de idioma: PT por defeito, EN quando selecionado -->
   <script>
-/* IDMAR page i18n runtime — PT por defeito, EN quando escolhido.
-   Suporta 3 fontes de texto:
-   1) data-en / data-en-placeholder / data-enattr-title|aria-label
-   2) texto "PT / EN" (divide e usa a parte certa)
-   3) caso só exista PT, mantém PT (não inventa EN)
-*/
-(function(){
-  const LS_KEY = "IDMAR_LANG";
-  const NODES = "h1,h2,h3,h4,h5,h6,label,th,td,button,summary,legend,span,strong,b,p,li,dt,dd";
-  const ATTRS = ["title","aria-label"];
+  (function(){
+    const LS_KEY = "IDMAR_LANG";
+    const getLang = () => (localStorage.getItem(LS_KEY) || (document.documentElement.getAttribute('lang')||'pt')).toLowerCase();
 
-  const getLang = () => (localStorage.getItem(LS_KEY) || (document.documentElement.getAttribute("lang")||"pt")).toLowerCase();
-  const norm   = s => (s||"").replace(/\s+/g," ").trim();
-  const splitB = s => {
-    if (!s) return null;
-    const i = s.indexOf(" / ");
-    return i >= 0 ? [s.slice(0,i).trim(), s.slice(i+3).trim()] : null;
-  };
-
-  function setText(el, pt, en, lang){
-    if (lang === "en" && en){ el.textContent = en; return; }
-    if (pt){ el.textContent = pt; return; }
-  }
-  function setAttr(el, a, pt, en, lang){
-    if (lang === "en" && en){ el.setAttribute(a, en); return; }
-    if (pt){ el.setAttribute(a, pt); return; }
-  }
-  function setPlaceholder(el, pt, en, lang){
-    if (lang === "en" && en){
-      // pequenos ajustes comuns
-      en = en.replace(/^\s*Ex\.\s*:/i,"E.g.:");
-      setTimeout(()=> el.setAttribute("placeholder", en),0);
-    } else if (pt){
-      setTimeout(()=> el.setAttribute("placeholder", pt),0);
-    }
-  }
-
-  function apply(root=document){
-    const lang = getLang();
-    // Texto principal
-    root.querySelectorAll(NODES).forEach(el=>{
-      // 1) data-*
-      const ptData = el.getAttribute("data-pt");
-      const enData = el.getAttribute("data-en");
-      if (ptData || enData){ setText(el, ptData ?? el.textContent, enData, lang); return; }
-
-      // 2) "PT / EN"
-      const raw = norm(el.textContent);
-      const pair = splitB(raw);
-      if (pair){
-        const [pt,en] = pair;
-        // guarda PT como data-pt para voltar sem perder
-        el.setAttribute("data-pt", pt);
-        el.setAttribute("data-en", en);
-        setText(el, pt, en, lang);
-      }
-    });
-
-    // Placeholders
-    root.querySelectorAll("input[placeholder],textarea[placeholder]").forEach(el=>{
-      const ptAttr = el.getAttribute("data-pt-placeholder");
-      const enAttr = el.getAttribute("data-en-placeholder");
-      if (ptAttr || enAttr){ setPlaceholder(el, ptAttr ?? el.getAttribute("placeholder"), enAttr, lang); return; }
-      const ph = el.getAttribute("placeholder");
-      const pair = splitB(ph);
-      if (pair){
-        el.setAttribute("data-pt-placeholder", pair[0]);
-        el.setAttribute("data-en-placeholder", pair[1]);
-        setPlaceholder(el, pair[0], pair[1], lang);
-      }
-    });
-
-    // Atributos comuns
-    root.querySelectorAll("*").forEach(el=>{
-      ATTRS.forEach(a=>{
-        const ptA = el.getAttribute("data-ptattr-"+a);
-        const enA = el.getAttribute("data-enattr-"+a);
-        if (ptA || enA){ setAttr(el, a, ptA, enA, lang); return; }
-        const v = el.getAttribute(a);
-        const pair = splitB(v);
-        if (pair){
-          el.setAttribute("data-ptattr-"+a, pair[0]);
-          el.setAttribute("data-enattr-"+a, pair[1]);
-          setAttr(el, a, pair[0], pair[1], lang);
-        }
+    function applyLang(root=document){
+      const lang = getLang();
+      // textos com data-en
+      root.querySelectorAll("[data-en]").forEach(el=>{
+        const pt = el.getAttribute("data-pt") ?? el.textContent;
+        const en = el.getAttribute("data-en");
+        if (lang === "en" && en) el.textContent = en;
+        else { el.textContent = pt; el.setAttribute("data-pt", pt); }
       });
-    });
+      // placeholders com data-en-placeholder
+      root.querySelectorAll("input[placeholder][data-en-placeholder],textarea[placeholder][data-en-placeholder]").forEach(el=>{
+        const pt = el.getAttribute("data-pt-placeholder") ?? el.getAttribute("placeholder");
+        const en = el.getAttribute("data-en-placeholder");
+        if (lang === "en" && en) el.setAttribute("placeholder", en);
+        else { el.setAttribute("placeholder", pt); el.setAttribute("data-pt-placeholder", pt); }
+      });
+      // options com data-en
+      root.querySelectorAll("option").forEach(opt=>{
+        const pt = opt.getAttribute("data-pt") ?? opt.textContent;
+        const en = opt.getAttribute("data-en");
+        if (lang === "en" && en) opt.textContent = en;
+        else { opt.textContent = pt; opt.setAttribute("data-pt", pt); }
+      });
+      document.documentElement.setAttribute("lang", lang);
+    }
 
-    // <option>
-    root.querySelectorAll("option").forEach(opt=>{
-      const pt = opt.getAttribute("data-pt") ?? opt.textContent;
-      const en = opt.getAttribute("data-en");
-      if (!en){
-        const pair = splitB(opt.textContent);
-        if (pair){ opt.setAttribute("data-pt", pair[0]); opt.setAttribute("data-en", pair[1]); setText(opt, pair[0], pair[1], lang); }
-        else opt.setAttribute("data-pt", pt);
-      } else {
-        setText(opt, pt, en, lang);
-      }
-    });
+    // wiring do seletor do header
+    function bindHeader(){
+      const sel = document.getElementById("langSel");
+      if (!sel) return;
+      sel.value = getLang();
+      sel.addEventListener("change", ()=>{
+        localStorage.setItem("IDMAR_LANG", sel.value);
+        applyLang();
+        document.dispatchEvent(new CustomEvent("idmar:ui-updated"));
+      });
+    }
 
-    document.documentElement.setAttribute("lang", lang);
-  }
+    function boot(){
+      applyLang();
+      bindHeader();
+    }
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
+    else boot();
 
-  // Primeiro arranque
-  function boot(){ apply(); }
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot); else boot();
+    window.IDMAR_I18N_APPLY = applyLang; // opcional: disponível para outros scripts
+    document.addEventListener("idmar:ui-updated", ()=>applyLang());
+    window.addEventListener("storage", e=>{ if (e.key==="IDMAR_LANG") applyLang(); });
+  })();
+  </script>
 
-  // Reaplicar quando:
-  document.addEventListener("change", e=>{ if (e.target && e.target.id === "langSel") apply(); });
-  document.addEventListener("idmar:ui-updated", apply);
-  window.addEventListener("storage", e=>{ if (e.key === "IDMAR_LANG") apply(); });
+  <!-- Demo simples das mensagens (podes remover) -->
+  <script>
+    (function(){
+      function ok(msg){ return '<span style="color:green">'+msg+'</span>'; }
+      function er(msg){ return '<span style="color:#b00020">'+msg+'</span>'; }
+      const t = k => (localStorage.getItem('IDMAR_LANG')||'pt')==='en' ? ({
+        ok:"Valid number.", inv:"Invalid number: too short",
+        saved:"Record saved to history.", invsn:"Invalid S/N: too short"
+      }[k]) : ({
+        ok:"Número válido.", inv:"Número inválido: comprimento insuficiente",
+        saved:"Registo guardado no histórico.", invsn:"S/N inválido: comprimento insuficiente"
+      }[k]);
 
-  // Segurança para UIs injetadas tardiamente
-  const mo = new MutationObserver(m=>{ for (const x of m){ if (x.addedNodes && x.addedNodes.length){ apply(); break; } } });
-  try { mo.observe(document.body, {childList:true, subtree:true}); } catch(e){}
-})();
-</script>
-  
+      document.getElementById("btnWin")?.addEventListener("click", (e)=>{
+        e.preventDefault();
+        const v = (document.getElementById("win").value||"").trim();
+        const valid = v.length >= 6;
+        document.getElementById("winOut").innerHTML = valid ? ok(t("ok")) : er(t("inv"));
+      });
+
+      document.getElementById("btnMotor")?.addEventListener("click", (e)=>{
+        e.preventDefault();
+        const sn = (document.getElementById("serial")?.value||"").trim();
+        const valid = (sn? sn.length:0) >= 6; // se não tiveres #serial, esta demo mostra sempre "saved"
+        document.getElementById("motorOut").innerHTML = valid ? ok(t("saved")) : er(t("invsn"));
+      });
+    })();
+  </script>
 </body>
 </html>
