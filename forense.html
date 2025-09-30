@@ -1,97 +1,86 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="pt">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-
-  <!-- CSS base -->
-  <link rel="stylesheet" href="css/styles.css">
-  <link rel="stylesheet" href="css/theme-soft-light.v1.css">
-  <link rel="stylesheet" href="css/nav-ribbon.v5.css"><!-- os botões novos -->
-
-  <!-- Versão + branding -->
-  <script>window.IDMAR_VERSION="Vs 1.3";</script>
-  <script defer src="js/idmar-config.v4.js"></script>
-
-  <!-- Header/i18n (core) -->
-  <script defer src="js/idmar-i18n.js"></script>
-  <script defer src="js/idmar-header-only.all.v4.js"></script>
-
-  <!-- Overrides -->
-  <script defer src="js/header-override.v4.js"></script>
-  <script defer src="js/i18n-boot.js"></script>
-  <script defer src="js/idmar-version.v4.js"></script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<!-- CSS base -->
+<link href="css/styles.css" rel="stylesheet"/>
+<link href="css/theme-soft-light.v1.css" rel="stylesheet"/>
+<link href="css/nav-ribbon.v5.css" rel="stylesheet"/><!-- os botões novos -->
+<!-- Versão + branding -->
+<script>window.IDMAR_VERSION="Vs 1.3";</script>
+<script defer="" src="js/idmar-config.v4.js"></script>
+<!-- Header/i18n (core) -->
+<script defer="" src="js/idmar-i18n.js"></script>
+<script defer="" src="js/idmar-header-only.all.v4.js"></script>
+<!-- Overrides -->
+<script defer="" src="js/header-override.v4.js"></script>
+<script defer="" src="js/i18n-boot.js"></script>
+<script defer="" src="js/idmar-version.v4.js"></script>
 </head>
-
 <body>
-  <!-- header é injetado por JS -->
+<!-- header é injetado por JS -->
+<main class="container">
+<h1 data-en="Forensics — Index">Forense — Índice</h1>
+<section class="panel">
+<h2 data-en="Upload evidence">Carregar evidências</h2>
+<div class="row" style="display:flex;gap:.5rem;flex-wrap:wrap">
+<input accept="image/*" id="evPhotos" multiple="" type="file"/>
+<select id="evContext">
+<option data-en="Context: HIN/WIN" value="win">Contexto: WIN/HIN</option>
+<option data-en="Context: Engine" value="motor">Contexto: Motor</option>
+</select>
+<button id="evAttach">Anexar ao histórico mais recente</button>
+</div>
+<div class="meta" id="evMeta" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:.5rem;margin-top:.5rem"></div>
+<div class="thumbs" id="evThumbs" style="display:flex;gap:.5rem;flex-wrap:wrap"></div>
+</section>
+<section class="panel">
+<h2 data-en="Workspace">Workspace</h2>
+<div class="row" style="display:flex;gap:.5rem;flex-wrap:wrap">
+<button data-en="Open lightbox" id="lbOpen">Abrir lightbox</button>
+<label data-en="Compare">Comparar <input id="cmpRange" max="100" min="0" type="range" value="50"/></label>
+<button data-en="Annotate (rect)" id="addRect">Anotar (rect)</button>
+<button data-en="Clear annotations" id="clearRects">Limpar anotações</button>
+<button data-en="Export annotated PNG" id="exportPNG">Exportar PNG anotado</button>
+<button data-en="Save bundle (JSON)" id="saveBundle">Guardar “bundle” (JSON)</button>
+<input accept=".json" id="loadBundle" type="file"/>
+</div>
+<div class="canvas-wrap" style="position:relative;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:#f1f5f9;height:540px">
+<canvas id="evCanvas" style="display:block;width:100%;height:100%"></canvas>
+</div>
+<small>Dica: a comparação usa a 1ª e a 2ª foto; as anotações servem para redacção/realce.</small>
+</section>
+<section class="panel">
+<h2 data-en="Forensic checklist">Checklist forense</h2>
+<div class="checkboxes" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.35rem">
+<label><input id="chk_rebites" type="checkbox"/> Rebites inconsistentes/añadidos</label>
+<label data-en="Abnormal weld beads"><input id="chk_solda" type="checkbox"/> Cordões de solda anómalos</label>
+<label data-en="Re-marked/replaced plate"><input id="chk_placa" type="checkbox"/> Placa remarcada/substituída</label>
+<label data-en="Paint layers/abrasions"><input id="chk_tinta" type="checkbox"/> Camadas de tinta/abrasões</label>
+<label data-en="Tampered/missing label (engine)"><input id="chk_etq" type="checkbox"/> Etiqueta adulterada/ausente (motor)</label>
+<label data-en="Core plug damaged/removed (engine)"><input id="chk_core" type="checkbox"/> Core plug danificado/removido (motor)</label>
+<label data-en="Abnormal weld/corrosion at boss (engine)"><input id="chk_boss" type="checkbox"/> Solda/corrosão anómala no boss (motor)</label>
+<label data-en="Re-stamping on block (engine)"><input id="chk_bloco" type="checkbox"/> Remarcação no bloco (motor)</label>
+</div>
+<label data-en="Notes">Notas</label>
+<textarea data-en-placeholder="Technical notes…" id="notes" placeholder="Observações técnicas…" rows="4" style="width:100%;border:1px solid var(--border);border-radius:10px;padding:.5rem .6rem;background:#fff"></textarea>
+</section>
+</main>
+<footer class="footer" style="border-top:1px solid var(--border);padding:1rem;opacity:.85;background:var(--bg-elev)">IDMAR — Identificação Marítima</footer>
+<div class="lightbox" id="lightbox" style="position:fixed;inset:0;background:rgba(15,23,42,.85);display:none;align-items:center;justify-content:center;z-index:50">
+<img alt="" id="lbImg" style="max-width:90vw;max-height:90vh;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.5)"/>
+</div>
+<!-- (limpo) removido idmar-layout.r3c.js -->
+<script src="js/forense-r1.js?v=r1"></script>
 
-  <main class="container">
-    <h1 data-en="Forensics — Index">Forense — Índice</h1>
-
-    <section class="panel">
-      <h2 data-en="Upload evidence">Carregar evidências</h2>
-      <div class="row" style="display:flex;gap:.5rem;flex-wrap:wrap">
-        <input id="evPhotos" type="file" accept="image/*" multiple />
-        <select id="evContext">
-          <option value="win" data-en="Context: HIN/WIN">Contexto: WIN/HIN</option>
-          <option value="motor" data-en="Context: Engine">Contexto: Motor</option>
-        </select>
-        <button id="evAttach" data-en="Attach to most recent history">Anexar ao histórico mais recente</button>
-      </div>
-      <div id="evMeta" class="meta" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:.5rem;margin-top:.5rem"></div>
-      <div id="evThumbs" class="thumbs" style="display:flex;gap:.5rem;flex-wrap:wrap"></div>
-    </section>
-
-    <section class="panel">
-      <h2 data-en="Workspace">Workspace</h2>
-      <div class="row" style="display:flex;gap:.5rem;flex-wrap:wrap">
-        <button id="lbOpen" data-en="Open lightbox">Abrir lightbox</button>
-        <label data-en="Compare">Comparar <input id="cmpRange" type="range" min="0" max="100" value="50"/></label>
-        <button id="addRect" data-en="Annotate (rect)">Anotar (rect)</button>
-        <button id="clearRects" data-en="Clear annotations">Limpar anotações</button>
-        <button id="exportPNG" data-en="Export annotated PNG">Exportar PNG anotado</button>
-        <button id="saveBundle" data-en="Save bundle (JSON)">Guardar “bundle” (JSON)</button>
-        <input id="loadBundle" type="file" accept=".json" />
-      </div>
-      <div class="canvas-wrap" style="position:relative;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:#f1f5f9;height:540px">
-        <canvas id="evCanvas" style="display:block;width:100%;height:100%"></canvas>
-      </div>
-      <small><span data-en="Tip: comparison uses the 1st and 2nd photo; annotations are for redaction/highlight.">Dica: a comparação usa a 1ª e a 2ª foto; as anotações servem para redacção/realce.</span></small>
-    </section>
-
-    <section class="panel">
-      <h2 data-en="Forensic checklist">Checklist forense</h2>
-      <div class="checkboxes" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.35rem">
-        <label><input type="checkbox" id="chk_rebites"> Rebites inconsistentes/añadidos</label>
-        <label><input type="checkbox" id="chk_solda"> Cordões de solda anómalos</label>
-        <label><input type="checkbox" id="chk_placa"> Placa remarcada/substituída</label>
-        <label><input type="checkbox" id="chk_tinta"> Camadas de tinta/abrasões</label>
-        <label><input type="checkbox" id="chk_etq"> Etiqueta adulterada/ausente (motor)</label>
-        <label><input type="checkbox" id="chk_core"> Core plug danificado/removido (motor)</label>
-        <label><input type="checkbox" id="chk_boss"> Solda/corrosão anómala no boss (motor)</label>
-        <label><input type="checkbox" id="chk_bloco"> Remarcação no bloco (motor)</label>
-      </div>
-      <label data-en="Notes">Notas</label>
-      <textarea id="notes" rows="4" placeholder="Observações técnicas…" data-en-placeholder="Technical notes…" style="width:100%;border:1px solid var(--border);border-radius:10px;padding:.5rem .6rem;background:#fff"></textarea>
-    </section>
-  </main>
-
-  <footer class="footer" style="border-top:1px solid var(--border);padding:1rem;opacity:.85;background:var(--bg-elev)">IDMAR — Identificação Marítima</footer>
-
-  <div class="lightbox" id="lightbox" style="position:fixed;inset:0;background:rgba(15,23,42,.85);display:none;align-items:center;justify-content:center;z-index:50">
-    <img id="lbImg" alt="" style="max-width:90vw;max-height:90vh;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.5)"/>
-  </div>
-
-  <!-- (limpo) removido idmar-layout.r3c.js -->
-  <script src="js/forense-r1.js?v=r1"></script>
-
-  <!-- IDMAR body i18n runtime: PT default, EN when selected -->
+  <!-- IDMAR: PT/EN switcher for body -->
   <script>
   (function(){
     const LS_KEY = "IDMAR_LANG";
     const getLang = () => (localStorage.getItem(LS_KEY) || (document.documentElement.getAttribute('lang')||'pt')).toLowerCase();
-    function applyLang(root=document){
+    function apply(root=document){
       const lang = getLang();
       root.querySelectorAll("[data-en]").forEach(el=>{
         const pt = el.getAttribute("data-pt") ?? el.textContent;
@@ -105,6 +94,14 @@
         if (lang === "en" && en) el.setAttribute("placeholder", en);
         else { el.setAttribute("placeholder", pt); el.setAttribute("data-pt-placeholder", pt); }
       });
+      root.querySelectorAll("[data-enattr-title]").forEach(el=>{
+        const pt = el.getAttribute("data-ptattr-title"); const en = el.getAttribute("data-enattr-title");
+        el.setAttribute("title", (lang==='en'&&en)?en:pt||el.getAttribute("title")||"");
+      });
+      root.querySelectorAll("[data-enattr-aria-label]").forEach(el=>{
+        const pt = el.getAttribute("data-ptattr-aria-label"); const en = el.getAttribute("data-enattr-aria-label");
+        el.setAttribute("aria-label", (lang==='en'&&en)?en:pt||el.getAttribute("aria-label")||"");
+      });
       root.querySelectorAll("option[data-en]").forEach(opt=>{
         const pt = opt.getAttribute("data-pt") ?? opt.textContent;
         const en = opt.getAttribute("data-en");
@@ -114,21 +111,17 @@
       document.documentElement.setAttribute("lang", lang);
     }
     function boot(){
-      applyLang();
+      apply();
       const sel = document.getElementById("langSel");
       if (sel){
-        try { sel.value = getLang(); } catch(e){}
-        sel.addEventListener("change", ()=>{
-          localStorage.setItem("IDMAR_LANG", sel.value);
-          applyLang();
-          document.dispatchEvent(new CustomEvent("idmar:ui-updated"));
-        });
+        try{ sel.value = getLang(); }catch(e){}
+        sel.addEventListener("change", ()=>{ localStorage.setItem("IDMAR_LANG", sel.value); apply(); document.dispatchEvent(new CustomEvent("idmar:ui-updated")); });
       }
-      document.addEventListener("idmar:ui-updated", ()=>applyLang());
-      window.addEventListener("storage", e=>{ if (e.key==="IDMAR_LANG") applyLang(); });
+      document.addEventListener("idmar:ui-updated", ()=>apply());
+      window.addEventListener("storage", e=>{ if (e.key==="IDMAR_LANG") apply(); });
     }
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot); else boot();
-    window.IDMAR_I18N_APPLY = applyLang;
+    window.IDMAR_I18N_APPLY = apply;
   })();
   </script>
 

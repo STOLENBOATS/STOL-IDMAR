@@ -1,17 +1,16 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="pt">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>IDMAR — Histórico Motor</title>
-  <link rel="icon" href="img/logo-pm.png" />
-
-  <!-- CSS base -->
-  <link rel="stylesheet" href="css/styles.css">
-  <link rel="stylesheet" href="css/theme-soft-light.v1.css"><!-- tema claro -->
-  <link rel="stylesheet" href="css/nav-ribbon.v5.css"><!-- botões ribbon v5 -->
-
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>IDMAR — Histórico Motor</title>
+<link href="img/logo-pm.png" rel="icon"/>
+<!-- CSS base -->
+<link href="css/styles.css" rel="stylesheet"/>
+<link href="css/theme-soft-light.v1.css" rel="stylesheet"/><!-- tema claro -->
+<link href="css/nav-ribbon.v5.css" rel="stylesheet"/><!-- botões ribbon v5 -->
+<style>
     :root{--bg:#f8fafc;--fg:#0f172a;--bg-elev:#ffffff;--border:#e5e7eb;--link:#0b6bcb}
     html,body{height:100%}
     body{background:var(--bg);color:var(--fg);margin:0;display:flex;flex-direction:column;
@@ -30,9 +29,8 @@
     input,select,button{border:1px solid var(--border);background:#fff;border-radius:10px;padding:.5rem .6rem}
     button{cursor:pointer}
   </style>
-
-  <!-- Gate -->
-  <script>
+<!-- Gate -->
+<script>
     (function(){
       try{
         var ok = sessionStorage.getItem('IDMAR_SESSION')==='ok' || sessionStorage.getItem('NAV_SESSION')==='ok';
@@ -40,80 +38,71 @@
       }catch(e){}
     })();
   </script>
-
-  <!-- Versão + branding (antes do header) -->
-  <script>window.IDMAR_VERSION="Vs 1.3";</script>
-  <script defer src="js/idmar-config.v4.js"></script>
-
-  <!-- Core: i18n + header -->
-  <script defer src="js/idmar-i18n.js?v=1"></script>
-  <script defer src="js/idmar-header-only.all.v4.js?v=4"></script>
-
-  <!-- Overrides -->
-  <script defer src="js/header-override.v4.js"></script>
-  <script defer src="js/i18n-boot.js?v=1"></script>
-  <script defer src="js/idmar-version.v4.js"></script>
+<!-- Versão + branding (antes do header) -->
+<script>window.IDMAR_VERSION="Vs 1.3";</script>
+<script defer="" src="js/idmar-config.v4.js"></script>
+<!-- Core: i18n + header -->
+<script defer="" src="js/idmar-i18n.js?v=1"></script>
+<script defer="" src="js/idmar-header-only.all.v4.js?v=4"></script>
+<!-- Overrides -->
+<script defer="" src="js/header-override.v4.js"></script>
+<script defer="" src="js/i18n-boot.js?v=1"></script>
+<script defer="" src="js/idmar-version.v4.js"></script>
 </head>
-
 <body>
-  <!-- header é injetado por JS -->
+<!-- header é injetado por JS -->
+<main class="container">
+<h1 data-en="History — Engines">Histórico — Motores</h1>
+<section class="panel">
+<div class="filters">
+<input data-en-placeholder="marca / modelo / texto)" data-pt-placeholder="Pesquisar (S/N" id="hist_motor_search" placeholder="Pesquisar (S/N" type="search"/>
+<select aria-label="Marca" id="hist_motor_brand">
+<option value="">Marca (todas)</option>
+<option>Yamaha</option><option>Honda</option><option>Suzuki</option><option>Tohatsu</option>
+<option>Mercury</option><option>MerCruiser</option><option>Volvo Penta</option>
+<option>Yanmar</option><option>Evinrude/Johnson</option>
+</select>
+<select aria-label="Estado" id="hist_motor_state">
+<option data-en="State (all)" value="all">Estado (todos)</option>
+<option data-en="Valid" value="ok">Válido</option>
+<option data-en="Invalid" value="bad">Inválido</option>
+</select>
+<input data-en-placeholder="From" id="hist_motor_from" placeholder="De" type="date"/>
+<input data-en-placeholder="To" id="hist_motor_to" placeholder="Até" type="date"/>
+</div>
+<div class="actions">
+<button data-en="Export CSV" id="hist_motor_csv">Exportar CSV</button>
+<button data-en="Clear history (Engine)" id="hist_motor_clear">Limpar histórico (Motor)</button>
+</div>
+</section>
+<section class="panel">
+<table>
+<thead>
+<tr>
+<th data-en="When">Quando</th>
+<th>S/N</th>
+<th data-en="Brand">Marca</th>
+<th>Modelo</th>
+<th data-en="State">Estado</th>
+<th data-en="Reason">Justificação</th>
+<th data-en="Photo (name)">Foto (nome)</th>
+<th data-en="Thumbnail">Miniatura</th>
+</tr>
+</thead>
+<tbody id="hist_motor_tbody"></tbody>
+</table>
+</section>
+</main>
+<footer class="footer" id="fallback-footer">IDMAR — Identificação Marítima</footer>
+<!-- Removido idmar-layout.r3b.js -->
+<script src="js/historico-motor.r3b.js?v=r3b"></script>
 
-  <main class="container">
-    <h1 data-en="History — Engines">Histórico — Motores</h1>
-
-    <section class="panel">
-      <div class="filters">
-        <input id="hist_motor_search" type="search" placeholder="Pesquisar (S/N / marca / modelo / texto)" data-en-placeholder="Search (S/N / brand / model / text)" />
-        <select id="hist_motor_brand" aria-label="Marca" data-enattr-aria-label="Brand">
-          <option value="" data-en="Brand (all)">Marca (todas)</option>
-          <option>Yamaha</option><option>Honda</option><option>Suzuki</option><option>Tohatsu</option>
-          <option>Mercury</option><option>MerCruiser</option><option>Volvo Penta</option>
-          <option>Yanmar</option><option>Evinrude/Johnson</option>
-        </select>
-        <select id="hist_motor_state" aria-label="Estado">
-          <option value="all" data-en="State (all)">Estado (todos)</option>
-          <option value="ok" data-en="Valid">Válido</option>
-          <option value="bad" data-en="Invalid">Inválido</option>
-        </select>
-        <input id="hist_motor_from" type="date" placeholder="De" data-en-placeholder="From" />
-        <input id="hist_motor_to" type="date" placeholder="Até" data-en-placeholder="To" />
-      </div>
-      <div class="actions">
-        <button id="hist_motor_csv" data-en="Export CSV">Exportar CSV</button>
-        <button id="hist_motor_clear" data-en="Clear history (Engine)">Limpar histórico (Motor)</button>
-      </div>
-    </section>
-
-    <section class="panel">
-      <table>
-        <thead>
-          <tr>
-            <th data-en="When">Quando</th>
-            <th data-en="S/N">S/N</th>
-            <th data-en="Brand">Marca</th>
-            <th data-en="Model">Modelo</th>
-            <th data-en="State">Estado</th>
-            <th data-en="Reason">Justificação</th>
-            <th data-en="Photo (name)">Foto (nome)</th>
-            <th data-en="Thumbnail">Miniatura</th>
-          </tr>
-        </thead>
-        <tbody id="hist_motor_tbody"></tbody>
-      </table>
-    </section>
-  </main>
-
-  <footer class="footer" id="fallback-footer">IDMAR — Identificação Marítima</footer>
-
-  <!-- Removido idmar-layout.r3b.js -->
-  <script src="js/historico-motor.r3b.js?v=r3b"></script>
-
-  <!-- IDMAR body i18n runtime: PT default, EN when selected -->
+  <!-- IDMAR: PT/EN switcher for body -->
   <script>
   (function(){
     const LS_KEY = "IDMAR_LANG";
     const getLang = () => (localStorage.getItem(LS_KEY) || (document.documentElement.getAttribute('lang')||'pt')).toLowerCase();
-    function applyLang(root=document){
+    function apply(root=document){
       const lang = getLang();
       root.querySelectorAll("[data-en]").forEach(el=>{
         const pt = el.getAttribute("data-pt") ?? el.textContent;
@@ -127,6 +116,14 @@
         if (lang === "en" && en) el.setAttribute("placeholder", en);
         else { el.setAttribute("placeholder", pt); el.setAttribute("data-pt-placeholder", pt); }
       });
+      root.querySelectorAll("[data-enattr-title]").forEach(el=>{
+        const pt = el.getAttribute("data-ptattr-title"); const en = el.getAttribute("data-enattr-title");
+        el.setAttribute("title", (lang==='en'&&en)?en:pt||el.getAttribute("title")||"");
+      });
+      root.querySelectorAll("[data-enattr-aria-label]").forEach(el=>{
+        const pt = el.getAttribute("data-ptattr-aria-label"); const en = el.getAttribute("data-enattr-aria-label");
+        el.setAttribute("aria-label", (lang==='en'&&en)?en:pt||el.getAttribute("aria-label")||"");
+      });
       root.querySelectorAll("option[data-en]").forEach(opt=>{
         const pt = opt.getAttribute("data-pt") ?? opt.textContent;
         const en = opt.getAttribute("data-en");
@@ -136,21 +133,17 @@
       document.documentElement.setAttribute("lang", lang);
     }
     function boot(){
-      applyLang();
+      apply();
       const sel = document.getElementById("langSel");
       if (sel){
-        try { sel.value = getLang(); } catch(e){}
-        sel.addEventListener("change", ()=>{
-          localStorage.setItem("IDMAR_LANG", sel.value);
-          applyLang();
-          document.dispatchEvent(new CustomEvent("idmar:ui-updated"));
-        });
+        try{ sel.value = getLang(); }catch(e){}
+        sel.addEventListener("change", ()=>{ localStorage.setItem("IDMAR_LANG", sel.value); apply(); document.dispatchEvent(new CustomEvent("idmar:ui-updated")); });
       }
-      document.addEventListener("idmar:ui-updated", ()=>applyLang());
-      window.addEventListener("storage", e=>{ if (e.key==="IDMAR_LANG") applyLang(); });
+      document.addEventListener("idmar:ui-updated", ()=>apply());
+      window.addEventListener("storage", e=>{ if (e.key==="IDMAR_LANG") apply(); });
     }
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot); else boot();
-    window.IDMAR_I18N_APPLY = applyLang;
+    window.IDMAR_I18N_APPLY = apply;
   })();
   </script>
 
