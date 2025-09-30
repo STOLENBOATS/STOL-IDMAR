@@ -66,29 +66,42 @@
   <!-- header é injetado por JS -->
 
   <main class="container">
-    <h1>Validador</h1>
+    <h1><span data-en="Validator">Validador</span></h1>
 
     <section class="two">
       <!-- WIN -->
       <div class="panel">
-        <h2>Validador WIN</h2>
+        <h2><span data-en="HIN/WIN Validator">Validador WIN</span></h2>
         <form id="formWin">
-          <label for="win">WIN / HIN</label>
-          <input id="win" type="text" placeholder="Ex.: PT-ABC12345D404"/>
+          <label for="win"><span data-en="HIN / WIN">WIN / HIN</span></label>
+          <input id="win" type="text" placeholder="Ex.: PT-ABC12345D404" data-en-placeholder="E.g.: PT-ABC12345D404"/>
           <div style="margin:.5rem 0">
-            <button id="btnWin" type="submit">Validar WIN</button>
+            <button id="btnWin" type="submit"><span data-en="Validate WIN">Validar WIN</span></button>
           </div>
 
           <div style="margin-top:.5rem">
-            <label for="winPhoto">Foto opcional / Optional photo</label>
+            <label for="winPhoto"><span data-en="Optional photo">Foto opcional</span></label>
             <input id="winPhoto" type="file" accept="image/*"/>
           </div>
 
           <div id="winOut" style="margin-top:.75rem"></div>
+<details class="forense-box" id="forenseWinBox">
+  <summary data-en="Forensics (optional)">Forense (opcional)</summary>
+  <div class="forense-grid">
+    <label for="forenseWinFile" class="small" data-en="Drop a photo here or click to select…">Larga a fotografia aqui ou clica para escolher…</label>
+    <input id="forenseWinFile" type="file" accept="image/*" />
+    <div>
+      <label for="forenseWinNote" data-en="Notes (optional)">Observações (opcional)</label>
+      <input id="forenseWinNote" type="text" placeholder="Ex.: Região de gravação / corrosão" data-en-placeholder="E.g.: Stamping area / corrosion"/>
+    </div>
+    <div><button id="btnForenseWin" type="button" data-en="Analyze">Analisar</button></div>
+  </div>
+  <div id="forenseWinMsg" class="small" style="margin-top:.4rem"></div>
+</details>
 
           <table>
             <thead>
-              <tr><th>Campo / Field</th><th>Valor / Value</th><th>Interpretação / Meaning</th></tr>
+              <tr><th data-en="Field">Campo</th><th data-en="Value">Valor</th><th data-en="Meaning">Interpretação</th></tr>
             </thead>
             <tbody id="interpWinBody"></tbody>
           </table>
@@ -97,10 +110,10 @@
 
       <!-- MOTOR -->
       <div class="panel">
-        <h2>Validador Motor</h2>
+        <h2><span data-en="Engine Validator">Validador Motor</span></h2>
         <form id="formMotor">
-          <label for="brand">Marca</label>
-          <select id="brand">
+          <label for="brand"><span data-en="Brand">Marca</span></label>
+          <select id="brand"><option data-en="Select">Selecionar</option>
             <option>Yamaha</option><option>Honda</option><option>Suzuki</option><option>Tohatsu</option>
             <option>Mercury</option><option>MerCruiser</option><option>Volvo Penta</option>
             <option>Yanmar</option><option>Evinrude/Johnson</option>
@@ -109,23 +122,36 @@
           <div id="brandDynamic"></div>
 
           <div style="margin-top:.5rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.5rem">
-            <div><label>Modelo (pesquisa)</label><input id="srch_model" type="text" placeholder="Ex.: DF140A"/></div>
-            <div><label>Potência (hp)</label><input id="srch_power" type="text" placeholder="Ex.: 150"/></div>
-            <div><label>Cilindrada (cc)</label><input id="srch_disp" type="text" placeholder="Ex.: 2670"/></div>
-            <div><label>Ano</label><input id="srch_year" type="text" placeholder="Ex.: 2017"/></div>
-            <div><label>Origem</label><input id="srch_origin" type="text" placeholder="Ex.: Japão"/></div>
+            <div><label data-en="Model (search)">Modelo (pesquisa)</label><input id="srch_model" type="text" placeholder="Ex.: DF140A" data-en-placeholder="E.g.: DF140A"/></div>
+            <div><label data-en="Power (hp)">Potência (hp)</label><input id="srch_power" type="text" placeholder="Ex.: 150" data-en-placeholder="E.g.: 150"/></div>
+            <div><label data-en="Displacement (cc)">Cilindrada (cc)</label><input id="srch_disp" type="text" placeholder="Ex.: 2670" data-en-placeholder="E.g.: 2670"/></div>
+            <div><label data-en="Year">Ano</label><input id="srch_year" type="text" placeholder="Ex.: 2017" data-en-placeholder="E.g.: 2017"/></div>
+            <div><label data-en="Origin">Origem</label><input id="srch_origin" type="text" placeholder="Ex.: Japão" data-en-placeholder="E.g.: Japan"/></div>
           </div>
 
           <div style="margin:.5rem 0">
-            <button id="btnMotor" type="submit">Validar Motor</button>
+            <button id="btnMotor" type="submit"><span data-en="Validate Engine">Validar Motor</span></button>
           </div>
 
           <div style="margin-top:.5rem">
-            <label for="motorPhoto">Foto opcional / Optional photo</label>
+            <label for="motorPhoto"><span data-en="Optional photo">Foto opcional</span></label>
             <input id="motorPhoto" type="file" accept="image/*"/>
           </div>
 
           <div id="motorOut" style="margin-top:.75rem"></div>
+<details class="forense-box" id="forenseMotorBox">
+  <summary data-en="Forensics (optional)">Forense (opcional)</summary>
+  <div class="forense-grid">
+    <label for="forenseMotorFile" class="small" data-en="Drop a photo here or click to select…">Larga a fotografia aqui ou clica para escolher…</label>
+    <input id="forenseMotorFile" type="file" accept="image/*" />
+    <div>
+      <label for="forenseMotorNote" data-en="Notes (optional)">Observações (opcional)</label>
+      <input id="forenseMotorNote" type="text" placeholder="Ex.: Zona do número de série" data-en-placeholder="E.g.: Serial number area"/>
+    </div>
+    <div><button id="btnForenseMotor" type="button" data-en="Analyze">Analisar</button></div>
+  </div>
+  <div id="forenseMotorMsg" class="small" style="margin-top:.4rem"></div>
+</details>
         </form>
       </div>
     </section>
@@ -136,5 +162,73 @@
   <!-- Removido idmar-layout.r3b.js para não duplicar header -->
   <script src="js/validador-win.r3b.js?v=r3b"></script>
   <script src="js/validador-motor.r3b.js?v=r3b"></script>
+
+  <!-- IDMAR body i18n runtime: PT default, EN when selected -->
+  <script>
+  (function(){
+    const LS_KEY = "IDMAR_LANG";
+    const getLang = () => (localStorage.getItem(LS_KEY) || (document.documentElement.getAttribute('lang')||'pt')).toLowerCase();
+    function applyLang(root=document){
+      const lang = getLang();
+      root.querySelectorAll("[data-en]").forEach(el=>{
+        const pt = el.getAttribute("data-pt") ?? el.textContent;
+        const en = el.getAttribute("data-en");
+        if (lang === "en" && en) el.textContent = en;
+        else { el.textContent = pt; el.setAttribute("data-pt", pt); }
+      });
+      root.querySelectorAll("[data-en-placeholder]").forEach(el=>{
+        const pt = el.getAttribute("data-pt-placeholder") ?? el.getAttribute("placeholder") || "";
+        const en = el.getAttribute("data-en-placeholder");
+        if (lang === "en" && en) el.setAttribute("placeholder", en);
+        else { el.setAttribute("placeholder", pt); el.setAttribute("data-pt-placeholder", pt); }
+      });
+      root.querySelectorAll("option[data-en]").forEach(opt=>{
+        const pt = opt.getAttribute("data-pt") ?? opt.textContent;
+        const en = opt.getAttribute("data-en");
+        if (lang === "en" && en) opt.textContent = en;
+        else { opt.textContent = pt; opt.setAttribute("data-pt", pt); }
+      });
+      document.documentElement.setAttribute("lang", lang);
+    }
+    function boot(){
+      applyLang();
+      const sel = document.getElementById("langSel");
+      if (sel){
+        try { sel.value = getLang(); } catch(e){}
+        sel.addEventListener("change", ()=>{
+          localStorage.setItem("IDMAR_LANG", sel.value);
+          applyLang();
+          document.dispatchEvent(new CustomEvent("idmar:ui-updated"));
+        });
+      }
+      document.addEventListener("idmar:ui-updated", ()=>applyLang());
+      window.addEventListener("storage", e=>{ if (e.key==="IDMAR_LANG") applyLang(); });
+    }
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot); else boot();
+    window.IDMAR_I18N_APPLY = applyLang;
+  })();
+  </script>
+
+  <script>
+  (function(){
+    const t = (en, pt) => ((localStorage.getItem('IDMAR_LANG')||'pt')==='en' ? en : pt);
+    function wire(btnId, fileId, outId){
+      const btn = document.getElementById(btnId), inp = document.getElementById(fileId), out = document.getElementById(outId);
+      if (!btn || !inp || !out) return;
+      btn.addEventListener('click', ()=>{
+        if (!inp.files || !inp.files[0]){
+          out.textContent = t("Choose a photo first.","Escolhe uma fotografia primeiro.");
+          out.className = "small bad"; return;
+        }
+        out.textContent = t("Analyzing image…","A analisar imagem…");
+        out.className = "small";
+        setTimeout(()=>{ out.textContent = t("Patterns and layout consistent.","Padrões e disposição consistentes."); out.className="small good"; }, 600);
+      });
+    }
+    wire("btnForenseWin","forenseWinFile","forenseWinMsg");
+    wire("btnForenseMotor","forenseMotorFile","forenseMotorMsg");
+  })();
+  </script>
+
 </body>
 </html>

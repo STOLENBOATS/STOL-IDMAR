@@ -61,22 +61,22 @@
   <!-- header é injetado por JS -->
 
   <main class="container">
-    <h1>Histórico — WIN</h1>
+    <h1 data-en="History — HIN/WIN">Histórico — WIN</h1>
 
     <section class="panel">
       <div class="row">
-        <input id="hist_win_search" type="search" placeholder="Pesquisar (WIN / texto)" />
-        <select id="hist_win_state" aria-label="Estado">
-          <option value="all">Estado (todos)</option>
-          <option value="ok">Válido</option>
-          <option value="bad">Inválido</option>
+        <input id="hist_win_search" type="search" placeholder="Pesquisar (WIN / texto)" data-en-placeholder="Search (HIN/WIN / text)" />
+        <select id="hist_win_state" aria-label="Estado" data-enattr-aria-label="State">
+          <option value="all" data-en="State (all)">Estado (todos)</option>
+          <option value="ok" data-en="Valid">Válido</option>
+          <option value="bad" data-en="Invalid">Inválido</option>
         </select>
-        <input id="hist_win_from" type="date" placeholder="De" />
-        <input id="hist_win_to" type="date" placeholder="Até" />
+        <input id="hist_win_from" type="date" placeholder="De" data-en-placeholder="From" />
+        <input id="hist_win_to" type="date" placeholder="Até" data-en-placeholder="To" />
       </div>
       <div class="actions">
-        <button id="hist_win_csv">Exportar CSV</button>
-        <button id="hist_win_clear">Limpar histórico (WIN)</button>
+        <button id="hist_win_csv" data-en="Export CSV">Exportar CSV</button>
+        <button id="hist_win_clear" data-en="Clear history (HIN/WIN)">Limpar histórico (WIN)</button>
       </div>
     </section>
 
@@ -84,12 +84,12 @@
       <table>
         <thead>
           <tr>
-            <th>Quando</th>
-            <th>WIN/HIN</th>
-            <th>Estado</th>
-            <th>Justificação</th>
-            <th>Foto (nome)</th>
-            <th>Miniatura</th>
+            <th data-en="When">Quando</th>
+            <th data-en="HIN/WIN">WIN/HIN</th>
+            <th data-en="State">Estado</th>
+            <th data-en="Reason">Justificação</th>
+            <th data-en="Photo (name)">Foto (nome)</th>
+            <th data-en="Thumbnail">Miniatura</th>
           </tr>
         </thead>
         <tbody id="hist_win_tbody"></tbody>
@@ -101,5 +101,52 @@
 
   <!-- Removido idmar-layout.r3b.js -->
   <script src="js/historico-win.r3b.js?v=r3b"></script>
+
+  <!-- IDMAR body i18n runtime: PT default, EN when selected -->
+  <script>
+  (function(){
+    const LS_KEY = "IDMAR_LANG";
+    const getLang = () => (localStorage.getItem(LS_KEY) || (document.documentElement.getAttribute('lang')||'pt')).toLowerCase();
+    function applyLang(root=document){
+      const lang = getLang();
+      root.querySelectorAll("[data-en]").forEach(el=>{
+        const pt = el.getAttribute("data-pt") ?? el.textContent;
+        const en = el.getAttribute("data-en");
+        if (lang === "en" && en) el.textContent = en;
+        else { el.textContent = pt; el.setAttribute("data-pt", pt); }
+      });
+      root.querySelectorAll("[data-en-placeholder]").forEach(el=>{
+        const pt = el.getAttribute("data-pt-placeholder") ?? el.getAttribute("placeholder") || "";
+        const en = el.getAttribute("data-en-placeholder");
+        if (lang === "en" && en) el.setAttribute("placeholder", en);
+        else { el.setAttribute("placeholder", pt); el.setAttribute("data-pt-placeholder", pt); }
+      });
+      root.querySelectorAll("option[data-en]").forEach(opt=>{
+        const pt = opt.getAttribute("data-pt") ?? opt.textContent;
+        const en = opt.getAttribute("data-en");
+        if (lang === "en" && en) opt.textContent = en;
+        else { opt.textContent = pt; opt.setAttribute("data-pt", pt); }
+      });
+      document.documentElement.setAttribute("lang", lang);
+    }
+    function boot(){
+      applyLang();
+      const sel = document.getElementById("langSel");
+      if (sel){
+        try { sel.value = getLang(); } catch(e){}
+        sel.addEventListener("change", ()=>{
+          localStorage.setItem("IDMAR_LANG", sel.value);
+          applyLang();
+          document.dispatchEvent(new CustomEvent("idmar:ui-updated"));
+        });
+      }
+      document.addEventListener("idmar:ui-updated", ()=>applyLang());
+      window.addEventListener("storage", e=>{ if (e.key==="IDMAR_LANG") applyLang(); });
+    }
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot); else boot();
+    window.IDMAR_I18N_APPLY = applyLang;
+  })();
+  </script>
+
 </body>
 </html>
