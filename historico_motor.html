@@ -59,28 +59,28 @@
   <!-- header é injetado por JS -->
 
   <main class="container">
-    <h1 data-en="History — Engines">Histórico — Motores</h1>
+    <h1>Histórico — Motores</h1>
 
     <section class="panel">
       <div class="filters">
-        <input id="hist_motor_search" type="search" placeholder="Pesquisar (S/N / marca / modelo / texto)" data-en-placeholder="Search (S/N / brand / model / text)" />
-        <select id="hist_motor_brand" aria-label="Marca" data-enattr-aria-label="Brand">
-          <option value="" data-en="Brand (all)">Marca (todas)</option>
+        <input id="hist_motor_search" type="search" placeholder="Pesquisar (S/N / marca / modelo / texto)" />
+        <select id="hist_motor_brand" aria-label="Marca">
+          <option value="">Marca (todas)</option>
           <option>Yamaha</option><option>Honda</option><option>Suzuki</option><option>Tohatsu</option>
           <option>Mercury</option><option>MerCruiser</option><option>Volvo Penta</option>
           <option>Yanmar</option><option>Evinrude/Johnson</option>
         </select>
         <select id="hist_motor_state" aria-label="Estado">
-          <option value="all" data-en="State (all)">Estado (todos)</option>
-          <option value="ok" data-en="Valid">Válido</option>
-          <option value="bad" data-en="Invalid">Inválido</option>
+          <option value="all">Estado (todos)</option>
+          <option value="ok">Válido</option>
+          <option value="bad">Inválido</option>
         </select>
-        <input id="hist_motor_from" type="date" placeholder="De" data-en-placeholder="From" />
-        <input id="hist_motor_to" type="date" placeholder="Até" data-en-placeholder="To" />
+        <input id="hist_motor_from" type="date" placeholder="De" />
+        <input id="hist_motor_to" type="date" placeholder="Até" />
       </div>
       <div class="actions">
-        <button id="hist_motor_csv" data-en="Export CSV">Exportar CSV</button>
-        <button id="hist_motor_clear" data-en="Clear history (Engine)">Limpar histórico (Motor)</button>
+        <button id="hist_motor_csv">Exportar CSV</button>
+        <button id="hist_motor_clear">Limpar histórico (Motor)</button>
       </div>
     </section>
 
@@ -88,14 +88,14 @@
       <table>
         <thead>
           <tr>
-            <th data-en="When">Quando</th>
-            <th data-en="S/N">S/N</th>
-            <th data-en="Brand">Marca</th>
-            <th data-en="Model">Modelo</th>
-            <th data-en="State">Estado</th>
-            <th data-en="Reason">Justificação</th>
-            <th data-en="Photo (name)">Foto (nome)</th>
-            <th data-en="Thumbnail">Miniatura</th>
+            <th>Quando</th>
+            <th>S/N</th>
+            <th>Marca</th>
+            <th>Modelo</th>
+            <th>Estado</th>
+            <th>Justificação</th>
+            <th>Foto (nome)</th>
+            <th>Miniatura</th>
           </tr>
         </thead>
         <tbody id="hist_motor_tbody"></tbody>
@@ -107,53 +107,5 @@
 
   <!-- Removido idmar-layout.r3b.js -->
   <script src="js/historico-motor.r3b.js?v=r3b"></script>
-
-  <!-- IDMAR body i18n runtime: PT default, EN when selected -->
-  <script>
-  (function(){
-    const LS_KEY = "IDMAR_LANG";
-    const getLang = () => (localStorage.getItem(LS_KEY) || (document.documentElement.getAttribute('lang')||'pt')).toLowerCase();
-    function applyLang(root=document){
-      const lang = getLang();
-      root.querySelectorAll("[data-en]").forEach(el=>{
-        const pt = el.getAttribute("data-pt") ?? el.textContent;
-        const en = el.getAttribute("data-en");
-        if (lang === "en" && en) el.textContent = en;
-        else { el.textContent = pt; el.setAttribute("data-pt", pt); }
-      });
-      root.querySelectorAll("[data-en-placeholder]").forEach(el=>{
-        const pt = el.getAttribute("data-pt-placeholder") ?? el.getAttribute("placeholder") || "";
-        const en = el.getAttribute("data-en-placeholder");
-        if (lang === "en" && en) el.setAttribute("placeholder", en);
-        else { el.setAttribute("placeholder", pt); el.setAttribute("data-pt-placeholder", pt); }
-      });
-      root.querySelectorAll("option[data-en]").forEach(opt=>{
-        const pt = opt.getAttribute("data-pt") ?? opt.textContent;
-        const en = opt.getAttribute("data-en");
-        if (lang === "en" && en) opt.textContent = en;
-        else { opt.textContent = pt; opt.setAttribute("data-pt", pt); }
-      });
-      document.documentElement.setAttribute("lang", lang);
-    }
-    function boot(){
-      applyLang();
-      const sel = document.getElementById("langSel");
-      if (sel){
-        try { sel.value = getLang(); } catch(e){}
-        sel.addEventListener("change", ()=>{
-          localStorage.setItem("IDMAR_LANG", sel.value);
-          applyLang();
-          document.dispatchEvent(new CustomEvent("idmar:ui-updated"));
-        });
-      }
-      document.addEventListener("idmar:ui-updated", ()=>applyLang());
-      window.addEventListener("storage", e=>{ if (e.key==="IDMAR_LANG") applyLang(); });
-    }
-    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot); else boot();
-    window.IDMAR_I18N_APPLY = applyLang;
-  })();
-  </script>
-
-  <script defer src="js/idmar-body-i18n.v2.js"></script>
 </body>
 </html>
