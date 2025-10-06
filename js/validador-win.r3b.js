@@ -40,7 +40,7 @@
   }
  const r=new FileReader(); r.onload=()=>res(r.result||''); r.onerror=rej; r.readAsDataURL(file); }); }
 
-  function interpretWIN(win, opts){
+  function interpretWIN(win){
     const c = String(win||'').replace(/\s|-/g,'').toUpperCase().trim();
     if(c.length!==14 && c.length!==16) return {valid:false, reason:'Tamanho inválido (14/16).'};
     if(c.length===15) return {valid:false, reason:'Formato EUA não admite 15.'};
@@ -63,14 +63,7 @@
     const current=new Date().getFullYear(); const windowMax=current+1;
     let modelResolved=null;
     [1900,2000,2100].forEach(base=>{ const y=base+mm; if(y>=1998 && y<=windowMax) modelResolved=y; });
-    if(modelResolved===null){
-      let modelResolvedPre=null; for(const base of [1900,2000]){ const y=base+mm; if(y>=1972 && y<1998){ modelResolvedPre=y; break; } }
-      if(modelResolvedPre!==null){
-        const hasCE = opts && opts.hasCE; const notified = opts && (opts.notifiedBody||'').trim();
-        return { valid: !!hasCE, reason: hasCE ? ('Pré-1998 com DoC/CE'+(notified? ' — '+notified:'')) : 'Pré-1998: falta DoC/CE (avaliação pós-construção)', pre98:true, modelYear:modelResolvedPre, notifiedBody:notified };
-      }
-      return {valid:false, reason:'Ano do modelo não resolvido.'};
-    }
+    if(modelResolved===null) return {valid:false, reason:'Ano do modelo fora do intervalo permitido (>=1998).'};
 
     function resolveProdYearDigit(modelYear,dig){
       const d=parseInt(dig,10); if(isNaN(d)) return null;
@@ -110,11 +103,9 @@
     const input=$id('win'); const out=$id('winOut'); const file=$id('winPhoto');
     if(!input||!out) return;
     const win=input.value.trim();
-    const hasCE = !!document.getElementById('doc_ce')?.checked;
-    const notifiedBody = document.getElementById('notified_body')?.value||'';
-    const info=interpretWIN(win,{hasCE, notifiedBody});
+    const info=interpretWIN(win);
     if(!info.valid){ out.innerHTML='<span class="badge bad">Inválido</span> '+info.reason; $id('interpWinBody').innerHTML=''; }
-    else{ const tag = info.pre98 ? '<span class="badge warn">Pré‑1998</span>' : '<span class="badge good">Válido</span>'; out.innerHTML= tag + Estrutura conforme regras básicas.'; renderInterpretation(info); }
+    else{ out.innerHTML='<span class="badge good">Válido</span> Estrutura conforme regras básicas.'; renderInterpretation(info); }
     // foto + gravação
     let photoName='', photoData='';
     if(file && file.files && file.files[0]){ photoName=file.files[0].name; try{ photoData=await compressImageFile(file.files[0]); }catch(e){} }

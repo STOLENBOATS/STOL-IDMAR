@@ -44,24 +44,24 @@
     "Yamaha":[
       {id:"yam_model", label:"Código do modelo / Model code", ph:"F350NSA"},
       {id:"yam_shaft", label:"Shaft", ph:"S / L / X / U / UL / N"},
-      {id:"yam_yearpair", label:"Par de letras (ano) / Year pair", ph:"BA, BB..."},
-      {id:"yam_serial", label:"Série (6–7 dígitos) / Serial (6–7 digits)", ph:"1005843"}
+      {id:"yam_yearpair", label:"Par de letras (ano)", ph:"BA, BB..."},
+      {id:"yam_serial", label:"Série (6–7 dígitos)", ph:"1005843"}
     ],
     "Honda":[
-      {id:"hon_frame", label:"N.º de quadro (externo) / Frame no. (external)", ph:"xxxxx..."},
-      {id:"hon_engine", label:"N.º motor / Engine no. (bloco)", ph:"BF150A..."}
+      {id:"hon_frame", label:"N.º de quadro (externo)", ph:"xxxxx..."},
+      {id:"hon_engine", label:"N.º motor (bloco)", ph:"BF150A..."}
     ],
     "Suzuki":[
-      {id:"suz_model", label:"Código do modelo / Model code", ph:"DF140A"},
-      {id:"suz_serial", label:"Série (6 dígitos) / Serial (6 digits)", ph:"123456"}
+      {id:"suz_model", label:"Código do modelo", ph:"DF140A"},
+      {id:"suz_serial", label:"Série (6 dígitos)", ph:"123456"}
     ],
     "Tohatsu":[
-      {id:"toh_model", label:"Código do modelo / Model code", ph:"MFS 60"},
+      {id:"toh_model", label:"Código do modelo", ph:"MFS 60"},
       {id:"toh_shaft", label:"Shaft", ph:"S / L / X / U / UL / N"},
-      {id:"toh_serial", label:"Série (6–7 dígitos) / Serial (6–7 digits)", ph:"1234567"}
+      {id:"toh_serial", label:"Série (6–7 dígitos)", ph:"1234567"}
     ],
     "Mercury":[
-      {id:"mer_engine", label:"N.º motor / Engine no.", ph:"Etiqueta / core plug"}
+      {id:"mer_engine", label:"N.º motor", ph:"Etiqueta / core plug"}
     ],
     "MerCruiser":[
       {id:"mrc_engine", label:"Engine no.", ph:"A123456"},
@@ -69,12 +69,12 @@
       {id:"mrc_transom",label:"Transom no.",ph:"A123456"}
     ],
     "Volvo Penta":[
-      {id:"vol_engine", label:"N.º motor / Engine no.", ph:"Etiqueta/bloco"},
+      {id:"vol_engine", label:"N.º motor", ph:"Etiqueta/bloco"},
       {id:"vol_trans",  label:"N.º transmissão (sail/shaft/IPs)", ph:"Etiqueta/bloco"}
     ],
     "Yanmar":[
-      {id:"yan_engine",  label:"N.º motor / Engine no. (etiqueta)", ph:"Etiqueta/bloco"},
-      {id:"yan_engine2", label:"N.º motor / Engine no. (estampado)", ph:"Estampado no bloco"}
+      {id:"yan_engine",  label:"N.º motor (etiqueta)", ph:"Etiqueta/bloco"},
+      {id:"yan_engine2", label:"N.º motor (estampado)", ph:"Estampado no bloco"}
     ],
     "Evinrude/Johnson":[
       {id:"evj_engine", label:"Engine number", ph:"OMC/BRP — ver nota"}
