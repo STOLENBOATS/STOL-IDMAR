@@ -1,14 +1,19 @@
 
-IDMAR — Drop-in bilingual & Pre-1998 add-on (v3)
+IDMAR — Drop-in bilingual & Pre-1998 add-on (v4)
 ================================================
-Changes from v2:
-- Forensic labels now show EN on a NEW line under PT (no trailing slash), using .en.sub styling.
-- Everything else remains the same (history PT/EN, pre-1998 interpretation, evidence thumbnail, checklist summary).
-
-Include these (replace v2 names if you used them):
+Include:
 
 Historico pages (WIN & Motor):
   <script defer src="js/history-bilingual.v3.js"></script>
 
 Validador page:
-  <script defer src="js/validator-enhancements.v3.js"></script>
+  <script defer src="js/validator-enhancements.v4.js"></script>
+
+Notes:
+- v4 no longer hooks internal functions; it watches the DOM instead.
+- It appends rows to the Campo/Valor/Interpretação table with:
+  * Justificação (PT+EN translation)
+  * Base legal (PT/EN), Regime, Organismo notificado (when Pré‑1998)
+  * Evidências (file name + preview thumbnail)
+  * Checklist forense (summary of checked labels)
+- Forensic labels in the validator show EN on a new line under PT.

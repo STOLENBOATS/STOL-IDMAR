@@ -1,5 +1,4 @@
-
-// (same as v2) IDMAR history bilingual enhancer v3
+// IDMAR history bilingual enhancer v3 (unchanged from v3)
 (function(){
   const mapReason = [
     [/^Estrutura válida\.?$/i, "Structure valid"],
