@@ -32,7 +32,7 @@
     .badge{display:inline-block;border-radius:999px;padding:.15rem .55rem;font-weight:600}
     .good{background:#10b98120;color:#065f46}
     .bad{background:#ef444420;color:#7f1d1d}
-    details.Forense / <span class="en">Forensic</span>-box{margin-top:.75rem;border:1px dashed var(--border);border-radius:10px;padding:.5rem}
+    details.forense-box{margin-top:.75rem;border:1px dashed var(--border);border-radius:10px;padding:.5rem}
     .forense-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.5rem;margin-top:.5rem}
     .footer{border-top:1px solid var(--border);padding:1rem;text-align:left;opacity:.85;background:var(--bg-elev)}
   </style>
@@ -46,7 +46,6 @@
     })();
     <script defer src="js/idmar-header-only.all.js?v=1"></script>
 
-  <style>.en{font-style:italic;opacity:.8}</style>
 </head>
 <body>
 <header class="topbar" id="fallback-topbar">
@@ -57,10 +56,10 @@
 </div>
 <nav style="margin-left:auto">
 <a href="validador.html">Validador</a>
-<a href="historico_win.html">Histórico WIN / <span class="en">WIN Log</span> / <span class="en">WIN Log</span></a>
-<a href="historico_motor.html">Histórico Motor / <span class="en">Engine Log</span></a>
-<a href="forense.html">Forense / <span class="en">Forensic</span></a>
-<a href="#" onclick="try{sessionStorage.clear()}catch(e){};location.href='login.html'">Sair / <span class="en">Logout</span></a>
+<a href="historico_win.html">Histórico WIN</a>
+<a href="historico_motor.html">Histórico Motor</a>
+<a href="forense.html">Forense</a>
+<a href="#" onclick="try{sessionStorage.clear()}catch(e){};location.href='login.html'">Sair</a>
 </nav>
 </header>
 <main class="container">
@@ -70,10 +69,10 @@
 <div class="panel">
 <h2>Validador WIN</h2>
 <form id="formWin">
-<label Data / <span class="en">Date</span>-i18n="validator.win.label" for="win">WIN / HIN</label>
-<input Data / <span class="en">Date</span>-i18n-placeholder="validator.win.label" id="win" placeholder="Ex.: PT-ABC12345D404" type="text"/>
+<label data-i18n="validator.win.label" for="win">WIN / HIN</label>
+<input data-i18n-placeholder="validator.win.label" id="win" placeholder="Ex.: PT-ABC12345D404" type="text"/>
 <div style="margin:.5rem 0">
-<button Data / <span class="en">Date</span>-i18n="validator.win.validate" id="btnWin" type="submit">Validar WIN</button>
+<button data-i18n="validator.win.validate" id="btnWin" type="submit">Validar WIN</button>
 </div>
 <div style="margin-top:.5rem">
 <label for="winPhoto">Foto opcional / Optional photo</label>
@@ -92,7 +91,7 @@
 <div class="panel">
 <h2>Validador Motor</h2>
 <form id="formMotor">
-<label for="brand">Marca / <span class="en">Brand</span></label>
+<label for="brand">Marca</label>
 <select id="brand">
 <option>Yamaha</option><option>Honda</option><option>Suzuki</option><option>Tohatsu</option>
 <option>Mercury</option><option>MerCruiser</option><option>Volvo Penta</option>
@@ -104,13 +103,13 @@
 <div><label>Potência (hp)</label><input id="srch_power" placeholder="Ex.: 150" type="text"/></div>
 <div><label>Cilindrada (cc)</label><input id="srch_disp" placeholder="Ex.: 2670" type="text"/></div>
 <div><label>Ano</label><input id="srch_year" placeholder="Ex.: 2017" type="text"/></div>
-<div><label>Origem / <span class="en">Origin</span></label><input id="srch_origin" placeholder="Ex.: Japão" type="text"/></div>
+<div><label>Origem</label><input id="srch_origin" placeholder="Ex.: Japão" type="text"/></div>
 </div>
 <div style="margin:.5rem 0">
 <button data-i18n="validator.motor.validate" id="btnMotor" type="submit">Validar Motor</button>
 </div>
 <div style="margin-top:.5rem">
-<label for="motorPhoto">Foto / <span class="en">Photo</span> opcional / Optional photo</label>
+<label for="motorPhoto">Foto opcional / Optional photo</label>
 <input accept="image/*" id="motorPhoto" type="file"/>
 </div>
 <div id="motorOut" style="margin-top:.75rem"></div>
