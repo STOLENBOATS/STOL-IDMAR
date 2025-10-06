@@ -21,37 +21,36 @@
   <script defer src="js/header-override.v4.js"></script>
   <script defer src="js/i18n-boot.js"></script>
   <script defer src="js/idmar-version.v4.js"></script>
-  <style>.en{font-style:italic;opacity:.8}</style>
 </head>
 
 <body>
   <!-- header é injetado por JS -->
 
   <main class="container">
-    <h1>Forense / <span class="en">Forensic</span> — Índice / <span class="en">Index</span></h1>
+    <h1>Forense — Índice</h1>
 
     <section class="panel">
-      <h2>Carregar evidências / <span class="en">Upload evidence</span></h2>
+      <h2>Carregar evidências</h2>
       <div class="row" style="display:flex;gap:.5rem;flex-wrap:wrap">
         <input id="evPhotos" type="file" accept="image/*" multiple />
         <select id="evContext">
-          <option value="win">Contexto: WIN/HIN / <span class="en">Context: HIN/WIN</span></option>
+          <option value="win">Contexto: WIN/HIN</option>
           <option value="motor">Contexto: Motor</option>
         </select>
-        <button id="evAttach">Anexar ao histórico mais recente / <span class="en">Attach to most recent history</span></button>
+        <button id="evAttach">Anexar ao histórico mais recente</button>
       </div>
       <div id="evMeta" class="meta" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:.5rem;margin-top:.5rem"></div>
       <div id="evThumbs" class="thumbs" style="display:flex;gap:.5rem;flex-wrap:wrap"></div>
     </section>
 
     <section class="panel">
-      <h2>Workspace / <span class="en">Workspace</span></h2>
+      <h2>Workspace</h2>
       <div class="row" style="display:flex;gap:.5rem;flex-wrap:wrap">
-        <button id="lbOpen">Abrir lightbox / <span class="en">Open lightbox</span></button>
+        <button id="lbOpen">Abrir lightbox</button>
         <label>Comparar <input id="cmpRange" type="range" min="0" max="100" value="50"/></label>
-        <button id="addRect">Anotar (rect) / <span class="en">Annotate (rect)</span></button>
-        <button id="clearRects">Limpar anotações / <span class="en">Clear annotations</span></button>
-        <button id="exportPNG">Exportar PNG anotado / <span class="en">Export annotated PNG</span></button>
+        <button id="addRect">Anotar (rect)</button>
+        <button id="clearRects">Limpar anotações</button>
+        <button id="exportPNG">Exportar PNG anotado</button>
         <button id="saveBundle">Guardar “bundle” (JSON)</button>
         <input id="loadBundle" type="file" accept=".json" />
       </div>
@@ -62,18 +61,18 @@
     </section>
 
     <section class="panel">
-      <h2>Checklist forense / <span class="en">Forensic checklist</span></h2>
+      <h2>Checklist forense</h2>
       <div class="checkboxes" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.35rem">
-        <label><input type="checkbox" id="chk_rebites"> Rebites inconsistentes/añadidos / <span class="en">Inconsistent/added rivets</span></label>
-        <label><input type="checkbox" id="chk_solda"> Cordões de solda anómalos / <span class="en">Anomalous weld beads</span></label>
-        <label><input type="checkbox" id="chk_placa"> Placa remarcada/substituída / <span class="en">Re‑stamped/replaced plate</span></label>
-        <label><input type="checkbox" id="chk_tinta"> Camadas de tinta/abrasões / <span class="en">Paint layers/abrasions</span></label>
-        <label><input type="checkbox" id="chk_etq"> Etiqueta adulterada/ausente (motor) / <span class="en">Tampered/missing label (engine)</span></label>
-        <label><input type="checkbox" id="chk_core"> Core plug danificado/removido (motor) / <span class="en">Core plug damaged/removed (engine)</span></label>
-        <label><input type="checkbox" id="chk_boss"> Solda/corrosão anómala no boss (motor) / <span class="en">Abnormal weld/corrosion on boss (engine)</span></label>
+        <label><input type="checkbox" id="chk_rebites"> Rebites inconsistentes/añadidos</label>
+        <label><input type="checkbox" id="chk_solda"> Cordões de solda anómalos</label>
+        <label><input type="checkbox" id="chk_placa"> Placa remarcada/substituída</label>
+        <label><input type="checkbox" id="chk_tinta"> Camadas de tinta/abrasões</label>
+        <label><input type="checkbox" id="chk_etq"> Etiqueta adulterada/ausente (motor)</label>
+        <label><input type="checkbox" id="chk_core"> Core plug danificado/removido (motor)</label>
+        <label><input type="checkbox" id="chk_boss"> Solda/corrosão anómala no boss (motor)</label>
         <label><input type="checkbox" id="chk_bloco"> Remarcação no bloco (motor)</label>
       </div>
-      <label>Notas / <span class="en">Notes</span></label>
+      <label>Notas</label>
       <textarea id="notes" rows="4" placeholder="Observações técnicas…" style="width:100%;border:1px solid var(--border);border-radius:10px;padding:.5rem .6rem;background:#fff"></textarea>
     </section>
   </main>

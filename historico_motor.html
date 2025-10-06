@@ -53,26 +53,25 @@
   <script defer src="js/header-override.v4.js"></script>
   <script defer src="js/i18n-boot.js?v=1"></script>
   <script defer src="js/idmar-version.v4.js"></script>
-  <style>.en{font-style:italic;opacity:.8}</style>
 </head>
 
 <body>
   <!-- header é injetado por JS -->
 
   <main class="container">
-    <h1>Histórico — Motores / <span class="en">Engines</span></h1>
+    <h1>Histórico — Motores</h1>
 
     <section class="panel">
       <div class="filters">
-        <input id="hist_motor_search" type="search" placeholder="Pesquisar / Search" />
+        <input id="hist_motor_search" type="search" placeholder="Pesquisar (S/N / marca / modelo / texto)" />
         <select id="hist_motor_brand" aria-label="Marca">
-          <option value="">Marca (todas) / <span class="en">Brand (all)</span></option>
+          <option value="">Marca (todas)</option>
           <option>Yamaha</option><option>Honda</option><option>Suzuki</option><option>Tohatsu</option>
           <option>Mercury</option><option>MerCruiser</option><option>Volvo Penta</option>
           <option>Yanmar</option><option>Evinrude/Johnson</option>
         </select>
         <select id="hist_motor_state" aria-label="Estado">
-          <option value="all">Estado (todos) / <span class="en">State (all)</span></option>
+          <option value="all">Estado (todos)</option>
           <option value="ok">Válido</option>
           <option value="bad">Inválido</option>
         </select>
@@ -80,7 +79,7 @@
         <input id="hist_motor_to" type="date" placeholder="Até" />
       </div>
       <div class="actions">
-        <button id="hist_motor_csv">Exportar CSV / <span class="en">Export CSV</span></button>
+        <button id="hist_motor_csv">Exportar CSV</button>
         <button id="hist_motor_clear">Limpar histórico (Motor)</button>
       </div>
     </section>
@@ -89,14 +88,14 @@
       <table>
         <thead>
           <tr>
-            <th>Quando / <span class="en">When</span></th>
-            <th>S/N / <span class="en">Serial no.</span></th>
+            <th>Quando</th>
+            <th>S/N</th>
             <th>Marca</th>
             <th>Modelo</th>
-            <th>Estado / <span class="en">Status</span></th>
+            <th>Estado</th>
             <th>Justificação</th>
             <th>Foto (nome)</th>
-            <th>Miniatura / <span class="en">Thumbnail</span></th>
+            <th>Miniatura</th>
           </tr>
         </thead>
         <tbody id="hist_motor_tbody"></tbody>
