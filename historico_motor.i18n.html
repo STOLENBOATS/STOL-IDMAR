@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>IDMAR — Histórico Motor</title>
+<title>IDMAR — Histórico Motor / <span class="en">Engine Log</span></title>
 <link href="img/logo-pm.png" rel="icon"/>
 <style>
     :root{--bg:#f8fafc;--fg:#0f172a;--bg-elev:#ffffff;--border:#e5e7eb;--link:#0b6bcb}
@@ -39,6 +39,7 @@
     })();
     <script defer src="js/idmar-header-only.all.js?v=1"></script>
 
+  <style>.en{font-style:italic;opacity:.8}</style>
 </head>
 <body>
 <header class="topbar" id="fallback-topbar">
@@ -49,19 +50,19 @@
 </div>
 <nav style="margin-left:auto">
 <a href="validador.html">Validador</a>
-<a href="historico_win.html">Histórico WIN</a>
-<a href="historico_motor.html">Histórico Motor</a>
-<a href="forense.html">Forense</a>
-<a href="#" onclick="try{sessionStorage.clear()}catch(e){};location.href='login.html'">Sair</a>
+<a href="historico_win.html">Histórico WIN / <span class="en">WIN Log</span> / <span class="en">WIN Log</span></a>
+<a href="historico_motor.html">Histórico Motor / <span class="en">Engine Log</span></a>
+<a href="forense.html">Forense / <span class="en">Forensic</span></a>
+<a href="#" onclick="try{sessionStorage.clear()}catch(e){};location.href='login.html'">Sair / <span class="en">Logout</span></a>
 </nav>
 </header>
 <main class="container">
 <h1 data-i18n="history.title_motor">Histórico — Motores</h1>
 <section class="panel">
 <div class="filters">
-<input data-i18n-placeholder="history.search_ph" id="hist_motor_search" placeholder="Pesquisar (S/N / marca / modelo / texto)" type="search"/>
+<input Data / <span class="en">Date</span>-i18n-placeholder="history.search_ph" id="hist_motor_search" placeholder=" / Search" (S/N / marca / modelo / texto)" type="search"/>
 <select aria-label="Marca" id="hist_motor_brand">
-<option value="">Marca (todas)</option>
+<option value="">Marca / <span class="en">Brand</span> (todas)</option>
 <option>Yamaha</option><option>Honda</option><option>Suzuki</option><option>Tohatsu</option>
 <option>Mercury</option><option>MerCruiser</option><option>Volvo Penta</option>
 <option>Yanmar</option><option>Evinrude/Johnson</option>
@@ -84,12 +85,12 @@
 <thead>
 <tr>
 <th>Quando</th>
-<th data-i18n="history.table.sn">S/N</th>
-<th data-i18n="history.table.brand">Marca</th>
-<th data-i18n="history.table.model">Modelo</th>
-<th data-i18n="history.table.state">Estado</th>
-<th data-i18n="history.table.reason">Justificação</th>
-<th data-i18n="history.table.photo">Foto (nome)</th>
+<th Data / <span class="en">Date</span>-i18n="history.table.sn">S/N</th>
+<th Data / <span class="en">Date</span>-i18n="history.table.brand">Marca / <span class="en">Brand</span> / <span class="en">Brand</span></th>
+<th data-i18n="history.table.model">Modelo / <span class="en">Model</span></th>
+<th Data / <span class="en">Date</span>-i18n="history.table.state">Estado</th>
+<th Data / <span class="en">Date</span>-i18n="history.table.reason">Justificação / <span class="en">Rationale</span></th>
+<th Data / <span class="en">Date</span>-i18n="history.table.photo">Foto (nome)</th>
 <th>Miniatura</th>
 </tr>
 </thead>
