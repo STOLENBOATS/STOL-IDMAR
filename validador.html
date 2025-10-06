@@ -60,27 +60,41 @@
   <script defer src="js/header-override.v4.js"></script>
   <script defer src="js/i18n-boot.js"></script>
   <script defer src="js/idmar-version.v4.js"></script>
+  <style>
+  .en{font-style:italic;opacity:.8}
+  </style>
 </head>
 
 <body>
   <!-- header é injetado por JS -->
 
   <main class="container">
-    <h1>Validador</h1>
+    <h1>Validador / <span class="en">Validator</span></h1>
 
     <section class="two">
       <!-- WIN -->
       <div class="panel">
-        <h2>Validador WIN</h2>
+        <h2>Validador WIN / <span class="en">WIN Validator</span></h2>
         <form id="formWin">
-          <label for="win">WIN / HIN</label>
+          <label for="win">WIN / HIN <span class="en">(Hull ID Number)</span></label>
           <input id="win" type="text" placeholder="Ex.: PT-ABC12345D404"/>
-          <div style="margin:.5rem 0">
-            <button id="btnWin" type="submit">Validar WIN</button>
+          
+          <div class="docce" style="margin-top:.5rem;display:grid;grid-template-columns:1fr 1fr;gap:.75rem">
+            <label style="display:flex;align-items:center;gap:.5rem">
+              <input id="doc_ce" type="checkbox"/>
+              <span>Certificado de Conformidade (CE) / <span class="en">Declaration of Conformity (CE)</span></span>
+            </label>
+            <div>
+              <label for="notified_body">Organismo notificado / <span class="en">Notified body</span></label>
+              <input id="notified_body" type="text" placeholder="Ex.: Bureau Veritas (IMP)"/>
+            </div>
+          </div>
+<div style="margin:.5rem 0">
+            <button id="btnWin" type="submit">Validar WIN / <span class="en">Validate WIN</span></button>
           </div>
 
           <div style="margin-top:.5rem">
-            <label for="winPhoto">Foto opcional / Optional photo</label>
+            <label for="winPhoto">Foto opcional / <span class="en">Optional photo</span></label>
             <input id="winPhoto" type="file" accept="image/*"/>
           </div>
 
@@ -99,7 +113,7 @@
       <div class="panel">
         <h2>Validador Motor</h2>
         <form id="formMotor">
-          <label for="brand">Marca</label>
+          <label for="brand">Marca / <span class="en">Brand</span></label>
           <select id="brand">
             <option>Yamaha</option><option>Honda</option><option>Suzuki</option><option>Tohatsu</option>
             <option>Mercury</option><option>MerCruiser</option><option>Volvo Penta</option>
@@ -109,10 +123,10 @@
           <div id="brandDynamic"></div>
 
           <div style="margin-top:.5rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.5rem">
-            <div><label>Modelo (pesquisa)</label><input id="srch_model" type="text" placeholder="Ex.: DF140A"/></div>
-            <div><label>Potência (hp)</label><input id="srch_power" type="text" placeholder="Ex.: 150"/></div>
-            <div><label>Cilindrada (cc)</label><input id="srch_disp" type="text" placeholder="Ex.: 2670"/></div>
-            <div><label>Ano</label><input id="srch_year" type="text" placeholder="Ex.: 2017"/></div>
+            <div><label>Modelo (pesquisa) / <span class="en">Model (search)</span></label><input id="srch_model" type="text" placeholder="Ex.: DF140A"/></div>
+            <div><label>Potência (hp) / <span class="en">Power (hp)</span></label><input id="srch_power" type="text" placeholder="Ex.: 150"/></div>
+            <div><label>Cilindrada (cc) / <span class="en">Displacement (cc)</span></label><input id="srch_disp" type="text" placeholder="Ex.: 2670"/></div>
+            <div><label>Ano / <span class="en">Year</span></label><input id="srch_year" type="text" placeholder="Ex.: 2017"/></div>
             <div><label>Origem</label><input id="srch_origin" type="text" placeholder="Ex.: Japão"/></div>
           </div>
 
@@ -121,7 +135,7 @@
           </div>
 
           <div style="margin-top:.5rem">
-            <label for="motorPhoto">Foto opcional / Optional photo</label>
+            <label for="motorPhoto">Foto opcional / <span class="en">Optional photo</span></label>
             <input id="motorPhoto" type="file" accept="image/*"/>
           </div>
 
@@ -131,7 +145,7 @@
     </section>
   </main>
 
-  <footer class="footer" id="fallback-footer">IDMAR — Identificação Marítima</footer>
+  <footer class="footer" id="fallback-footer">IDMAR — Identificação Marítima / <span class="en">Maritime Identification</span></footer>
 
   <!-- Removido idmar-layout.r3b.js para não duplicar header -->
   <script src="js/validador-win.r3b.js?v=r3b"></script>
