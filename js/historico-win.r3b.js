@@ -14,6 +14,31 @@
   function findFrom(){ return $id('hist_win_from') || d.querySelector('input[type="date"]:not([id$="to"])'); }
   function findTo(){ return $id('hist_win_to') || d.querySelectorAll('input[type="date"]')[1]; }
   function findTableBody(){ return $id('hist_win_tbody') || d.querySelector('table tbody'); }
+  
+  function trEN_WIN(pt){
+    if(!pt) return '';
+    const s=(''+pt).trim();
+    // Common reasons
+    if(/Estrutura v[aá]lida/i.test(s)) return s + ' / <span class="en">Structure valid</span>';
+    if(/Ano de produ[cç][aã]o inconsistente/i.test(s)) return s + ' / <span class="en">Production year inconsistent</span>';
+    if(/fora de 1998\+/i.test(s)) return s + ' / <span class="en">outside 1998+</span>';
+    if(/Ano do modelo n[aã]o pode ser anterior/i.test(s)) return s + ' / <span class="en">Model year cannot be earlier</span>';
+    if(/M[eê]s inv[aá]lido/i.test(s)) return s + ' / <span class="en">Invalid month</span>';
+    if(/Tamanho inv[aá]lido/i.test(s)) return s + ' / <span class="en">Invalid length</span>';
+    if(/Formato EUA n[aã]o admite 15/i.test(s)) return s + ' / <span class="en">US format does not allow 15</span>';
+    if(/Caracteres inv[aá]lidos/i.test(s)) return s + ' / <span class="en">Invalid characters</span>';
+    if(/Pa[ií]s inv[aá]lido/i.test(s)) return s + ' / <span class="en">Invalid country</span>';
+    if(/Fabricante inv[aá]lido/i.test(s)) return s + ' / <span class="en">Invalid manufacturer</span>';
+    if(/Ano do modelo fora do intervalo/i.test(s)) return s + ' / <span class="en">Model year out of range</span>';
+    if(/Pr[eé]-?1998.*DoC\/CE/i.test(s)) return s + ' / <span class="en">Pre‑1998 with DoC/CE</span>';
+    if(/Pr[eé]-?1998.*falta DoC\/CE/i.test(s)) return s + ' / <span class="en">Pre‑1998: missing DoC/CE</span>';
+    return s + ' / <span class="en">' + s + '</span>';
+  }
+  function trStatePTEN(valid, pre98){
+    if(pre98) return 'Pré‑1998 / <span class="en">Pre‑1998</span>';
+    return valid ? 'Válido / <span class="en">Valid</span>' : 'Inválido / <span class="en">Invalid</span>';
+  }
+
   function findCSV(){ return $id('hist_win_csv') || Array.from(d.querySelectorAll('button,input[type="button"]')).find(b=>/exportar/i.test(b.textContent||b.value||'')); }
   function findClear(){ return $id('hist_win_clear') || Array.from(d.querySelectorAll('button,input[type="button"]')).find(b=>/limpar/i.test(b.textContent||b.value||'')); }
 
@@ -64,8 +89,7 @@
       const tr = d.createElement('tr');
       tr.innerHTML = '<td>'+dtxt+'</td>'
                    + '<td>'+ (r.win||'') + forIcon + '</td>'
-                   + '<td>'+state+'</td>'
-                   + '<td>'+reason+'</td>'
+                   + '<td>'+ trStatePTEN(!!r.valid, !!r.pre98) + '</td>' + '<td>'+ trEN_WIN(reason) + '</td>'
                    + '<td>'+photo+'</td>'
                    + '<td>'+thumb+'</td>';
       if(r.forense){ tr.title = 'Forense: ' + JSON.stringify(r.forense); }

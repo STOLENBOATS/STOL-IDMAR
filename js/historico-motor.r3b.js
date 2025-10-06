@@ -15,6 +15,19 @@
   function findFrom(){ return $id('hist_motor_from') || d.querySelector('input[type="date"]:not([id$="to"])'); }
   function findTo(){ return $id('hist_motor_to') || d.querySelectorAll('input[type="date"]')[1]; }
   function findTableBody(){ return $id('hist_motor_tbody') || d.querySelector('table tbody'); }
+  
+  function trEN_MOTOR(pt){
+    if(!pt) return '';
+    const s=(''+pt).trim();
+    if(/^ok$/i.test(s)) return 'OK';
+    if(/Estrutura v[aá]lida/i.test(s)) return s + ' / <span class="en">Structure valid</span>';
+    if(/S[eé]rie/i.test(s) && /inv[aá]lida/i.test(s)) return s + ' / <span class="en">Invalid serial</span>';
+    return s + ' / <span class="en">' + s + '</span>';
+  }
+  function trStatePTEN(valid){
+    return valid ? 'Válido / <span class="en">Valid</span>' : 'Inválido / <span class="en">Invalid</span>';
+  }
+
   function findCSV(){ return $id('hist_motor_csv') || Array.from(d.querySelectorAll('button,input[type="button"]')).find(b=>/exportar/i.test(b.textContent||b.value||'')); }
   function findClear(){ return $id('hist_motor_clear') || Array.from(d.querySelectorAll('button,input[type="button"]')).find(b=>/limpar/i.test(b.textContent||b.value||'')); }
 
@@ -69,8 +82,7 @@
                    + '<td>'+ sn +'</td>'
                    + '<td>'+ (r.brand||'') + forIcon + '</td>'
                    + '<td>'+ (r.model||'') + '</td>'
-                   + '<td>'+state+'</td>'
-                   + '<td>'+reason+'</td>'
+                   + '<td>'+ trStatePTEN(!!r.valid) + '</td>' + '<td>'+ trEN_MOTOR(reason) + '</td>'
                    + '<td>'+photo+'</td>'
                    + '<td>'+thumb+'</td>';
       if(r.forense){ tr.title = 'Forense: ' + JSON.stringify(r.forense); }

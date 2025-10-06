@@ -42,3 +42,4 @@ const $btnCSV=document.getElementById('btnExport')||document.querySelector('[dat
 function readKey(k){ try{ const r=localStorage.getItem(k); if(!r) return []; const a=JSON.parse(r); return Array.isArray(a)?a:[] }catch{ return [] } }
 function deriveFoto(r){ if(r.foto) return r.foto; const fx=(r.meta&&Array.isArray(r.meta.forense))?r.meta.forense:[]; if(!fx.length) return ''; const f=fx[0]?.file||''; return f ? (f+' (+'+Math.max(0,fx.length-1)+')') : (fx.length+' anexo(s)'); }
 function sanitize(x){ const o={...x}; o.ts=o.ts||x.timestamp||''; o.sn=o.sn||x.serial||'';
+ 
