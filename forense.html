@@ -21,6 +21,7 @@
   <script defer src="js/header-override.v4.js"></script>
   <script defer src="js/i18n-boot.js"></script>
   <script defer src="js/idmar-version.v4.js"></script>
+  <style>.en{font-style:italic;opacity:.8}</style>
 </head>
 
 <body>
@@ -47,11 +48,11 @@
       <h2>Workspace</h2>
       <div class="row" style="display:flex;gap:.5rem;flex-wrap:wrap">
         <button id="lbOpen">Abrir lightbox</button>
-        <label>Comparar <input id="cmpRange" type="range" min="0" max="100" value="50"/></label>
+        <label>Comparar / <span class="en">Compare</span> <input id="cmpRange" type="range" min="0" max="100" value="50"/></label>
         <button id="addRect">Anotar (rect)</button>
         <button id="clearRects">Limpar anotações</button>
         <button id="exportPNG">Exportar PNG anotado</button>
-        <button id="saveBundle">Guardar “bundle” (JSON)</button>
+        <button id="saveBundle">Guardar / <span class="en">Save</span> “bundle” (JSON)</button>
         <input id="loadBundle" type="file" accept=".json" />
       </div>
       <div class="canvas-wrap" style="position:relative;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:#f1f5f9;height:540px">
@@ -73,11 +74,11 @@
         <label><input type="checkbox" id="chk_bloco"> Remarcação no bloco (motor)</label>
       </div>
       <label>Notas</label>
-      <textarea id="notes" rows="4" placeholder="Observações técnicas…" style="width:100%;border:1px solid var(--border);border-radius:10px;padding:.5rem .6rem;background:#fff"></textarea>
+      <textarea id="notes" rows="4" placeholder="Observações / <span class="en">Notes</span> técnicas…" style="width:100%;border:1px solid var(--border);border-radius:10px;padding:.5rem .6rem;background:#fff"></textarea>
     </section>
   </main>
 
-  <footer class="footer" style="border-top:1px solid var(--border);padding:1rem;opacity:.85;background:var(--bg-elev)">IDMAR — Identificação Marítima</footer>
+  <footer class="footer" style="border-top:1px solid var(--border);padding:1rem;opacity:.85;background:var(--bg-elev)">IDMAR — Identificação Marítima / <span class="en">Maritime Identification</span></footer>
 
   <div class="lightbox" id="lightbox" style="position:fixed;inset:0;background:rgba(15,23,42,.85);display:none;align-items:center;justify-content:center;z-index:50">
     <img id="lbImg" alt="" style="max-width:90vw;max-height:90vh;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.5)"/>

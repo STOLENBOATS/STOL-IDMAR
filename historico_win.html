@@ -55,6 +55,7 @@
   <script defer src="js/header-override.v4.js"></script>
   <script defer src="js/i18n-boot.js?v=1"></script>
   <script defer src="js/idmar-version.v4.js"></script>
+  <style>.en{font-style:italic;opacity:.8}</style>
 </head>
 
 <body>
@@ -65,7 +66,7 @@
 
     <section class="panel">
       <div class="row">
-        <input id="hist_win_search" type="search" placeholder="Pesquisar (WIN / texto)" />
+        <input id="hist_win_search" type="search" placeholder="Pesquisar / <span class="en">Search</span> (WIN / texto)" />
         <select id="hist_win_state" aria-label="Estado">
           <option value="all">Estado (todos)</option>
           <option value="ok">Válido</option>
@@ -87,7 +88,7 @@
             <th>Quando</th>
             <th>WIN/HIN</th>
             <th>Estado</th>
-            <th>Justificação</th>
+            <th>Justificação / <span class="en">Rationale</span></th>
             <th>Foto (nome)</th>
             <th>Miniatura</th>
           </tr>
@@ -97,7 +98,7 @@
     </section>
   </main>
 
-  <footer class="footer" id="fallback-footer">IDMAR — Identificação Marítima</footer>
+  <footer class="footer" id="fallback-footer">IDMAR — Identificação Marítima / <span class="en">Maritime Identification</span></footer>
 
   <!-- Removido idmar-layout.r3b.js -->
   <script src="js/historico-win.r3b.js?v=r3b"></script>
