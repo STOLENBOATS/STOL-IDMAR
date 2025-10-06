@@ -30,11 +30,11 @@
     const here=(location.pathname.split('/').pop()||'').toLowerCase();
     const nav=h('nav','app-nav'); styleFlex(nav,'1rem');
     [
-      ['validador.html','Validador'],
-      ['historico_win.html','Histórico WIN'],
-      ['historico_motor.html','Histórico Motor'],
-      ['forense.html','Forense'],
-      ['#logout','Sair']
+      ['validador.html','Validador / Validator'],
+      ['historico_win.html','Histórico WIN / WIN Log'],
+      ['historico_motor.html','Histórico Motor / Engine Log'],
+      ['forense.html','Forense / Forensic'],
+      ['#logout','Sair / Logout']
     ].forEach(([href,txt])=>{
       const a=h('a',null,txt); a.href=href;
       if(href!=='#logout' && (here||ACTIVE)===href.toLowerCase()){ a.setAttribute('data-active','1'); a.style.fontWeight='700'; }

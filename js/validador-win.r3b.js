@@ -3,17 +3,6 @@
   w.IDMAR=w.IDMAR||{}; w.NAV=w.NAV||w.IDMAR;
   NAV.STORAGE = NAV.STORAGE || { SESSION:'IDMAR_SESSION', WIN_HISTORY:'hist_win', MOTOR_HISTORY:'hist_motor' };
 
-  // Regras (ajuda) — PT/EN
-  const IDMAR_RULES_HELP = {
-    monthLettersPT: "Mês (11ª/13ª pos.): apenas A–H, J, K, L, M, N, P, R, S, T, U, V, W, X, Y, Z (sem I, O, Q).",
-    monthLettersEN: "Month code: only A–H, J, K, L, M, N, P, R, S, T, U, V, W, X, Y, Z (no I, O, Q).",
-    len15PT: "Comprimento 15 é inválido no formato EUA (apenas 14 ou 16).",
-    len15EN: "Length 15 is invalid for US format (only 14 or 16).",
-    yearPT: "Ano (2 dígitos) aceita 19xx ou 20xx conforme contexto.",
-    yearEN: "Year (2 digits) may map to 19xx or 20xx depending on context."
-  };
-    
-
   function $id(id){ return d.getElementById(id); }
   function load(key){ try{ return JSON.parse(localStorage.getItem(key)||'[]'); }catch(e){ return []; } }
   function save(key, val){ try{ localStorage.setItem(key, JSON.stringify(val||[])); }catch(e){} }
@@ -59,13 +48,6 @@
     const eu=(c.length===14);
     const country=c.slice(0,2), maker=c.slice(2,5);
     let series, month, year, model;
-    // --- Pré-1998 pathway (HIN legacy / PCA / CE DoC) ---
-    let modelResolvedPre = null;
-    for (const base of [1900, 2000]) { // 2100 não aplicável para pré-98
-      const y = base + mm;
-      if (y >= 1972 && y < 1998) { modelResolvedPre = y; break; }
-    }
-
     if(eu){ series=c.slice(5,10); month=c.slice(10,11); year=c.slice(11,12); model=c.slice(12,14); }
     else { series=c.slice(5,12); month=c.slice(12,13); year=c.slice(13,14); model=c.slice(14,16); }
     if(!/^[A-Z]{2}$/.test(country)) return {valid:false,reason:'País inválido.'};
@@ -82,15 +64,10 @@
     let modelResolved=null;
     [1900,2000,2100].forEach(base=>{ const y=base+mm; if(y>=1998 && y<=windowMax) modelResolved=y; });
     if(modelResolved===null){
-      // Se não foi possível resolver >=1998, tentar pré-1998
+      let modelResolvedPre=null; for(const base of [1900,2000]){ const y=base+mm; if(y>=1972 && y<1998){ modelResolvedPre=y; break; } }
       if(modelResolvedPre!==null){
-        // Para aceitar, exige DoC/CE (avaliação pós-construção) ou marcar como 'atenção'
-        const hasCE = opts && opts.hasCE;
-        const notified = opts && (opts.notifiedBody||'').trim();
-        return { valid: !!hasCE, reason: hasCE ? 
-          ('Pré-1998 com DoC/CE'+(notified? ' — '+notified:'')) : 
-          'Pré-1998: falta DoC/CE (avaliação pós-construção)',
-          pre98: true, modelYear: modelResolvedPre, notifiedBody: notified };
+        const hasCE = opts && opts.hasCE; const notified = opts && (opts.notifiedBody||'').trim();
+        return { valid: !!hasCE, reason: hasCE ? ('Pré-1998 com DoC/CE'+(notified? ' — '+notified:'')) : 'Pré-1998: falta DoC/CE (avaliação pós-construção)', pre98:true, modelYear:modelResolvedPre, notifiedBody:notified };
       }
       return {valid:false, reason:'Ano do modelo não resolvido.'};
     }
@@ -101,20 +78,9 @@
       for(let delta=2; delta<=9; delta++){ const y=modelYear-delta; if(y%10===d && y>=1998 && y<=current) return y; }
       return null;
     }
-    let prodResolved = resolveProdYearDigit(modelResolved, yy);
-    if(prodResolved===null){
-      if(modelResolvedPre!==null){
-        // Para pré-98, produção não pode exceder 1998
-        const d=parseInt(yy,10);
-        // tenta casar com décadas até 1998
-        for(let delta=0; delta<=9; delta++){
-          const y=modelResolvedPre - delta;
-          if(y%10===d && y>=1972 && y<=1998){ prodResolved=y; break; }
-        }
-      }
-    }
-    if(prodResolved===null) return {valid:false, reason:'Ano de produção inconsistente.'};
-    if((modelResolved||modelResolvedPre) < prodResolved) return {valid:false, reason:'Ano do modelo não pode ser anterior ao de produção.'};
+    const prodResolved = resolveProdYearDigit(modelResolved, yy);
+    if(prodResolved===null) return {valid:false, reason:'Ano de produção inconsistente ou fora de 1998+.'};
+    if(modelResolved < prodResolved) return {valid:false, reason:'Ano do modelo não pode ser anterior ao de produção.'};
 
     const countryMap={'PT':'Portugal','FR':'França','ES':'Espanha','IT':'Itália','DE':'Alemanha','NL':'Países Baixos','GB':'Reino Unido','UK':'Reino Unido','US':'Estados Unidos','CA':'Canadá'};
     const makerMap={'CNB':'CNB Yacht Builders','BEN':'Bénéteau','JEA':'Jeanneau','SEA':'Sea Ray','BRP':'BRP (Evinrude)','YAM':'Yamaha','HON':'Honda'};
@@ -148,7 +114,7 @@
     const notifiedBody = document.getElementById('notified_body')?.value||'';
     const info=interpretWIN(win,{hasCE, notifiedBody});
     if(!info.valid){ out.innerHTML='<span class="badge bad">Inválido</span> '+info.reason; $id('interpWinBody').innerHTML=''; }
-    else{ out.innerHTML='<span class="badge good">Válido</span> Estrutura conforme regras básicas.'; renderInterpretation(info); }
+    else{ const tag = info.pre98 ? '<span class="badge warn">Pré‑1998</span>' : '<span class="badge good">Válido</span>'; out.innerHTML= tag + Estrutura conforme regras básicas.'; renderInterpretation(info); }
     // foto + gravação
     let photoName='', photoData='';
     if(file && file.files && file.files[0]){ photoName=file.files[0].name; try{ photoData=await compressImageFile(file.files[0]); }catch(e){} }
