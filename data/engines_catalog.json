@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "brands": {
+    "Yamaha": {
+      "segments": [
+        "outboard"
+      ],
+      "shaft_options": [
+        "S",
+        "L",
+        "X",
+        "U",
+        "UL",
+        "N"
+      ],
+      "year_letter_pairs_hint": "BA, BB, ...",
+      "series_digits": [
+        6,
+        7
+      ],
+      "model_code_examples": [
+        "F350NSA",
+        "F150",
+        "F25G"
+      ],
+      "power_hp_range": [
+        2,
+        450
+      ],
+      "displacement_cc_range": [
+        50,
+        5600
+      ],
+      "origins_hint": [
+        "JP",
+        "TH"
+      ],
+      "search_examples": [
+        "F350",
+        "F150"
+      ],
+      "notes": ""
+    },
+    "Suzuki": {
+      "segments": [
+        "outboard"
+      ],
+      "shaft_options": [
+        "S",
+        "L",
+        "X",
+        "UL"
+      ],
+      "year_letter_pairs_hint": "BA, BB, ...",
+      "series_digits": [
+        6,
+        7
+      ],
+      "model_code_examples": [
+        "DF140A",
+        "DF90A"
+      ],
+      "power_hp_range": [
+        2,
+        350
+      ],
+      "displacement_cc_range": [
+        68,
+        4028
+      ],
+      "origins_hint": [
+        "JP",
+        "TH"
+      ],
+      "search_examples": [
+        "DF140A",
+        "DF90A"
+      ],
+      "notes": ""
+    }
+  }
+}
