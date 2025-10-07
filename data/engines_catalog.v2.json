@@ -24,7 +24,7 @@
           "LF{hp}",
           "XTO{hp}"
         ],
-        "notes": "Shaft: S(15\"), L(20\"), X(25\"), U(30\"), XX(35\"). Rotação: STD / CCW (contra-rotação)."
+        "notes": "Shaft: S(15\"), L(20\"), X(25\"), U(30\"), XX(35\"). Rotação: STD / CCW."
       },
       "families": {
         "XTO Offshore V8": {
@@ -577,7 +577,6 @@
           "rigging": [
             "Inboard/Sterndrive"
           ],
-          "shaft": [],
           "rotation": [
             "STD",
             "CCW"
