@@ -1,82 +1,60 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "brands": {
     "Yamaha": {
-      "segments": [
-        "outboard"
-      ],
-      "shaft_options": [
-        "S",
-        "L",
-        "X",
-        "U",
-        "UL",
-        "N"
-      ],
-      "year_letter_pairs_hint": "BA, BB, ...",
-      "series_digits": [
-        6,
-        7
-      ],
-      "model_code_examples": [
-        "F350NSA",
-        "F150",
-        "F25G"
-      ],
-      "power_hp_range": [
-        2,
-        450
-      ],
-      "displacement_cc_range": [
-        50,
-        5600
-      ],
-      "origins_hint": [
-        "JP",
-        "TH"
-      ],
-      "search_examples": [
-        "F350",
-        "F150"
-      ],
-      "notes": ""
+      "segments": ["outboard"],
+      "families": {
+        "XTO Offshore V8": {
+          "years": [2019, 2025],
+          "displacement_cc": 5559,
+          "hp": [425, 450],
+          "rigging": ["DEC"],
+          "shaft": ["X","U","XX"],           // 25", 30", 35"
+          "rotation": ["STD","CCW"],
+          "gearcase": ["Standard"],
+          "color": ["Gray","White"],
+          "variants": [
+            {"code":"XTO450","hp":450,"shaft":["U","XX"],"rotation":["STD","CCW"]},
+            {"code":"XTO425","hp":425,"shaft":["X","U"], "rotation":["STD","CCW"]}
+          ]
+        },
+        "Offshore V6 4.2L": {
+          "years": [2010, 2025],
+          "displacement_cc": 4169,
+          "hp": [300, 250, 225],
+          "rigging": ["DEC","Mechanical"],
+          "shaft": ["L","X","U"],
+          "rotation": ["STD","CCW"],
+          "gearcase": ["Standard"],
+          "color": ["Gray","Pearl White"],
+          "variants": [
+            {"code":"F300", "hp":300, "rigging":["DEC"], "shaft":["X","U"], "rotation":["STD","CCW"]},
+            {"code":"F250", "hp":250, "rigging":["DEC","Mechanical"], "shaft":["L","X","U"], "rotation":["STD","CCW"]},
+            {"code":"F225", "hp":225, "rigging":["DEC","Mechanical"], "shaft":["L","X","U"], "rotation":["STD","CCW"]}
+          ]
+        },
+        "Inline-4": {
+          "years": [2014, 2025],
+          "displacement_cc": 2785,
+          "hp": [200,175,150],
+          "rigging": ["DEC","Mechanical"],
+          "shaft": ["L","X"],
+          "rotation": ["STD","CCW"],
+          "gearcase": ["Standard"]
+        }
+      }
     },
     "Suzuki": {
-      "segments": [
-        "outboard"
-      ],
-      "shaft_options": [
-        "S",
-        "L",
-        "X",
-        "UL"
-      ],
-      "year_letter_pairs_hint": "BA, BB, ...",
-      "series_digits": [
-        6,
-        7
-      ],
-      "model_code_examples": [
-        "DF140A",
-        "DF90A"
-      ],
-      "power_hp_range": [
-        2,
-        350
-      ],
-      "displacement_cc_range": [
-        68,
-        4028
-      ],
-      "origins_hint": [
-        "JP",
-        "TH"
-      ],
-      "search_examples": [
-        "DF140A",
-        "DF90A"
-      ],
-      "notes": ""
+      "segments": ["outboard"],
+      "families": {
+        "DF-A Series": {
+          "years": [2010, 2025],
+          "hp": [350,300,250,200,175,150,140,115,90],
+          "rigging": ["Drive-by-Wire","Mechanical"],
+          "shaft": ["L","X","UL"],
+          "rotation": ["STD","CCW"]
+        }
+      }
     }
   }
 }
