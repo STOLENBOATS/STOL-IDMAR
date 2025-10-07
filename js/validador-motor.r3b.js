@@ -42,31 +42,31 @@
 
   const SCHEMAS={
     "Yamaha":[
-      {id:"yam_model", label:"Código do modelo / Model code", ph:"F350NSA"},
-      {id:"yam_shaft", label:"Shaft", ph:"S / L / X / U / UL / N"},
-      {id:"yam_yearpair", label:"Par de letras (ano)", ph:"BA, BB..."},
-      {id:"yam_serial", label:"Série (6–7 dígitos)", ph:"1005843"}
+      {id:"yam_model",   label:"Código do modelo / Model code", ph:"F350NSA"},
+      {id:"yam_shaft",   label:"Shaft", ph:"S / L / X / U / UL / N"},
+      {id:"yam_yearpair",label:"Par de letras (ano)", ph:"BA, BB..."},
+      {id:"yam_serial",  label:"Série (6–7 dígitos)", ph:"1005843"}
     ],
     "Honda":[
       {id:"hon_frame", label:"N.º de quadro (externo)", ph:"xxxxx..."},
-      {id:"hon_engine", label:"N.º motor (bloco)", ph:"BF150A..."}
+      {id:"hon_engine",label:"N.º motor (bloco)", ph:"BF150A..."}
     ],
     "Suzuki":[
       {id:"suz_model", label:"Código do modelo", ph:"DF140A"},
-      {id:"suz_serial", label:"Série (6 dígitos)", ph:"123456"}
+      {id:"suz_serial",label:"Série (6 dígitos)", ph:"123456"}
     ],
     "Tohatsu":[
       {id:"toh_model", label:"Código do modelo", ph:"MFS 60"},
       {id:"toh_shaft", label:"Shaft", ph:"S / L / X / U / UL / N"},
-      {id:"toh_serial", label:"Série (6–7 dígitos)", ph:"1234567"}
+      {id:"toh_serial",label:"Série (6–7 dígitos)", ph:"1234567"}
     ],
     "Mercury":[
       {id:"mer_engine", label:"N.º motor", ph:"Etiqueta / core plug"}
     ],
     "MerCruiser":[
-      {id:"mrc_engine", label:"Engine no.", ph:"A123456"},
-      {id:"mrc_drive",  label:"Drive no.",  ph:"A123456"},
-      {id:"mrc_transom",label:"Transom no.",ph:"A123456"}
+      {id:"mrc_engine",  label:"Engine no.",  ph:"A123456"},
+      {id:"mrc_drive",   label:"Drive no.",   ph:"A123456"},
+      {id:"mrc_transom", label:"Transom no.", ph:"A123456"}
     ],
     "Volvo Penta":[
       {id:"vol_engine", label:"N.º motor", ph:"Etiqueta/bloco"},
@@ -81,6 +81,17 @@
     ]
   };
 
+  // mapeia id → data-engine-field para o add-on
+  function dataFieldFor(id){
+    const s = String(id).toLowerCase();
+    if (s.includes('shaft'))                return 'shaft';
+    if (s.includes('yearpair') || s.includes('letter') || s.includes('par')) return 'letter_pair';
+    if (s.includes('serial') || s.includes('serie'))  return 'series';
+    if (s.includes('model')  || s.includes('codigo')) return 'model_code';
+    // os restantes (engine/frame/etc.) não são usados pelo add-on de catálogo
+    return null;
+  }
+
   function renderFields(){
     const brandSel=$id('brand'); const dyn=$id('brandDynamic');
     if(!brandSel||!dyn) return;
@@ -88,7 +99,16 @@
     dyn.innerHTML='';
     schema.forEach(f=>{
       const wrap=d.createElement('div');
-      wrap.innerHTML = '<label>'+f.label+'</label><input id="'+f.id+'" type="text" placeholder="'+f.ph+'">';
+      const input = d.createElement('input');
+      input.id = f.id;
+      input.type = 'text';
+      input.placeholder = f.ph;
+      const df = dataFieldFor(f.id);
+      if (df) input.setAttribute('data-engine-field', df);  // <<<<<<  AQUI
+      const label = d.createElement('label');
+      label.textContent = f.label;
+      wrap.appendChild(label);
+      wrap.appendChild(input);
       dyn.appendChild(wrap);
     });
     // Nota por marca
