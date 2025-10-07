@@ -100,20 +100,42 @@
         <h2>Validador Motor</h2>
         <form id="formMotor">
           <label for="brand">Marca</label>
-          <select id="brand">
+          <!-- marca -->
+          <select id="brand" data-engine-field="brand">
             <option>Yamaha</option><option>Honda</option><option>Suzuki</option><option>Tohatsu</option>
             <option>Mercury</option><option>MerCruiser</option><option>Volvo Penta</option>
             <option>Yanmar</option><option>Evinrude/Johnson</option>
           </select>
 
+          <!-- aqui o JS pode injetar campos dinâmicos (shaft / par de letras / série, etc.) -->
           <div id="brandDynamic"></div>
 
           <div style="margin-top:.5rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.5rem">
-            <div><label>Modelo (pesquisa)</label><input id="srch_model" type="text" placeholder="Ex.: DF140A"/></div>
-            <div><label>Potência (hp)</label><input id="srch_power" type="text" placeholder="Ex.: 150"/></div>
-            <div><label>Cilindrada (cc)</label><input id="srch_disp" type="text" placeholder="Ex.: 2670"/></div>
-            <div><label>Ano</label><input id="srch_year" type="text" placeholder="Ex.: 2017"/></div>
-            <div><label>Origem</label><input id="srch_origin" type="text" placeholder="Ex.: Japão"/></div>
+            <div>
+              <label>Modelo (pesquisa)</label>
+              <input id="srch_model" type="text" placeholder="Ex.: DF140A"
+                     data-engine-field="model_code"/>
+            </div>
+            <div>
+              <label>Potência (hp)</label>
+              <input id="srch_power" type="text" placeholder="Ex.: 150"
+                     data-engine-field="power"/>
+            </div>
+            <div>
+              <label>Cilindrada (cc)</label>
+              <input id="srch_disp" type="text" placeholder="Ex.: 2670"
+                     data-engine-field="displacement"/>
+            </div>
+            <div>
+              <label>Ano</label>
+              <input id="srch_year" type="text" placeholder="Ex.: 2017"
+                     data-engine-field="year"/>
+            </div>
+            <div>
+              <label>Origem</label>
+              <input id="srch_origin" type="text" placeholder="Ex.: Japão"
+                     data-engine-field="origin"/>
+            </div>
           </div>
 
           <div style="margin:.5rem 0">
@@ -138,10 +160,10 @@
   <script src="js/validador-motor.r3b.js?v=r3b"></script>
   <script defer src="js/validator-enhancements.v4.js"></script>
 
+  <!-- autocomplete motores (lê engines_catalog.json) -->
   <script type="module"
         src="js/engine_autocomplete_addon.v1.js"
         data-catalog="data/engines_catalog.json"></script>
-
 
 </body>
 </html>
