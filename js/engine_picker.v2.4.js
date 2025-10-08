@@ -51,6 +51,63 @@
     });
   }
 
+// === Overrides locais (IDMAR_ENGINE_OVERRIDES) ===
+function loadOverrides(){
+  try{ return JSON.parse(localStorage.getItem('IDMAR_ENGINE_OVERRIDES')||'{}'); }
+  catch(_){ return {}; }
+}
+
+function mergeArraysUniq(base, add){
+  const A = Array.isArray(base) ? base : [];
+  const B = Array.isArray(add)  ? add  : [];
+  return Array.from(new Set([...A, ...B])).filter(v => v!=='' && v!=null);
+}
+
+/**
+ * Suporta:
+ * - v1 (brand level): hp_list, rigging, shaft_options, rotation, model_code_list, displacement_list, year_list
+ * - v2 (brand.families[fam]): mesmas listas mas com nomes “*_list”; mapeadas para campos do renderer v2
+ */
+function mergeOverrides(cat, ov){
+  if(!ov || typeof ov!=='object') return cat;
+  cat.brands = cat.brands || {};
+
+  for(const brand of Object.keys(ov)){
+    cat.brands[brand] = cat.brands[brand] || {};
+    const dstB = cat.brands[brand];
+    const srcB = ov[brand] || {};
+
+    // v1 brand-level
+    const v1Keys = ['hp_list','rigging','shaft_options','rotation','model_code_list','displacement_list','year_list'];
+    v1Keys.forEach(k=>{
+      if(srcB[k]) dstB[k] = mergeArraysUniq(dstB[k], srcB[k]);
+    });
+
+    // v2 families
+    dstB.families = dstB.families || {};
+    const fams = srcB.families || {};
+    for(const famName of Object.keys(fams)){
+      const srcF = fams[famName] || {};
+      const dstF = (dstB.families[famName] = dstB.families[famName] || {});
+
+      // mapear nomes “*_list” do admin para campos que o renderer v2 usa
+      // renderer usa: hp, rigging, shaft, rotation, color, gearcase, codes, years
+      if(srcF.hp_list)            dstF.hp          = mergeArraysUniq(dstF.hp,          srcF.hp_list);
+      if(srcF.rigging)            dstF.rigging     = mergeArraysUniq(dstF.rigging,     srcF.rigging);
+      if(srcF.shaft_options)      dstF.shaft       = mergeArraysUniq(dstF.shaft,       srcF.shaft_options);
+      if(srcF.rotation)           dstF.rotation    = mergeArraysUniq(dstF.rotation,    srcF.rotation);
+      if(srcF.model_code_list)    dstF.codes       = mergeArraysUniq(dstF.codes,       srcF.model_code_list);
+      if(srcF.displacement_list)  dstF.displacement= mergeArraysUniq(dstF.displacement,srcF.displacement_list);
+      if(srcF.year_list)          dstF.years       = mergeArraysUniq(dstF.years,       srcF.year_list);
+
+      // (opcionais caso um dia guardes também no admin)
+      if(srcF.color)              dstF.color       = mergeArraysUniq(dstF.color,       srcF.color);
+      if(srcF.gearcase)           dstF.gearcase    = mergeArraysUniq(dstF.gearcase,    srcF.gearcase);
+    }
+  }
+  return cat;
+}
+  
   // v1 enriched fallback (simplified): brand-level lists
   function attachV1(container, cat){
     const brand = el('brand')?.value; const b = (cat.brands||{})[brand]||{};
@@ -155,16 +212,38 @@
     refresh();
   }
 
-  async function boot(){
-    const s=document.currentScript;
-    const url=s?.dataset?.catalog || 'data/engines_catalog.v2.json';
-    let cat; try{ cat=await loadJSON(url);}catch(e){ console.error('[engine_picker] catálogo:',e); return; }
-    const target=document.getElementById('brandDynamic'); if(!target){ console.warn('[engine_picker] #brandDynamic não encontrado'); return; }
-    const v=Number(cat.schema_version||1); C('schema_version', v, 'url', url);
-    const render=()=> v>=2 ? attachV2(target,cat) : attachV1(target,cat);
-    render();
-    const brandSel=el('brand'); if(brandSel && !brandSel.dataset.bound){ brandSel.addEventListener('change', render); brandSel.dataset.bound='1'; }
+ async function boot(){
+  const s = document.currentScript;
+  const url = s?.dataset?.catalog || 'data/engines_catalog.v2.json';
+
+  // 1) carrega catálogo base
+  let cat;
+  try {
+    cat = await loadJSON(url);
+  } catch (e) {
+    console.error('[engine_picker] catálogo:', e);
+    return;
   }
+
+  // 2) FUNDIR overrides locais (guardados pelo admin)
+  const overrides = loadOverrides();      // <- precisa das helpers loadOverrides/mergeOverrides
+  cat = mergeOverrides(cat, overrides);   //    que te passei antes
+
+  // 3) render
+  const target = document.getElementById('brandDynamic');
+  if (!target) { console.warn('[engine_picker] #brandDynamic não encontrado'); return; }
+  const v = Number(cat.schema_version || 1);
+  C('schema_version', v, 'url', url);
+
+  const render = () => v >= 2 ? attachV2(target, cat) : attachV1(target, cat);
+  render();
+
+  const brandSel = el('brand');
+  if (brandSel && !brandSel.dataset.bound) {
+    brandSel.addEventListener('change', render);
+    brandSel.dataset.bound = '1';
+  }
+}
 
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
