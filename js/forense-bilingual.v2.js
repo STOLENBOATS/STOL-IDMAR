@@ -1,67 +1,71 @@
-// forense-bilingual.v2.js — aplica rótulos/legendas PT/EN na página Forense
+// forense-bilingual.v2.js — PT/EN para a página Forense (sem :contains)
 (function (d) {
-  // helpers pequenos
-  function t(el, pt, en) { if (el) el.innerHTML = `${pt} <span class="small">/ ${en}</span>`; }
-  function tx(el, s)     { if (el) el.textContent = s; }
-  function attr(el,k,v)  { if (el && !el.getAttribute(k)) el.setAttribute(k,v); }
-  function findByText(sel, re) {
-    return Array.from(d.querySelectorAll(sel)).find(n => re.test((n.textContent||'').trim()));
+  const q = sel => d.querySelector(sel);
+  const qa = sel => Array.from(d.querySelectorAll(sel));
+  const setText = (el, txt) => { if (el) el.textContent = txt; };
+  const setHTML = (el, pt, en) => { if (el) el.innerHTML = `${pt} <span class="small">/ ${en}</span>`; };
+  const setTitle = (el, t) => { if (el && !el.title) el.title = t; };
+
+  function findByText(nodes, re){
+    nodes = Array.isArray(nodes) ? nodes : qa(nodes);
+    return nodes.find(n => re.test((n.textContent||'').trim()));
   }
-  function renameBtn(re, pt, en) {
-    const el = findByText('button, a[role="button"]', re);
-    if (el) tx(el, `${pt} / ${en}`);
+  function renameAllByText(nodes, re, text){
+    (Array.isArray(nodes)?nodes:qa(nodes))
+      .filter(n => re.test((n.textContent||'').trim()))
+      .forEach(n => setText(n, text));
   }
 
-  function boot() {
-    // Título principal
-    const h1 = d.querySelector('h1');
-    if (h1 && /forense/i.test(h1.textContent)) tx(h1, 'Forense — Índice / Forensics — Index');
+  function boot(){
+    // Título
+    const h1 = q('h1');
+    if (h1 && /forense/i.test(h1.textContent)) setText(h1, 'Forense — Índice / Forensics — Index');
 
     // Secções
-    const secUpload = findByText('h2,h3', /Carregar evidências/i);
-    if (secUpload) tx(secUpload, 'Carregar evidências / Upload evidence');
+    const secUp = findByText(['h2','h3'].flatMap(t=>qa(t)), /Carregar evid/i);
+    if (secUp) setText(secUp, 'Carregar evidências / Upload evidence');
 
-    const secWorkspace = findByText('h2,h3', /Workspace/i);
-    if (secWorkspace) tx(secWorkspace, 'Workspace / Workspace');
+    const secWs = findByText(['h2','h3'].flatMap(t=>qa(t)), /Workspace/i);
+    if (secWs) setText(secWs, 'Workspace / Workspace');
 
-    // Label "Contexto"
-    const ctxLabel = findByText('label', /^Contexto\b/i);
-    t(ctxLabel, 'Contexto', 'Context');
+    // Contexto
+    const ctxLbl = findByText('label', /^Contexto\b/i);
+    if (ctxLbl) setHTML(ctxLbl, 'Contexto', 'Context');
 
-    // Botão "Anexar ao histórico"
-    const btnAttach = findByText('button', /Anexar ao histórico/i);
-    if (btnAttach) {
-      tx(btnAttach, 'Anexar ao histórico mais recente / Attach to most recent history');
-      attr(btnAttach, 'title',
-        'Anexa as evidências ao registo mais recente do contexto selecionado. / Attach current evidence to the newest record in the selected context.');
+    // Botão anexar
+    const btnAttach = findByText('button, a[role=button]', /Anexar ao histórico/i);
+    if (btnAttach){
+      setText(btnAttach, 'Anexar ao histórico mais recente / Attach to most recent history');
+      setTitle(btnAttach, 'Anexa ao registo mais recente do contexto selecionado. / Attach to newest record in selected context.');
     }
 
     // Slider "Comparar"
-    const lblComparar = findByText('label', /^Comparar$/i);
-    t(lblComparar, 'Comparar', 'Compare');
+    // (não usamos :contains — filtramos por texto)
+    renameAllByText('label', /^Comparar$/i, 'Comparar / Compare');
 
-    // Conjunto de botões de ferramentas
-    renameBtn(/Abrir lightbox/i,           'Abrir lightbox',         'Open lightbox');
-    renameBtn(/Anotar/i,                   'Anotar (rect)',          'Annotate (rect)');
-    renameBtn(/Limpar anotações/i,         'Limpar anotações',       'Clear annotations');
-    renameBtn(/Exportar PNG/i,             'Exportar PNG anotado',   'Export annotated PNG');
-    renameBtn(/Guardar.*bundle/i,          'Guardar “bundle” (JSON)', 'Save “bundle” (JSON)');
+    // Botões de ferramentas
+    renameAllByText('button, a[role=button]', /Abrir lightbox/i,        'Abrir lightbox / Open lightbox');
+    renameAllByText('button, a[role=button]', /^Anotar/i,               'Anotar (rect) / Annotate (rect)');
+    renameAllByText('button, a[role=button]', /Limpar anotações/i,      'Limpar anotações / Clear annotations');
+    renameAllByText('button, a[role=button]', /Exportar PNG/i,          'Exportar PNG anotado / Export annotated PNG');
+    renameAllByText('button, a[role=button]', /Guardar.*bundle/i,       'Guardar “bundle” (JSON) / Save “bundle” (JSON)');
 
-    // File pickers: acessibilidade
-    Array.from(d.querySelectorAll('input[type=file]'))
-      .forEach(inp => attr(inp, 'aria-label', 'Carregar ficheiro / Upload file'));
+    // Acessibilidade nos file pickers
+    qa('input[type=file]').forEach(inp=>{
+      if(!inp.getAttribute('aria-label')) inp.setAttribute('aria-label','Carregar ficheiro / Upload file');
+    });
 
-    // Dicas rápidas (se existirem estes IDs)
-    const compare = d.querySelector('#compareRange, input[type=range]');
-    if (compare) attr(compare, 'title', 'Ajusta opacidade entre imagens A/B / Adjust opacity between images A/B');
+    // Dica no range (se existir)
+    const range = q('input[type=range]');
+    if (range) setTitle(range, 'Ajusta opacidade entre imagens A/B / Adjust opacity between A/B images');
 
-    // Dropdown de contexto — rótulo das opções (se usares estas strings)
-    const ctxSel = findByText('select, [role="listbox"]', /.*/); // pega no primeiro select desta área
-    if (ctxSel && ctxSel.tagName === 'SELECT') {
-      Array.from(ctxSel.options || []).forEach(opt => {
-        const v = (opt.value || opt.textContent || '').toUpperCase();
-        if (/WIN/.test(v)) opt.textContent = 'WIN/HIN';
-        if (/MOTOR|ENGINE/.test(v)) opt.textContent = 'Motor / Engine';
+    // Opções do contexto (se forem estas palavras)
+    const sel = q('select');
+    if (sel) {
+      qa('option', sel).forEach(o=>{
+        const v=(o.value||o.textContent||'').toUpperCase();
+        if (/WIN/.test(v)) o.textContent='WIN/HIN';
+        if (/MOTOR|ENGINE/.test(v)) o.textContent='Motor / Engine';
       });
     }
   }
