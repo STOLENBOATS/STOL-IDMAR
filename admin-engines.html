@@ -5,85 +5,164 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>IDMAR — Admin motores (overrides locais)</title>
   <style>
-    body{font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;margin:20px;max-width:900px}
+    body{font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;margin:20px;max-width:980px}
+    h1{margin:0 0 .25rem}
+    .muted{opacity:.75}
     label{display:block;margin-top:10px}
-    input,select,textarea{width:100%;padding:6px;border:1px solid #ccc;border-radius:8px}
+    input,select,textarea{width:100%;padding:8px;border:1px solid #e5e7eb;border-radius:10px}
     .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .card{border:1px solid #e5e7eb;border-radius:12px;padding:12px;margin:12px 0;background:#fafafa}
+    .card{border:1px solid #e5e7eb;border-radius:14px;padding:14px;margin:14px 0;background:#fafafa}
     button{background:#0b6bcb;border:none;color:#fff;border-radius:10px;padding:8px 12px;cursor:pointer}
-    .muted{opacity:.7}
+    button.danger{background:#ef4444}
+    .bar{display:flex;gap:10px;flex-wrap:wrap}
+    pre{white-space:pre-wrap;word-break:break-word}
   </style>
 </head>
 <body>
   <h1>Admin — Overrides de Catálogo (localStorage)</h1>
-  <p class="muted">Isto escreve em <code>localStorage["IDMAR_ENGINE_OVERRIDES"]</code>. Útil para testar novas entradas sem editar o JSON.</p>
+  <p class="muted">
+    Escreve em <code>localStorage["IDMAR_ENGINE_OVERRIDES"]</code>. Útil para testar novas entradas sem editar o JSON.
+    Após guardar, o Validador atualiza o picker automaticamente.
+  </p>
+
   <div class="card">
-    <label>Marca</label>
-    <select id="brand">
-      <option>Yamaha</option><option>Suzuki</option><option>Honda</option><option>Mercury</option>
-      <option>Tohatsu</option><option>Evinrude/Johnson</option><option>Volvo Penta</option><option>MerCruiser</option>
-    </select>
     <div class="row">
       <div>
-        <label>hp_list (valores separados por vírgulas)</label>
-        <input id="hp" placeholder="ex.: 2.5,4,6,8,9.9,15,20,25,30,40,50,60,70,75,90,115,150,175,200,225,250,300,425,450">
+        <label>Marca / Brand</label>
+        <select id="brand">
+          <option>Yamaha</option><option>Honda</option><option>Suzuki</option><option>Mercury</option>
+          <option>Tohatsu</option><option>Evinrude/Johnson</option><option>Volvo Penta</option><option>MerCruiser</option>
+          <option>Yanmar</option>
+        </select>
       </div>
       <div>
-        <label>displacement_list (cc, separados por vírgulas)</label>
-        <input id="disp" placeholder="ex.: 5559,4169,2785,1832,996">
+        <label>Família / Family <span class="muted">(opcional)</span></label>
+        <input id="family" placeholder="ex.: F115B / DF140A / BF100 / etc.">
       </div>
     </div>
-    <label>model_code_list (separados por vírgulas)</label>
-    <textarea id="model" rows="3" placeholder="ex.: F115,F150,VF150,XTO425"></textarea>
-    <label>year_list (separados por vírgulas)</label>
-    <input id="years" placeholder="ex.: 1998,1999,...,2025">
-    <label>rigging (separados por vírgulas)</label>
-    <input id="rig" placeholder="ex.: DEC,Mechanical">
-    <label>shaft_options (separados por vírgulas)</label>
-    <input id="shaft" placeholder="ex.: S,L,X,U,XX">
-    <div style="margin-top:10px">
+
+    <div class="row">
+      <div>
+        <label>Modelo / Model code (vírgulas)</label>
+        <textarea id="model" rows="3" placeholder="ex.: F115B,F150D,VF150,XTO425"></textarea>
+      </div>
+      <div>
+        <label>Potência (hp) / Power (vírgulas)</label>
+        <input id="hp" placeholder="ex.: 2.5,4,6,8,9.9,15,20,25,30,40,50,60,70,90,115,150,175,200,225,250,300,425,450">
+      </div>
+    </div>
+
+    <div class="row">
+      <div>
+        <label>Cilindrada (cc) / Displacement (vírgulas)</label>
+        <input id="disp" placeholder="ex.: 5559,4169,2785,1832,996">
+      </div>
+      <div>
+        <label>Anos / Years (vírgulas)</label>
+        <input id="years" placeholder="ex.: 1998,1999,...,2025">
+      </div>
+    </div>
+
+    <div class="row">
+      <div>
+        <label>Comando / Rigging (vírgulas)</label>
+        <input id="rig" placeholder="ex.: DEC/DBW,Mechanical,Tiller">
+      </div>
+      <div>
+        <label>Altura / Shaft (vírgulas)</label>
+        <input id="shaft" placeholder="ex.: S,L,X,XL,U,UL,XX">
+      </div>
+    </div>
+
+    <div class="bar" style="margin-top:12px">
       <button id="save">Guardar override</button>
-      <button id="clear" style="background:#ef4444">Limpar todos</button>
+      <button id="clear" class="danger">Limpar todos</button>
+      <button id="close">Fechar</button>
     </div>
   </div>
-  <pre id="out" class="card"></pre>
+
+  <div class="card">
+    <strong>Conteúdo atual de <code>IDMAR_ENGINE_OVERRIDES</code></strong>
+    <pre id="out">{}</pre>
+  </div>
 
 <script>
-const KEY='IDMAR_ENGINE_OVERRIDES';
-const $=id=>document.getElementById(id);
-function parseList(str, mapFn){ return (str||'').split(',').map(s=>s.trim()).filter(Boolean).map(mapFn||((x)=>x)); }
+(function(){
+  const KEY='IDMAR_ENGINE_OVERRIDES';
+  const $=id=>document.getElementById(id);
 
-function load(){ try{ return JSON.parse(localStorage.getItem(KEY)||'{}'); }catch(e){ return {}; } }
-function save(obj){ localStorage.setItem(KEY, JSON.stringify(obj, null, 2)); }
+  // helpers
+  function parseList(str, mapFn){ return (str||'').split(',').map(s=>s.trim()).filter(Boolean).map(mapFn||((x)=>x)); }
+  function uniq(arr){ return Array.from(new Set(arr)); }
+  function load(){ try{ return JSON.parse(localStorage.getItem(KEY)||'{}'); }catch(e){ return {}; } }
+  function save(obj){ localStorage.setItem(KEY, JSON.stringify(obj, null, 2)); }
+  function render(){ $('out').textContent = localStorage.getItem(KEY)||'{}'; }
 
-function render(){ $('out').textContent = localStorage.getItem(KEY)||'{}'; }
+  // prefills a partir do contexto (?brand=...&family=...&model=...&hp=...&disp=...&year=...&rig=...&shaft=...)
+  (function prefillFromQuery(){
+    try{
+      const sp=new URLSearchParams(location.search);
+      const setVal=(id, val)=>{ if(val){ const el=$(id); if(el) el.value = val; } };
+      setVal('brand', sp.get('brand'));
+      setVal('family', sp.get('family'));
+      setVal('model', sp.get('model'));
+      setVal('hp',    sp.get('hp'));
+      setVal('disp',  sp.get('disp'));
+      setVal('years', sp.get('year'));
+      setVal('rig',   sp.get('rig'));
+      setVal('shaft', sp.get('shaft'));
+    }catch(_){}
+  })();
 
-$('save').onclick = function(){
-  const brand=$('brand').value;
-  const hp=parseList($('hp').value, Number).filter(x=>!isNaN(x));
-  const disp=parseList($('disp').value, Number).filter(x=>!isNaN(x));
-  const model=parseList($('model').value);
-  const years=parseList($('years').value, Number).filter(x=>!isNaN(x));
-  const rig=parseList($('rig').value);
-  const shaft=parseList($('shaft').value);
-  const all=load();
-  all[brand]=all[brand]||{};
-  if(hp.length) all[brand].hp_list = (all[brand].hp_list||[]).concat(hp);
-  if(disp.length) all[brand].displacement_list = (all[brand].displacement_list||[]).concat(disp);
-  if(model.length) all[brand].model_code_list = (all[brand].model_code_list||[]).concat(model);
-  if(years.length) all[brand].year_list = (all[brand].year_list||[]).concat(years);
-  if(rig.length) all[brand].rigging = (all[brand].rigging||[]).concat(rig);
-  if(shaft.length) all[brand].shaft_options = (all[brand].shaft_options||[]).concat(shaft);
-  save(all);
+  // guardar
+  $('save').onclick = function(){
+    const brand=$('brand').value.trim();
+    if(!brand){ alert('Selecione a marca.'); return; }
+
+    const family = $('family').value.trim() || null; // se usar schema v2, podes guardar por família
+
+    const hp   = parseList($('hp').value, Number).filter(x=>!isNaN(x));
+    const disp = parseList($('disp').value, Number).filter(x=>!isNaN(x));
+    const model= parseList($('model').value);
+    const years= parseList($('years').value, Number).filter(x=>!isNaN(x));
+    const rig  = parseList($('rig').value);
+    const shaft= parseList($('shaft').value);
+
+    const all=load();
+    all[brand]=all[brand]||{};
+
+    // Se quiseres separar por família num futuro schema v2 local:
+    // all[brand].families = all[brand].families || {};
+    // const target = family ? (all[brand].families[family] = all[brand].families[family] || {}) : all[brand];
+
+    const target = all[brand]; // por agora, brand-level (v1.enriched + overrides brand)
+
+    if(hp.length)    target.hp_list            = uniq([...(target.hp_list||[]), ...hp]);
+    if(disp.length)  target.displacement_list  = uniq([...(target.displacement_list||[]), ...disp]);
+    if(model.length) target.model_code_list    = uniq([...(target.model_code_list||[]), ...model]);
+    if(years.length) target.year_list          = uniq([...(target.year_list||[]), ...years]);
+    if(rig.length)   target.rigging            = uniq([...(target.rigging||[]), ...rig]);
+    if(shaft.length) target.shaft_options      = uniq([...(target.shaft_options||[]), ...shaft]);
+
+    save(all);
+    render();
+
+    // avisa o Validador para refrescar o picker
+    try{ localStorage.setItem('IDMAR_ADMIN_DONE', Date.now().toString()); }catch(_){}
+    alert('Override guardado localmente.');
+  };
+
+  $('clear').onclick = function(){
+    if(!confirm('Apagar TODOS os overrides locais?')) return;
+    localStorage.removeItem(KEY);
+    render();
+    try{ localStorage.setItem('IDMAR_ADMIN_DONE', Date.now().toString()); }catch(_){}
+  };
+
+  $('close').onclick = function(){ window.close(); };
+
   render();
-};
-
-$('clear').onclick = function(){
-  localStorage.removeItem(KEY);
-  render();
-};
-
-render();
+})();
 </script>
 </body>
 </html>
