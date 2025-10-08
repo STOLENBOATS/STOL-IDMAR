@@ -20,48 +20,52 @@
   }
 
   // === botão novo, herdando estilo do "Validador" quando possível ===
-  function makeBtn(likeEl) {
-    const a = document.createElement('a');
-    a.href = ADMIN_URL;
-    a.textContent = LABEL;
-    a.setAttribute('data-idmar-admin-btn', '1');
+function makeBtn(likeEl) {
+  const a = document.createElement('a');
+  a.href = ADMIN_URL;
+  a.textContent = LABEL;
+  a.setAttribute('data-idmar-admin-btn', '1');
 
-    if (likeEl) {
-      // 1) herda EXACTAMENTE as mesmas classes (tamanho/hover)
-      a.className = likeEl.className;
+  if (likeEl) {
+    a.className = likeEl.className;
 
-      // 2) clona o “losango”/ícone do Validador, se existir
-      const icon = likeEl.querySelector('span, i, svg');
-      if (icon) a.prepend(icon.cloneNode(true));
+    // === COR DO BOTÃO (inline) ===
+    a.style.background = 'linear-gradient(180deg,#4FA8FF,#2F86E5)'; // azul claro
+    a.style.color = '#fff';
 
-      // 3) se o Validador tiver estilos inline de padding/borda, copia também
-      if (likeEl.style.padding) a.style.padding = likeEl.style.padding;
-      if (likeEl.style.borderRadius) a.style.borderRadius = likeEl.style.borderRadius;
-    } else {
-      // Fallback (caso não ache o Validador): estilo mínimo só para não ficar “nu”
-      a.className = 'nav-ribbon__item ribbon-btn';
-      a.style.display = 'inline-flex';
-      a.style.alignItems = 'center';
-      a.style.gap = '8px';
-      a.style.whiteSpace = 'nowrap';
-      a.style.background = '#4FA8FF';
-      a.style.color = '#fff';
-      a.style.borderRadius = '16px';
-      a.style.padding = '8.8px 16.8px 8.8px 11.2px';
-      a.style.textDecoration = 'none';
-      
-   // #7c3aed
-      
-      const loz = document.createElement('span');
-      loz.style.width = '10px';
-      loz.style.height = '10px';
-      loz.style.transform = 'rotate(45deg)';
-      loz.style.background = 'rgba(255,255,255,.35)';
-      loz.style.borderRadius = '2px';
-      a.prepend(loz);
-    }
+    // Hover para combinar com os outros (um pouco mais escuro)
+    a.addEventListener('mouseenter', () => {
+      a.style.background = 'linear-gradient(180deg,#459CFF,#2A78CF)';
+    });
+    a.addEventListener('mouseleave', () => {
+      a.style.background = 'linear-gradient(180deg,#4FA8FF,#2F86E5)';
+    });
 
-    return a;
+    // (resto igual)
+    const icon = likeEl.querySelector('span, i, svg');
+    if (icon) a.prepend(icon.cloneNode(true));
+    if (likeEl.style.padding) a.style.padding = likeEl.style.padding;
+    if (likeEl.style.borderRadius) a.style.borderRadius = likeEl.style.borderRadius;
+  } else {
+    // fallback…
+    a.className = 'nav-ribbon__item ribbon-btn';
+    a.style.display = 'inline-flex';
+    a.style.alignItems = 'center';
+    a.style.gap = '8px';
+    a.style.whiteSpace = 'nowrap';
+    a.style.background = 'linear-gradient(180deg,#4FA8FF,#2F86E5)'; // mesma cor
+    a.style.color = '#fff';
+    a.style.borderRadius = '16px';
+    a.style.padding = '8.8px 16.8px 8.8px 11.2px';
+    a.style.textDecoration = 'none';
+    const loz = document.createElement('span');
+    loz.style.width = '10px'; loz.style.height = '10px';
+    loz.style.transform = 'rotate(45deg)'; loz.style.background = 'rgba(255,255,255,.35)';
+    loz.style.borderRadius = '2px';
+    a.prepend(loz);
+  }
+  return a;
+}
   }
 
   function inject() {
