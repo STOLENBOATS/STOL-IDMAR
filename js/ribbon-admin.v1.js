@@ -1,7 +1,7 @@
 // ribbon-admin.v1.js — injeta botão "Admin" ao lado do "Validador"
 (function () {
   const ADMIN_URL = window.IDMAR_ADMIN_URL || 'admin-engines.html';
-  const LABEL = 'Admin / Admin';
+  const LABEL = 'Gestão WIN/Motores / WIN/Engines Admin';
 
   function makeBtn() {
     const a = document.createElement('a');
