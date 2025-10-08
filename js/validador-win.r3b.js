@@ -202,61 +202,112 @@
     }catch(_){}
   }
 
-  // Forense add-on (mantido igual; grava no último registo)
-  (function(){
-    function ensureForenseUI(){
-      const form=$id("formWin"); if(!form) return;
-      if($id("forenseBox_formWin")) return;
-      const box=d.createElement("details"); box.id="forenseBox_formWin"; box.className="forense-box"; box.innerHTML =
-        '<summary>Forense (opcional) / Forensic (optional)</summary>'
-        + '<div class="forense-grid">'
-        + '<label><input type="checkbox" id="flagRebites_formWin"> Rebites / Rivets</label>'
-        + '<label><input type="checkbox" id="flagSolda_formWin"> Cordões de solda / Weld beads</label>'
-        + '<label><input type="checkbox" id="flagPlaca_formWin"> Placa remarcada / Re-stamped plate</label>'
-        + '<label><input type="checkbox" id="flagTinta_formWin"> Camadas de tinta/abrasões / Paint layers/abrasions</label>'
-        + '<textarea id="forenseNotes_formWin" rows="3" placeholder="Notas forenses… / Forensic notes…"></textarea>'
-        + '</div>';
-      const anchor=$id("winPhoto");
-      (anchor&&anchor.parentElement)? anchor.parentElement.insertAdjacentElement("afterend", box) : form.appendChild(box);
+ // === Forense add-on (MOTOR) — PT/EN + grava no último registo do histórico ===
+(function(){
+  function $id(id){ return document.getElementById(id); }
+  function ts(x){ if(x==null) return 0; if(typeof x==="number") return x;
+    if(/^\d+$/.test(String(x))) return Number(x);
+    const t=Date.parse(x); return isNaN(t)?0:t;
+  }
+  function loadAny(keys){
+    for(const k of keys){
+      try{ const v=localStorage.getItem(k);
+        if(v){ const a=JSON.parse(v)||[]; if(Array.isArray(a)&&a.length) return {key:k, arr:a}; }
+      }catch(_){}
     }
-    async function sha256OfFile(file){
-      try{ const buf=await file.arrayBuffer(); const hash=await crypto.subtle.digest("SHA-256", buf); return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,"0")).join(""); }catch(e){ return null; }
-    }
-    function ts(x){ if(x==null) return 0; if(typeof x==="number") return x; if(/^\d+$/.test(String(x))) return Number(x); const t=Date.parse(x); return isNaN(t)?0:t; }
-    function attach(){
-      setTimeout(async function(){
-        const readKeys=["hist_win","history_win","historyWin","histWin"];
-        let arr=[]; for(const k of readKeys){ try{ const v=localStorage.getItem(k); if(v){ const a=JSON.parse(v)||[]; if(Array.isArray(a)&&a.length){ arr=a; break; } } }catch{} }
-        if(!arr.length) return;
+    return {key: keys[0], arr: []};
+  }
+  function saveAll(keys, arr){
+    const json = JSON.stringify(arr);
+    for(const k of keys){ try{ localStorage.setItem(k, json); }catch(_){/*ignora*/} }
+  }
 
-        let idx=0, best=-1;
-        for(let i=0;i<arr.length;i++){ const t=ts(arr[i].date||arr[i].dt||arr[i].time||arr[i].timestamp); if(t>=best){ best=t; idx=i; } }
+  function ensureForenseUI(){
+    const form=$id('formMotor'); if(!form) return;
+    if($id('forenseBox_formMotor')) return;
 
-        const photo=$id("winPhoto"); const file=(photo&&photo.files&&photo.files[0])? photo.files[0]: null;
-        const hash=file? await sha256OfFile(file): null;
+    const box=document.createElement('details');
+    box.id='forenseBox_formMotor';
+    box.className='forense-box';
+    box.innerHTML =
+      '<summary>Forense (opcional) / Forensic (optional)</summary>'
+    + '<div class="forense-grid">'
+    + '<label><input type="checkbox" id="flagEtiqueta_formMotor"> '
+      + 'Etiqueta adulterada/ausente / Tampered or missing label</label>'
+    + '<label><input type="checkbox" id="flagCore_formMotor"> '
+      + 'Core plug danificado/removido / Core plug damaged or removed</label>'
+    + '<label><input type="checkbox" id="flagBoss_formMotor"> '
+      + 'Solda/corrosão anómala no boss / Abnormal weld/corrosion on boss</label>'
+    + '<label><input type="checkbox" id="flagBloco_formMotor"> '
+      + 'Remarcação no bloco / Re-stamping on engine block</label>'
+    + '<textarea id="forenseNotes_formMotor" rows="3" '
+      + 'placeholder="Notas forenses… / Forensic notes…"></textarea>'
+    + '</div>';
 
-        const flags=[];
-        if($id("flagRebites_formWin")?.checked) flags.push("rebites");
-        if($id("flagSolda_formWin")?.checked) flags.push("solda");
-        if($id("flagPlaca_formWin")?.checked) flags.push("placa");
-        if($id("flagTinta_formWin")?.checked) flags.push("tinta");
-        const notes=($id("forenseNotes_formWin")?.value)||"";
+    const anchor=$id('motorPhoto');
+    (anchor && anchor.parentElement)
+      ? anchor.parentElement.insertAdjacentElement('afterend', box)
+      : form.appendChild(box);
+  }
 
-        const rec=arr[idx]||{};
-        const forense=(hash||flags.length||notes)? {hash,flags,notes}: null;
-        if(forense){
-          rec.forense=forense;
-          // escrever em todas as chaves (compat)
-          const writeKeys=["hist_win","history_win","historyWin","histWin"];
-          safeWriteAll(writeKeys, [rec, ...arr.slice(0,idx), ...arr.slice(idx+1)]);
-        }
-      }, 0);
-    }
-    d.addEventListener("DOMContentLoaded", function(){
-      ensureForenseUI();
-      const form=$id("formWin"); if(form) form.addEventListener("submit", attach);
-    });
-  })();
+  async function sha256OfFile(file){
+    try{
+      const buf=await file.arrayBuffer();
+      const hash=await crypto.subtle.digest('SHA-256', buf);
+      return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,'0')).join('');
+    }catch(_){ return null; }
+  }
+
+  function attach(){
+    setTimeout(async function(){
+      // Lê histórico (compat com várias chaves)
+      const readKeys  = ['hist_motor','history_motor','historyMotor','histMotor'];
+      const writeKeys = ['hist_motor','history_motor','historyMotor','histMotor'];
+      const { key: activeKey, arr } = loadAny(readKeys);
+      if(!arr.length) return;
+
+      // Escolhe o registo mais recente por timestamp
+      let idx=0, best=-1;
+      for(let i=0;i<arr.length;i++){
+        const t=ts(arr[i].date||arr[i].dt||arr[i].time||arr[i].timestamp);
+        if(t>=best){ best=t; idx=i; }
+      }
+
+      // Hash da foto atual (se houver)
+      const fileEl = $id('motorPhoto');
+      const file=(fileEl && fileEl.files && fileEl.files[0]) ? fileEl.files[0] : null;
+      const hash = file ? await sha256OfFile(file) : null;
+
+      // Flags PT/EN
+      const flags=[];
+      if($id('flagEtiqueta_formMotor')?.checked)
+        flags.push('Etiqueta adulterada/ausente / Tampered or missing label');
+      if($id('flagCore_formMotor')?.checked)
+        flags.push('Core plug danificado/removido / Core plug damaged or removed');
+      if($id('flagBoss_formMotor')?.checked)
+        flags.push('Solda/corrosão anómala no boss / Abnormal weld/corrosion on boss');
+      if($id('flagBloco_formMotor')?.checked)
+        flags.push('Remarcação no bloco / Re-stamping on engine block');
+
+      const notes = ($id('forenseNotes_formMotor')?.value)||'';
+
+      // Atualiza o último registo
+      const rec = arr[idx] || {};
+      const forense = (hash || flags.length || notes) ? { hash, flags, notes } : null;
+      if(forense){
+        rec.forense = forense;
+        const newArr = [rec, ...arr.slice(0,idx), ...arr.slice(idx+1)];
+        saveAll(writeKeys, newArr);
+      }
+    }, 0);
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    ensureForenseUI();
+    const form=$id('formMotor'); if(form) form.addEventListener('submit', attach);
+  });
+})();
+
 
   if (document.readyState === "loading") d.addEventListener("DOMContentLoaded", wire); else wire();
 })(window, document);
