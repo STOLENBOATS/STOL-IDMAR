@@ -1,7 +1,7 @@
 // ribbon-admin.v1.js — injeta botão "Admin" ao lado do "Validador"
 (function () {
   const ADMIN_URL = window.IDMAR_ADMIN_URL || 'admin-engines.html';
-  const LABEL = 'Gestão WIN/Motores / WIN/Engines Admin';
+  const LABEL = 'Item Novo / New Item';
 
   function makeBtn() {
     const a = document.createElement('a');
@@ -17,8 +17,8 @@
     // cor/shape caso não existam classes
     a.style.background = '#7c3aed';
     a.style.color = '#fff';
-    a.style.borderRadius = '999px';
-    a.style.padding = '8px 14px';
+    a.style.borderRadius = '16px';
+    a.style.padding = '8.8px 16.8px 8.8px 11.2px';
     a.style.textDecoration = 'none';
 
     const loz = document.createElement('span');
