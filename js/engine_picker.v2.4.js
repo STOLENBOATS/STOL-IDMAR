@@ -27,6 +27,30 @@
       sel.appendChild(o);
     });
   }
+
+  // ===== Rotação: rótulos bilingues + tooltip curto =====
+  function relabelRotationSelect(selectEl){
+    if(!selectEl) return;
+    Array.from(selectEl.options).forEach(opt=>{
+      const v = String(opt.value || '').toUpperCase().trim();
+      if(!v) return; // placeholder
+
+      // Normalizar rótulos conhecidos
+      if (v === 'STD' || v === 'RH' || v === 'CW') {
+        opt.textContent = 'STD — Standard (RH)'; // PT/EN no mesmo rótulo
+        opt.title       = 'Rotação padrão / Standard (hélice direita / right-hand)';
+        opt.value       = 'STD';
+      } else if (v === 'CCW' || v === 'LH' || v === 'ANTI' || v === 'COUNTER') {
+        opt.textContent = 'CCW — Counter-clockwise (LH)';
+        opt.title       = 'Rotação inversa / Counter-clockwise (hélice esquerda / left-hand)';
+        opt.value       = 'CCW';
+      } else {
+        // fallback: deixa como está, mas acrescenta título bilingue genérico
+        if(!opt.title) opt.title = 'Rotação / Rotation';
+      }
+    });
+  }
+
   // v1 enriched fallback (simplified): brand-level lists
   function attachV1(container, cat){
     const brand = el('brand')?.value; const b = (cat.brands||{})[brand]||{};
@@ -44,12 +68,19 @@
     fill(boxes.hp.sel,  stableSort(b.hp_list||[]));
     fill(boxes.rig.sel, stableSort(b.rigging||[]));
     fill(boxes.sh.sel,  stableSort(b.shaft_options||[]));
-    fill(boxes.rot.sel, [{value:'STD',label:'STD — rotação normal (clockwise)'},{value:'CCW',label:'CCW — contra-rotação (counter-rotating)'}]);
+    // rotação (v1): garantimos STD/CCW e aplicamos rótulo bilingue
+    fill(boxes.rot.sel, [
+      {value:'STD', label:'STD'},
+      {value:'CCW', label:'CCW'}
+    ]);
+    relabelRotationSelect(boxes.rot.sel);
+
     fill(boxes.mdl.sel, stableSort(b.model_code_list||[]));
     fill(boxes.disp.sel,stableSort(b.displacement_list||[]));
     fill(boxes.yr.sel,  stableSort(b.year_list||[]));
     wireSync(boxes);
   }
+
   function wireSync(boxes){
     const inpModel=document.querySelector('[data-engine-field=model_code], #srch_model');
     const inpPower=document.querySelector('[data-engine-field=power], #srch_power');
@@ -64,6 +95,7 @@
     ['hp','mdl','disp','yr'].forEach(k=>{ if(boxes[k]) boxes[k].sel.addEventListener('change', sync); });
     sync();
   }
+
   // v2 renderer
   function attachV2(container, cat){
     const brand=el('brand')?.value; const b=(cat.brands||{})[brand]||{}; const fams=b.families||{};
@@ -80,8 +112,11 @@
       mdl: makeSelect('Modelo / Model code','eng_model')
     };
     Object.values(boxes).forEach(x=>container.appendChild(x.wrap));
+
     const famNames=Object.keys(fams);
     fill(boxes.fam.sel, famNames);
+
+    function listYears(a,b){ const out=[]; for(let y=a;y<=b;y++) out.push(y); return out; }
     function compute(fName){
       const f=fams[fName]||{};
       const v = Array.isArray(f.variants)&&f.variants.length ? f.variants : [];
@@ -98,20 +133,24 @@
         color: stableSort(allCol), gear: stableSort(allGC), codes: stableSort(codes), years: stableSort(yrs)
       };
     }
-    function listYears(a,b){ const out=[]; for(let y=a;y<=b;y++) out.push(y); return out; }
+
     function refresh(){
       const fName=boxes.fam.sel.value;
       const d=compute(fName);
-      fill(boxes.hp.sel, d.hp);
+      fill(boxes.hp.sel,  d.hp);
       fill(boxes.rig.sel, d.rig);
-      fill(boxes.sh.sel, d.sh);
-      fill(boxes.rot.sel, [{value:'STD',label:'STD — rotação normal (clockwise)'},{value:'CCW',label:'CCW — contra-rotação (counter-rotating)'}]);
+      fill(boxes.sh.sel,  d.sh);
+      // rotação (v2): usamos o que vier do catálogo, mas normalizamos os rótulos
+      fill(boxes.rot.sel, (d.rot && d.rot.length) ? d.rot : [{value:'STD',label:'STD'},{value:'CCW',label:'CCW'}]);
+      relabelRotationSelect(boxes.rot.sel);
+
       fill(boxes.col.sel, d.color);
-      fill(boxes.gc.sel, d.gear);
-      fill(boxes.yr.sel, d.years);
+      fill(boxes.gc.sel,  d.gear);
+      fill(boxes.yr.sel,  d.years);
       fill(boxes.mdl.sel, d.codes);
       wireSync(boxes);
     }
+
     boxes.fam.sel.addEventListener('change', refresh);
     refresh();
   }
