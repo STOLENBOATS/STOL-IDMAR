@@ -44,13 +44,13 @@
       a.style.alignItems = 'center';
       a.style.gap = '8px';
       a.style.whiteSpace = 'nowrap';
-      a.style.background = '#7c3aed';
-      a.style.color = '#4FA8FF';
+      a.style.background = '#4FA8FF';
+      a.style.color = '#fff';
       a.style.borderRadius = '16px';
       a.style.padding = '8.8px 16.8px 8.8px 11.2px';
       a.style.textDecoration = 'none';
       
-   // #fff
+   // #7c3aed
       
       const loz = document.createElement('span');
       loz.style.width = '10px';
