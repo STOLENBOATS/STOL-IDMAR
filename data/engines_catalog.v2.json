@@ -986,6 +986,1192 @@
           ]
         }
       }
+    },
+    "Mercury": {
+      "families": {
+        "Verado V8/V12": {
+          "years": [
+            2018,
+            2025
+          ],
+          "hp": [
+            300,
+            350,
+            400,
+            600
+          ],
+          "rigging": [
+            "Digital"
+          ],
+          "shaft": [
+            "L",
+            "X",
+            "XX"
+          ],
+          "rotation": [
+            "STD",
+            "CCW"
+          ],
+          "color": [
+            "Phantom Black",
+            "White"
+          ],
+          "variants": [
+            {
+              "code": "Verado 300",
+              "hp": 300,
+              "shaft": [
+                "L",
+                "X"
+              ],
+              "rigging": [
+                "Digital"
+              ],
+              "rotation": [
+                "STD",
+                "CCW"
+              ],
+              "color": [
+                "Black",
+                "White"
+              ]
+            },
+            {
+              "code": "Verado 350",
+              "hp": 350,
+              "shaft": [
+                "L",
+                "X"
+              ],
+              "rigging": [
+                "Digital"
+              ],
+              "rotation": [
+                "STD",
+                "CCW"
+              ],
+              "color": [
+                "Black",
+                "White"
+              ]
+            },
+            {
+              "code": "Verado 400",
+              "hp": 400,
+              "shaft": [
+                "L",
+                "X"
+              ],
+              "rigging": [
+                "Digital"
+              ],
+              "rotation": [
+                "STD",
+                "CCW"
+              ],
+              "color": [
+                "Black",
+                "White"
+              ]
+            },
+            {
+              "code": "Verado 600 V12",
+              "hp": 600,
+              "shaft": [
+                "XX"
+              ],
+              "rigging": [
+                "Digital"
+              ],
+              "rotation": [
+                "STD",
+                "CCW"
+              ],
+              "gearcase": [
+                "Two-Speed",
+                "Steerable"
+              ]
+            }
+          ]
+        },
+        "FourStroke": {
+          "years": [
+            2014,
+            2025
+          ],
+          "hp": [
+            150,
+            175,
+            200,
+            225,
+            250,
+            300
+          ],
+          "rigging": [
+            "Digital",
+            "Mechanical"
+          ],
+          "shaft": [
+            "L",
+            "X"
+          ],
+          "rotation": [
+            "STD",
+            "CCW"
+          ],
+          "variants": [
+            {
+              "code": "FourStroke 150",
+              "hp": 150,
+              "rigging": [
+                "Mechanical"
+              ],
+              "shaft": [
+                "L",
+                "X"
+              ],
+              "rotation": [
+                "STD"
+              ]
+            },
+            {
+              "code": "FourStroke 175",
+              "hp": 175,
+              "rigging": [
+                "Digital",
+                "Mechanical"
+              ],
+              "shaft": [
+                "L",
+                "X"
+              ],
+              "rotation": [
+                "STD",
+                "CCW"
+              ]
+            },
+            {
+              "code": "FourStroke 200",
+              "hp": 200,
+              "rigging": [
+                "Digital",
+                "Mechanical"
+              ],
+              "shaft": [
+                "L",
+                "X"
+              ],
+              "rotation": [
+                "STD",
+                "CCW"
+              ]
+            },
+            {
+              "code": "FourStroke 225",
+              "hp": 225,
+              "rigging": [
+                "Digital",
+                "Mechanical"
+              ],
+              "shaft": [
+                "L",
+                "X"
+              ],
+              "rotation": [
+                "STD",
+                "CCW"
+              ]
+            },
+            {
+              "code": "FourStroke 250",
+              "hp": 250,
+              "rigging": [
+                "Digital",
+                "Mechanical"
+              ],
+              "shaft": [
+                "L",
+                "X"
+              ],
+              "rotation": [
+                "STD",
+                "CCW"
+              ]
+            },
+            {
+              "code": "FourStroke 300",
+              "hp": 300,
+              "rigging": [
+                "Digital",
+                "Mechanical"
+              ],
+              "shaft": [
+                "L",
+                "X"
+              ],
+              "rotation": [
+                "STD",
+                "CCW"
+              ]
+            }
+          ]
+        },
+        "SeaPro (Comercial)": {
+          "years": [
+            2017,
+            2025
+          ],
+          "hp": [
+            115,
+            150,
+            200,
+            300,
+            500
+          ],
+          "rigging": [
+            "Digital",
+            "Mechanical",
+            "Commercial"
+          ],
+          "shaft": [
+            "L",
+            "X",
+            "XX"
+          ],
+          "rotation": [
+            "STD",
+            "CCW"
+          ],
+          "variants": [
+            {
+              "code": "SeaPro 115",
+              "hp": 115,
+              "rigging": [
+                "Mechanical",
+                "Commercial"
+              ],
+              "shaft": [
+                "L",
+                "X"
+              ],
+              "rotation": [
+                "STD"
+              ]
+            },
+            {
+              "code": "SeaPro 150",
+              "hp": 150,
+              "rigging": [
+                "Mechanical",
+                "Commercial"
+              ],
+              "shaft": [
+                "L",
+                "X"
+              ],
+              "rotation": [
+                "STD"
+              ]
+            },
+            {
+              "code": "SeaPro 200",
+              "hp": 200,
+              "rigging": [
+                "Digital",
+                "Commercial"
+              ],
+              "shaft": [
+                "L",
+                "X"
+              ],
+              "rotation": [
+                "STD",
+                "CCW"
+              ]
+            },
+            {
+              "code": "SeaPro 300",
+              "hp": 300,
+              "rigging": [
+                "Digital",
+                "Commercial"
+              ],
+              "shaft": [
+                "L",
+                "X"
+              ],
+              "rotation": [
+                "STD",
+                "CCW"
+              ]
+            },
+            {
+              "code": "SeaPro 500",
+              "hp": 500,
+              "rigging": [
+                "Digital",
+                "Commercial"
+              ],
+              "shaft": [
+                "XX"
+              ],
+              "rotation": [
+                "STD",
+                "CCW"
+              ]
+            }
+          ]
+        },
+        "Portable & Midrange": {
+          "years": [
+            1998,
+            2025
+          ],
+          "hp": [
+            2.5,
+            3.5,
+            4,
+            5,
+            6,
+            8,
+            9.9,
+            15,
+            20,
+            25,
+            30,
+            40,
+            50,
+            60,
+            75,
+            90,
+            115
+          ],
+          "rigging": [
+            "Tiller",
+            "Mechanical"
+          ],
+          "shaft": [
+            "S",
+            "L",
+            "X"
+          ],
+          "rotation": [
+            "STD"
+          ],
+          "variants": [
+            {
+              "code": "Mercury 2.5",
+              "hp": 2.5
+            },
+            {
+              "code": "Mercury 3.5",
+              "hp": 3.5
+            },
+            {
+              "code": "Mercury 4",
+              "hp": 4
+            },
+            {
+              "code": "Mercury 5",
+              "hp": 5
+            },
+            {
+              "code": "Mercury 6",
+              "hp": 6
+            },
+            {
+              "code": "Mercury 8",
+              "hp": 8
+            },
+            {
+              "code": "Mercury 9.9",
+              "hp": 9.9
+            },
+            {
+              "code": "Mercury 15",
+              "hp": 15
+            },
+            {
+              "code": "Mercury 20",
+              "hp": 20
+            },
+            {
+              "code": "Mercury 25",
+              "hp": 25
+            },
+            {
+              "code": "Mercury 30",
+              "hp": 30
+            },
+            {
+              "code": "Mercury 40",
+              "hp": 40
+            },
+            {
+              "code": "Mercury 50",
+              "hp": 50
+            },
+            {
+              "code": "Mercury 60",
+              "hp": 60
+            },
+            {
+              "code": "Mercury 75",
+              "hp": 75
+            },
+            {
+              "code": "Mercury 90",
+              "hp": 90
+            },
+            {
+              "code": "SeaPro 115",
+              "hp": 115
+            }
+          ]
+        }
+      }
+    },
+    "Tohatsu": {
+      "families": {
+        "MFS100–140": {
+          "years": [
+            2019,
+            2025
+          ],
+          "hp": [
+            100,
+            115,
+            140
+          ],
+          "rigging": [
+            "Mechanical"
+          ],
+          "shaft": [
+            "L",
+            "X"
+          ],
+          "rotation": [
+            "STD"
+          ],
+          "variants": [
+            {
+              "code": "MFS100",
+              "hp": 100
+            },
+            {
+              "code": "MFS115",
+              "hp": 115
+            },
+            {
+              "code": "MFS140",
+              "hp": 140
+            }
+          ]
+        },
+        "MFS40–90": {
+          "years": [
+            2014,
+            2025
+          ],
+          "hp": [
+            40,
+            50,
+            60,
+            75,
+            90
+          ],
+          "rigging": [
+            "Mechanical",
+            "Tiller"
+          ],
+          "shaft": [
+            "L",
+            "X",
+            "S"
+          ],
+          "rotation": [
+            "STD"
+          ],
+          "variants": [
+            {
+              "code": "MFS40",
+              "hp": 40
+            },
+            {
+              "code": "MFS50",
+              "hp": 50
+            },
+            {
+              "code": "MFS60",
+              "hp": 60
+            },
+            {
+              "code": "MFS75",
+              "hp": 75
+            },
+            {
+              "code": "MFS90",
+              "hp": 90
+            }
+          ]
+        },
+        "Portable & Small": {
+          "years": [
+            1998,
+            2025
+          ],
+          "hp": [
+            30,
+            25,
+            20,
+            15,
+            9.9,
+            8,
+            6,
+            5,
+            4,
+            3.5,
+            2.5
+          ],
+          "rigging": [
+            "Tiller"
+          ],
+          "shaft": [
+            "S",
+            "L"
+          ],
+          "rotation": [
+            "STD"
+          ],
+          "variants": [
+            {
+              "code": "MFS30",
+              "hp": 30
+            },
+            {
+              "code": "MFS25",
+              "hp": 25
+            },
+            {
+              "code": "MFS20",
+              "hp": 20
+            },
+            {
+              "code": "MFS15",
+              "hp": 15
+            },
+            {
+              "code": "MFS9.9",
+              "hp": 9.9
+            },
+            {
+              "code": "MFS8",
+              "hp": 8
+            },
+            {
+              "code": "MFS6",
+              "hp": 6
+            },
+            {
+              "code": "MFS5",
+              "hp": 5
+            },
+            {
+              "code": "MFS4",
+              "hp": 4
+            },
+            {
+              "code": "MFS3.5",
+              "hp": 3.5
+            },
+            {
+              "code": "MFS2.5",
+              "hp": 2.5
+            }
+          ]
+        },
+        "BFT (Honda-based)": {
+          "years": [
+            2013,
+            2025
+          ],
+          "hp": [
+            150,
+            200
+          ],
+          "rigging": [
+            "Drive-by-Wire",
+            "Mechanical"
+          ],
+          "shaft": [
+            "L",
+            "X"
+          ],
+          "rotation": [
+            "STD",
+            "CCW"
+          ],
+          "variants": [
+            {
+              "code": "BFT150",
+              "hp": 150
+            },
+            {
+              "code": "BFT200",
+              "hp": 200
+            }
+          ]
+        }
+      }
+    },
+    "Evinrude/Johnson": {
+      "families": {
+        "E-TEC G2": {
+          "years": [
+            2014,
+            2020
+          ],
+          "hp": [
+            150,
+            175,
+            200,
+            225,
+            250,
+            300
+          ],
+          "rigging": [
+            "Digital"
+          ],
+          "shaft": [
+            "L",
+            "X",
+            "UL"
+          ],
+          "rotation": [
+            "STD",
+            "CCW"
+          ],
+          "variants": [
+            {
+              "code": "E-TEC G2 150",
+              "hp": 150
+            },
+            {
+              "code": "E-TEC G2 175",
+              "hp": 175
+            },
+            {
+              "code": "E-TEC G2 200",
+              "hp": 200
+            },
+            {
+              "code": "E-TEC G2 225",
+              "hp": 225
+            },
+            {
+              "code": "E-TEC G2 250",
+              "hp": 250
+            },
+            {
+              "code": "E-TEC G2 300",
+              "hp": 300
+            }
+          ]
+        },
+        "E-TEC": {
+          "years": [
+            2004,
+            2020
+          ],
+          "hp": [
+            115,
+            130,
+            140,
+            150,
+            175,
+            200,
+            225,
+            250,
+            300
+          ],
+          "rigging": [
+            "Digital",
+            "Mechanical"
+          ],
+          "shaft": [
+            "S",
+            "L",
+            "X",
+            "UL"
+          ],
+          "rotation": [
+            "STD",
+            "CCW"
+          ],
+          "variants": [
+            {
+              "code": "E-TEC 115",
+              "hp": 115
+            },
+            {
+              "code": "E-TEC 130",
+              "hp": 130
+            },
+            {
+              "code": "E-TEC 140",
+              "hp": 140
+            },
+            {
+              "code": "E-TEC 150",
+              "hp": 150
+            },
+            {
+              "code": "E-TEC 175",
+              "hp": 175
+            },
+            {
+              "code": "E-TEC 200",
+              "hp": 200
+            },
+            {
+              "code": "E-TEC 225",
+              "hp": 225
+            },
+            {
+              "code": "E-TEC 250",
+              "hp": 250
+            },
+            {
+              "code": "E-TEC 300",
+              "hp": 300
+            }
+          ]
+        },
+        "Portable & Midrange": {
+          "years": [
+            1998,
+            2015
+          ],
+          "hp": [
+            90,
+            75,
+            70,
+            60,
+            50,
+            40,
+            30,
+            25,
+            15,
+            9.9,
+            8,
+            6,
+            4,
+            2
+          ],
+          "rigging": [
+            "Mechanical",
+            "Tiller"
+          ],
+          "shaft": [
+            "S",
+            "L"
+          ],
+          "rotation": [
+            "STD"
+          ],
+          "variants": [
+            {
+              "code": "Evinrude 90",
+              "hp": 90
+            },
+            {
+              "code": "Evinrude 75",
+              "hp": 75
+            },
+            {
+              "code": "Evinrude 70",
+              "hp": 70
+            },
+            {
+              "code": "Evinrude 60",
+              "hp": 60
+            },
+            {
+              "code": "Evinrude 50",
+              "hp": 50
+            },
+            {
+              "code": "Evinrude 40",
+              "hp": 40
+            },
+            {
+              "code": "Evinrude 30",
+              "hp": 30
+            },
+            {
+              "code": "Evinrude 25",
+              "hp": 25
+            },
+            {
+              "code": "Evinrude 15",
+              "hp": 15
+            },
+            {
+              "code": "Evinrude 9.9",
+              "hp": 9.9
+            },
+            {
+              "code": "Evinrude 8",
+              "hp": 8
+            },
+            {
+              "code": "Evinrude 6",
+              "hp": 6
+            },
+            {
+              "code": "Evinrude 4",
+              "hp": 4
+            },
+            {
+              "code": "Evinrude 2",
+              "hp": 2
+            }
+          ]
+        }
+      }
+    },
+    "Volvo Penta": {
+      "families": {
+        "Diesel D-Series": {
+          "years": [
+            2003,
+            2025
+          ],
+          "hp": [
+            150,
+            200,
+            300,
+            440
+          ],
+          "rigging": [
+            "Inboard",
+            "Sterndrive"
+          ],
+          "shaft": [],
+          "rotation": [
+            "STD",
+            "CCW"
+          ],
+          "variants": [
+            {
+              "code": "D3-150",
+              "hp": 150,
+              "rigging": [
+                "Sterndrive"
+              ]
+            },
+            {
+              "code": "D4-300",
+              "hp": 300,
+              "rigging": [
+                "Sterndrive"
+              ]
+            },
+            {
+              "code": "D6-440",
+              "hp": 440,
+              "rigging": [
+                "Inboard",
+                "IPS"
+              ]
+            }
+          ]
+        },
+        "Gasoline V6/V8": {
+          "years": [
+            2010,
+            2025
+          ],
+          "hp": [
+            280,
+            350,
+            380,
+            430
+          ],
+          "rigging": [
+            "Sterndrive"
+          ],
+          "rotation": [
+            "STD",
+            "CCW"
+          ],
+          "variants": [
+            {
+              "code": "V6-280",
+              "hp": 280
+            },
+            {
+              "code": "V8-350",
+              "hp": 350
+            },
+            {
+              "code": "V8-380",
+              "hp": 380
+            },
+            {
+              "code": "V8-430",
+              "hp": 430
+            }
+          ]
+        },
+        "IPS": {
+          "years": [
+            2005,
+            2025
+          ],
+          "hp": [
+            600
+          ],
+          "rigging": [
+            "IPS"
+          ],
+          "rotation": [
+            "STD"
+          ],
+          "variants": [
+            {
+              "code": "IPS600",
+              "hp": 600,
+              "rigging": [
+                "IPS"
+              ]
+            }
+          ]
+        },
+        "Saildrive & Small": {
+          "years": [
+            1998,
+            2025
+          ],
+          "hp": [
+            30,
+            40,
+            55,
+            75,
+            110
+          ],
+          "rigging": [
+            "Saildrive",
+            "Inboard"
+          ],
+          "rotation": [
+            "STD"
+          ],
+          "variants": [
+            {
+              "code": "D1-30",
+              "hp": 30,
+              "rigging": [
+                "Saildrive"
+              ]
+            },
+            {
+              "code": "D2-40",
+              "hp": 40,
+              "rigging": [
+                "Saildrive"
+              ]
+            },
+            {
+              "code": "D2-55",
+              "hp": 55,
+              "rigging": [
+                "Saildrive"
+              ]
+            },
+            {
+              "code": "D3-110",
+              "hp": 110,
+              "rigging": [
+                "Inboard"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "MerCruiser": {
+      "families": {
+        "MPI Gasoline": {
+          "years": [
+            2014,
+            2025
+          ],
+          "hp": [
+            250,
+            300,
+            350,
+            380
+          ],
+          "rigging": [
+            "Sterndrive",
+            "Inboard"
+          ],
+          "rotation": [
+            "STD",
+            "CCW"
+          ],
+          "variants": [
+            {
+              "code": "4.5L",
+              "hp": 250,
+              "rigging": [
+                "Sterndrive"
+              ]
+            },
+            {
+              "code": "6.2L",
+              "hp": 300,
+              "rigging": [
+                "Sterndrive",
+                "Inboard"
+              ]
+            },
+            {
+              "code": "8.2L",
+              "hp": 380,
+              "rigging": [
+                "Sterndrive",
+                "Inboard"
+              ]
+            }
+          ]
+        },
+        "TDI Diesel": {
+          "years": [
+            2010,
+            2025
+          ],
+          "hp": [
+            230,
+            320,
+            370,
+            430
+          ],
+          "rigging": [
+            "Sterndrive",
+            "Inboard"
+          ],
+          "rotation": [
+            "STD",
+            "CCW"
+          ],
+          "variants": [
+            {
+              "code": "TDI 3.0",
+              "hp": 230
+            },
+            {
+              "code": "TDI 4.2",
+              "hp": 370
+            }
+          ]
+        }
+      }
+    },
+    "Yanmar": {
+      "families": {
+        "YM Series": {
+          "years": [
+            2004,
+            2025
+          ],
+          "hp": [
+            14,
+            21,
+            29,
+            39
+          ],
+          "rigging": [
+            "Saildrive",
+            "Inboard"
+          ],
+          "rotation": [
+            "STD"
+          ],
+          "variants": [
+            {
+              "code": "2YM15",
+              "hp": 14,
+              "rigging": [
+                "Saildrive",
+                "Inboard"
+              ]
+            },
+            {
+              "code": "3YM20",
+              "hp": 21,
+              "rigging": [
+                "Saildrive",
+                "Inboard"
+              ]
+            },
+            {
+              "code": "3YM30AE",
+              "hp": 29,
+              "rigging": [
+                "Saildrive",
+                "Inboard"
+              ]
+            },
+            {
+              "code": "3YM39",
+              "hp": 39,
+              "rigging": [
+                "Inboard"
+              ]
+            }
+          ]
+        },
+        "JH Series": {
+          "years": [
+            2006,
+            2025
+          ],
+          "hp": [
+            45,
+            57,
+            80,
+            110
+          ],
+          "rigging": [
+            "Shaftdrive",
+            "Inboard"
+          ],
+          "rotation": [
+            "STD",
+            "CCW"
+          ],
+          "variants": [
+            {
+              "code": "4JH45",
+              "hp": 45
+            },
+            {
+              "code": "4JH57",
+              "hp": 57
+            },
+            {
+              "code": "4JH80",
+              "hp": 80
+            },
+            {
+              "code": "4JH110",
+              "hp": 110
+            }
+          ]
+        }
+      }
     }
   }
 }
