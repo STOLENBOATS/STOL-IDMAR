@@ -185,3 +185,43 @@
   Document.prototype.__idmar_qsa_patched__ = true;
   console.info("[IDMAR shim] querySelectorAll patch: :contains() + fallback ativo.");
 })();
+(function(){
+  if (window.__IDMAR_QSA_PATCHED_FILE_V2__) return;
+  function makeSafeQSA(orig){
+    return function(selector){
+      try { return orig.call(this, selector); }
+      catch(e){
+        try{
+          var sel = String(selector).replace(/\[data-x\]\("([^"]+)"\)/g, ':contains("")');
+          var parts = sel.split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+          var out = [];
+          for (var i=0;i<parts.length;i++){
+            var part = parts[i], m = part.match(/^(.*?):contains\("([^"]+)"\)$/);
+            if (m){
+              var base = m[1] || '*', text = m[2].toLowerCase();
+              var nodes = orig.call(this, base);
+              for (var j=0;j<nodes.length;j++){
+                var el = nodes[j];
+                if ((el.textContent||'').toLowerCase().indexOf(text) > -1) out.push(el);
+              }
+            } else {
+              try { var nodes2 = orig.call(this, part);
+                for (var k=0;k<nodes2.length;k++) out.push(nodes2[k]); } catch(_){}
+            }
+          }
+          out.forEach = Array.prototype.forEach; return out;
+        }catch(_){ var empty=[]; empty.forEach = Array.prototype.forEach; return empty; }
+      }
+    };
+  }
+  if (!Document.prototype.__idmar_qsa_v2){
+    Document.prototype.querySelectorAll = makeSafeQSA(Document.prototype.querySelectorAll);
+    Document.prototype.__idmar_qsa_v2 = true;
+  }
+  if (!Element.prototype.__idmar_qsa_v2){
+    Element.prototype.querySelectorAll = makeSafeQSA(Element.prototype.querySelectorAll);
+    Element.prototype.__idmar_qsa_v2 = true;
+  }
+  window.__IDMAR_QSA_PATCHED_FILE_V2__ = true;
+  console.info("[IDMAR shim] qSA v2 file: Document+Element protegidos.");
+})();
