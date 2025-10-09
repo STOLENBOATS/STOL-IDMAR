@@ -156,7 +156,7 @@
     } catch (e) {
       try {
         // 1) corrige padrões inválidos do tipo [data-x]("Texto") -> :contains("Texto")
-        let sel = String(selector).replace(/\[data-x\]\("([^"]+)"\)/g, ':contains("")');
+        let sel = String(selector).replace(/\[data-x\]\("([^"]+)"\)/g, ':contains("$1")');
 
         // 2) divide por vírgulas e processa cada parte
         const parts = sel.split(',').map(s => s.trim()).filter(Boolean);
