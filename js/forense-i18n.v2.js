@@ -46,21 +46,29 @@
     });
 
     // Tooltips úteis (se existirem elementos)
-    const tips = [
-      { q: 'button:contains("Comparar"), .btn:contains("Comparar")', title: 'Arraste o slider / Drag the slider' },
-      { q: 'button:contains("Anotar"), .btn:contains("Anotar")', title: 'Clique e arraste para desenhar / Click and drag to draw' },
-      { q: 'button:contains("Exportar PNG anotado")', title: 'Guarda a imagem com as anotações / Save image with annotations' }
-    ];
-    tips.forEach(({q, title}) => {
-      root.querySelectorAll(q.replace(':contains', '[data-x]')).forEach(()=>{});
-      // fallback genérico: aplica por texto
-      root.querySelectorAll('button, .btn, [role="button"]').forEach(el=>{
-        const t=(el.textContent||'').trim().toLowerCase();
-        if (/comparar/.test(t) && /slider/.test(title.toLowerCase())) el.title=title;
-        if (/anotar/.test(t) && /desenhar/.test(title.toLowerCase())) el.title=title;
-        if (/exportar.*png/.test(t)) el.title = 'Guarda a imagem com as anotações / Save image with annotations';
-      });
-    });
+const tips = [
+  { text: 'Comparar', title: 'Arraste o slider / Drag the slider' },
+  { text: 'Anotar',   title: 'Clique e arraste para desenhar / Click and drag to draw' },
+  { text: 'Exportar PNG anotado', title: 'Guarda a imagem com as anotações / Save image with annotations' }
+];
+
+tips.forEach(({ text, title }) => {
+  // procura todos os botões e aplica por texto visível
+  document.querySelectorAll('button, .btn, [role="button"]').forEach(el => {
+    const t = (el.textContent || '').trim().toLowerCase();
+    if (!t) return;
+
+    if (t.includes(text.toLowerCase())) {
+      el.title = title;
+      return;
+    }
+
+    // heurísticas antigas, se quiseres manter:
+    if (/comparar/.test(t) && /slider/.test(title.toLowerCase())) el.title = title;
+    if (/anotar/.test(t)   && /desenhar/.test(title.toLowerCase())) el.title = title;
+    if (/exportar.*png/.test(t)) el.title = 'Guarda a imagem com as anotações / Save image with annotations';
+  });
+});
 
     // “Contexto: WIN/HIN” → “Contexto / Context: WIN/HIN”
     document.querySelectorAll('*').forEach(el=>{
