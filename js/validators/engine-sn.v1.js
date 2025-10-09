@@ -16,7 +16,7 @@
       parse(sn){
         const { prefix, serial } = splitPrefixNumber(sn);
         if (!prefix || !serial) return null;
-        return { brand:"Honda", prefix, serial };
+        return { brand:"Honda", prefix, serial, source: (/[A-Z]/.test(String(sn||"").charAt(0)) ? "exterior" : "interior") };
       }
     },
     Mercury: {
@@ -46,3 +46,4 @@
 
   w.IDMAR_EngineSN = { parse, splitPrefixNumber };
 })(window);
+
