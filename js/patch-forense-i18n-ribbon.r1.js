@@ -1,12 +1,13 @@
 ﻿(function(w,d){
   "use strict";
 
-  // ===== i18n helpers =====
-  function currentLang(){
-    try { return (localStorage.getItem('IDMAR_LANG') || 'pt').toLowerCase(); } catch(e){ return 'pt'; }
+  // ========= utils i18n =========
+  function getLang(){ try { return (localStorage.getItem('IDMAR_LANG') || 'pt').toLowerCase(); } catch(e){ return 'pt'; } }
+  function t(k){
+    try { return (w.IDMAR_i18n && typeof w.IDMAR_i18n.t==="function") ? w.IDMAR_i18n.t(k) : k; }
+    catch(e){ return k; }
   }
-  function t(k){ try{ return (w.IDMAR_i18n && w.IDMAR_i18n.t) ? w.IDMAR_i18n.t(k) : k; }catch(e){ return k; } }
-  function buildForensicFlags(){
+  function buildFlags(){
     return {
       layout: { pt: t('forense.flag.layout_pt'),  en: t('forense.flag.layout_en') },
       font:   { pt: t('forense.flag.font_pt'),    en: t('forense.flag.font_en') },
@@ -15,78 +16,129 @@
     };
   }
 
-  // ===== WIN history: envolver pushWinHistory, se existir =====
-  try{
-    if (typeof w.pushWinHistory === "function"){
-      const _orig = w.pushWinHistory;
-      w.pushWinHistory = function(rec){
-        try{
-          if (rec && !rec.lang) rec.lang = currentLang();
-          if (rec && !rec.flags) rec.flags = buildForensicFlags();
-        }catch(e){}
-        return _orig.apply(this, arguments);
-      };
-      console.info("[IDMAR] shim: pushWinHistory envolvido (flags PT/EN + lang).");
-    }
-  }catch(e){ console.warn("[IDMAR] shim pushWinHistory falhou:", e); }
+  // ========= 1) HISTÓRICO WIN via hook ao localStorage.setItem =========
+  (function(){
+    const LS = w.localStorage;
+    if (!LS || LS.__idmar_hooked__) return;
+    const getKey = ()=> (w.NAV && w.NAV.STORAGE && w.NAV.STORAGE.WIN_HISTORY) || "hist_win";
 
-  // ===== Motor: validação extra + notas (se possível) =====
-  try{
-    if (typeof w.validateEngine === "function"){
-      const _v = w.validateEngine;
-      w.validateEngine = async function(){
-        const res = await _v.apply(this, arguments);
-        try{
-          // tentar recolher brand/sn de estados comuns
-          let brand = "";
-          let sn = "";
-          // 1) IDs mais prováveis
-          const elBrand = d.querySelector('#engine-picker-hook select[name="brand"], select#engine-brand, [data-engine-brand]');
-          const elSN    = d.querySelector('#engine-sn, input[name="engine-sn"], [data-engine-sn]');
-          if (elBrand) brand = (elBrand.value || elBrand.textContent || "").trim();
-          if (elSN)    sn    = (elSN.value    || elSN.textContent    || "").trim();
-          // 2) fallback a estados globais
-          if (!brand && w.IDMAR && w.IDMAR.engineState && w.IDMAR.engineState.brand) brand = String(w.IDMAR.engineState.brand);
-          if (!sn && w.IDMAR && w.IDMAR.engineState && w.IDMAR.engineState.sn) sn = String(w.IDMAR.engineState.sn);
-
-          if (w.IDMAR_EngineExtra && typeof w.IDMAR_EngineExtra.validateEngineExtra === "function"){
-            const extra = w.IDMAR_EngineExtra.validateEngineExtra(sn, brand);
-            const box = d.getElementById('engine-result-hook');
-            if (extra && box){
-              if (Array.isArray(extra.notes) && extra.notes.length){
-                const ul = d.createElement('ul');
-                extra.notes.forEach(n => { const li = d.createElement('li'); li.textContent = n; ul.appendChild(li); });
-                box.appendChild(ul);
-              }
-              // Nota: não forçamos "NOK" visual para não conflitar com a tua UI; apenas acrescentamos notas.
-            }
-          }
-        }catch(e){ console.warn("[IDMAR] shim validateEngine extra:", e); }
-        return res;
-      };
-      console.info("[IDMAR] shim: validateEngine envolvido (extra notes).");
-    }
-  }catch(e){ console.warn("[IDMAR] shim validateEngine falhou:", e); }
-
-  // ===== Tooltips/rotação uniforme =====
-  function setRotateTooltip(el){
-    try{ el.setAttribute('title', t('tip.rotate')); el.setAttribute('data-i18n-title','tip.rotate'); }catch(e){}
-  }
-  d.addEventListener('DOMContentLoaded', ()=>{
-    try{
-      const img = d.querySelector('.rotatable');
-      if (img) setRotateTooltip(img);
-      d.addEventListener('keydown', (ev)=>{
-        if (ev.key && ev.key.toLowerCase()==='r' && ev.shiftKey){
-          const el = d.querySelector('.rotatable');
-          if (!el) return;
-          const v = (parseInt(el.dataset.rot||"0",10)+90)%360;
-          el.dataset.rot = String(v);
-          setRotateTooltip(el);
+    // função que garante lang/flags nos registos
+    function upgradeArray(arr){
+      if (!Array.isArray(arr)) return arr;
+      const L = getLang(), FLAGS = buildFlags();
+      return arr.map(r=>{
+        if (r && typeof r==="object"){
+          if (!r.lang)  r.lang = L;
+          if (!r.flags) r.flags = FLAGS;
         }
+        return r;
       });
-      console.info("[IDMAR] shim: rotação + tooltip ativo (SHIFT+R).");
+    }
+
+    // hook setItem apenas para a chave de histórico
+    const _set = LS.setItem.bind(LS);
+    LS.setItem = function(k,v){
+      try{
+        if (k === getKey() && typeof v === "string" && v.trim().startsWith("[")){
+          const arr = JSON.parse(v);
+          v = JSON.stringify(upgradeArray(arr));
+        }
+      }catch(e){}
+      return _set(k,v);
+    };
+
+    // migração imediata do que já existe
+    try{
+      const k = getKey();
+      const raw = LS.getItem(k);
+      if (raw){
+        const arr = JSON.parse(raw);
+        const up  = upgradeArray(arr);
+        if (JSON.stringify(arr) !== JSON.stringify(up)){
+          LS.setItem(k, JSON.stringify(up));
+          console.info("[IDMAR shim] WIN history: registos atualizados com lang + flags.");
+        }
+      }
     }catch(e){}
-  });
+
+    LS.__idmar_hooked__ = true;
+    console.info("[IDMAR shim] setItem hook ativo para histórico WIN (", getKey(), ").");
+  })();
+
+  // ========= 2) MOTOR: notas extra via MutationObserver =========
+  (function(){
+    const targetId = "engine-result-hook";
+    function pickBrand(){
+      const el = d.querySelector('#engine-picker-hook select[name="brand"], select#engine-brand, [data-engine-brand]');
+      if (el) return (el.value || el.textContent || "").trim();
+      if (w.IDMAR?.engineState?.brand) return String(w.IDMAR.engineState.brand);
+      return "";
+    }
+    function pickSN(){
+      const el = d.querySelector('#engine-sn, input[name="engine-sn"], [data-engine-sn]');
+      if (el) return (el.value || el.textContent || "").trim();
+      if (w.IDMAR?.engineState?.sn) return String(w.IDMAR.engineState.sn);
+      return "";
+    }
+    function appendNotes(notes){
+      const box = d.getElementById(targetId);
+      if (!box || !Array.isArray(notes) || !notes.length) return;
+      // evita duplicados
+      if (box.querySelector('[data-idmar-extra-notes="1"]')) return;
+      const ul = d.createElement('ul');
+      ul.setAttribute('data-idmar-extra-notes','1');
+      notes.forEach(n=>{ const li = d.createElement('li'); li.textContent = n; ul.appendChild(li); });
+      box.appendChild(ul);
+    }
+    function runExtra(){
+      try{
+        if (!w.IDMAR_EngineExtra || typeof w.IDMAR_EngineExtra.validateEngineExtra!=="function") return;
+        const extra = w.IDMAR_EngineExtra.validateEngineExtra(pickSN(), pickBrand());
+        if (extra && Array.isArray(extra.notes) && extra.notes.length){
+          appendNotes(extra.notes);
+        }
+      }catch(e){}
+    }
+
+    function installObserver(){
+      const box = d.getElementById(targetId);
+      if (!box) return false;
+      const mo = new MutationObserver(runExtra);
+      mo.observe(box, { childList:true, subtree:true });
+      // também corre já
+      runExtra();
+      console.info("[IDMAR shim] Motor: MutationObserver ativo para notas extra.");
+      return true;
+    }
+
+    if (!installObserver()){
+      d.addEventListener('DOMContentLoaded', installObserver, { once:true });
+    }
+  })();
+
+  // ========= 3) Tooltips/rotação uniformes =========
+  (function(){
+    function setRotateTooltip(el){
+      try{
+        el.setAttribute('title', t('tip.rotate'));
+        el.setAttribute('data-i18n-title','tip.rotate');
+      }catch(e){}
+    }
+    d.addEventListener('DOMContentLoaded', ()=>{
+      try{
+        const img = d.querySelector('.rotatable');
+        if (img) setRotateTooltip(img);
+        d.addEventListener('keydown', (ev)=>{
+          if (ev.key && ev.key.toLowerCase()==='r' && ev.shiftKey){
+            const el = d.querySelector('.rotatable'); if (!el) return;
+            const v = (parseInt(el.dataset.rot||"0",10)+90)%360;
+            el.dataset.rot = String(v);
+            setRotateTooltip(el);
+          }
+        });
+        console.info("[IDMAR shim] rotação + tooltip ativo (SHIFT+R).");
+      }catch(e){}
+    });
+  })();
 
 })(window, document);
