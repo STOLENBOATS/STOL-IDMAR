@@ -1,6 +1,6 @@
-// forense-i18n.v2.js — PT/EN overlay para a página Forense (não altera HTML)
+﻿// forense-i18n.v2.js â€” PT/EN overlay para a pÃ¡gina Forense (nÃ£o altera HTML)
 (function () {
-  // util: aplica tradução sem quebrar HTML interno
+  // util: aplica traduÃ§Ã£o sem quebrar HTML interno
 const small = (en) => ' / ' + en;
 function setTextSafely(el, textPt, textEn) {
   const onlyText = el.childNodes.length === 1 && el.firstChild && el.firstChild.nodeType === 3;
@@ -8,7 +8,7 @@ function setTextSafely(el, textPt, textEn) {
     el.textContent = textPt + ' / ' + textEn;
   } else {
     const base = (el.textContent || '').trim();
-    el.title = (base ? base + ' — ' : '') + textPt + ' / ' + textEn;
+    el.title = (base ? base + ' â€” ' : '') + textPt + ' / ' + textEn;
   }
 }
 const byText = (root, selector, map) => {
@@ -32,37 +32,37 @@ const byText = (root, selector, map) => {
   function applyBilingual() {
     const root = document;
 
-    // Cabeçalho
+    // CabeÃ§alho
     byText(root, 'h1, h2, summary', {
-      'Forense — Índice': { pt: 'Forense — Índice', en: 'Forensic — Index' },
-      'Carregar evidências': { pt: 'Carregar evidências', en: 'Upload evidence' },
+      'Forense â€” Ãndice': { pt: 'Forense â€” Ãndice', en: 'Forensic â€” Index' },
+      'Carregar evidÃªncias': { pt: 'Carregar evidÃªncias', en: 'Upload evidence' },
       'Workspace': { pt: 'Workspace', en: 'Workspace' },
       'Forense (opcional)*': { pt: 'Forense (opcional)', en: 'Forensic (optional)' },
     });
 
-    // Botões / controlos
+    // BotÃµes / controlos
     byText(root, 'button, .btn, [role="button"]', {
-      'Anexar ao histórico mais recente': { pt: 'Anexar ao histórico mais recente', en: 'Attach to latest history' },
+      'Anexar ao histÃ³rico mais recente': { pt: 'Anexar ao histÃ³rico mais recente', en: 'Attach to latest history' },
       'Abrir lightbox': { pt: 'Abrir lightbox', en: 'Open lightbox' },
       'Comparar': { pt: 'Comparar', en: 'Compare' },
       'Anotar (rect)': { pt: 'Anotar (rect)', en: 'Annotate (rect)' },
-      'Limpar anotações': { pt: 'Limpar anotações', en: 'Clear annotations' },
+      'Limpar anotaÃ§Ãµes': { pt: 'Limpar anotaÃ§Ãµes', en: 'Clear annotations' },
       'Exportar PNG anotado': { pt: 'Exportar PNG anotado', en: 'Export annotated PNG' },
-      'Guardar “bundle” (JSON)': { pt: 'Guardar “bundle” (JSON)', en: 'Save bundle (JSON)' },
-      'Guardar "bundle" (JSON)': { pt: 'Guardar “bundle” (JSON)', en: 'Save bundle (JSON)' }, // aspas normais fallback
+      'Guardar â€œbundleâ€ (JSON)': { pt: 'Guardar â€œbundleâ€ (JSON)', en: 'Save bundle (JSON)' },
+      'Guardar "bundle" (JSON)': { pt: 'Guardar â€œbundleâ€ (JSON)', en: 'Save bundle (JSON)' }, // aspas normais fallback
     });
 
-    // Rótulos/legendas que costumam aparecer como texto simples
+    // RÃ³tulos/legendas que costumam aparecer como texto simples
     byText(root, 'label, .label, .panel > .title, .panel label', {
       'Contexto:*': 'Contexto / Context:',
       'Contexto:': 'Contexto / Context:',
     });
 
-    // Tooltips úteis (sem :contains)
+    // Tooltips Ãºteis (sem :contains)
 [
   { needle: 'comparar', title: 'Arraste o slider / Drag the slider' },
   { needle: 'anotar',   title: 'Clique e arraste para desenhar / Click and drag to draw' },
-  { needle: 'exportar png anotado', title: 'Guarda a imagem com as anotações / Save image with annotations' }
+  { needle: 'exportar png anotado', title: 'Guarda a imagem com as anotaÃ§Ãµes / Save image with annotations' }
 ].forEach(({ needle, title }) => {
   document.querySelectorAll('button, .btn, [role="button"]').forEach(el => {
     const t = (el.textContent || '').trim().toLowerCase();
@@ -76,14 +76,14 @@ if (!t) return;
       return;
     }
 
-    // heurísticas antigas, se quiseres manter:
+    // heurÃ­sticas antigas, se quiseres manter:
     if (/comparar/.test(t) && /slider/.test(title.toLowerCase())) el.title = title;
     if (/anotar/.test(t)   && /desenhar/.test(title.toLowerCase())) el.title = title;
-    if (/exportar.*png/.test(t)) el.title = 'Guarda a imagem com as anotações / Save image with annotations';
+    if (/exportar.*png/.test(t)) el.title = 'Guarda a imagem com as anotaÃ§Ãµes / Save image with annotations';
   });
 });
 
-    // “Contexto: WIN/HIN” → “Contexto / Context: WIN/HIN”
+    // â€œContexto: WIN/HINâ€ â†’ â€œContexto / Context: WIN/HINâ€
     document.querySelectorAll('*').forEach(el => {
   if (!el.firstChild || el.firstChild.nodeType !== 3) return;
   const raw = el.firstChild.nodeValue || '';
@@ -99,3 +99,4 @@ if (!t) return;
     applyBilingual();
   }
 })();
+
