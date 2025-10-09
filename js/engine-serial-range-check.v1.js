@@ -1,93 +1,189 @@
-﻿(function (w, d) {
+// js/engine-serial-range-check.v1.js (r8)
+// - Lê data/engine_serial_ranges.json (cache)
+// - Entrega janelas (intervalos) coerentes com a seleção do cartão "Motor"
+// - Valida nº de motor (dentro/fora) e devolve notas claras (inclui mismatch de potência/código)
+(function(w){
   "use strict";
 
+  const DS_URL = "data/engine_serial_ranges.json";
+  let _cache = null; let _cacheAt = 0;
+
+  function within(num, range){
+    if (!range || range.length !== 2) return false;
+    const n = +num; return Number.isFinite(n) && n >= range[0] && n <= range[1];
+  }
+
+  function arrHas(arr, v){
+    if (!arr || !arr.length) return true; // sem filtro
+    return arr.includes(v);
+  }
+
+  function yearsOk(selYear, rangeYears){
+    if (!rangeYears || rangeYears.length !== 2) return true;
+    if (!selYear) return true;
+    return selYear >= rangeYears[0] && selYear <= rangeYears[1];
+  }
+
+  function hpOk(selHp, hpList){
+    if (!hpList || !hpList.length) return true;
+    if (!selHp) return true;
+    return hpList.includes(selHp);
+  }
+
+  function normalizeSel(sel){
+    // sel = {brand, family, code, hp, year}
+    const out = Object.assign({}, sel);
+    if (out.brand)  out.brand  = String(out.brand).trim();
+    if (out.family) out.family = String(out.family).trim().toUpperCase();    // p.ex. BF40 / BF40A
+    if (out.code)   out.code   = String(out.code).trim().toUpperCase();      // p.ex. BAAL / BALJ
+    if (out.hp)     out.hp     = parseInt(out.hp, 10);
+    if (out.year)   out.year   = parseInt(out.year, 10);
+    // família: normalizar BF40A -> BF40 para lookup por família base
+    if (out.family && /^BF\d+[A-Z]$/i.test(out.family)) {
+      out.familyBase = out.family.replace(/([A-Z])$/,''); // BF40A -> BF40
+    } else {
+      out.familyBase = out.family || null;
+    }
+    return out;
+  }
+
   async function loadRanges(){
-    if (w.__IDMAR_SERIAL_RANGES__) return w.__IDMAR_SERIAL_RANGES__;
-    const res = await fetch("data/engine_serial_ranges.json", { cache:"no-store" });
-    const json = await res.json();
-    w.__IDMAR_SERIAL_RANGES__ = json;
-    return json;
+    const now = Date.now();
+    if (_cache && (now - _cacheAt) < 60_000) return _cache;
+    const res = await fetch(DS_URL, {cache:"no-store"});
+    if (!res.ok) throw new Error("Falha a carregar "+DS_URL);
+    _cache = await res.json(); _cacheAt = now;
+    return _cache;
   }
 
-  function matchHonda(ranges, prefix, serial){
-    const list = (ranges?.Honda?.prefixes?.[prefix]) || [];
-    const hits = list.filter(x => typeof x.from === "number" && typeof x.to === "number" &&
-                                  serial >= x.from && serial <= x.to);
-    return { hits, candidates: list };
-  }
+  // Seleciona janelas compatíveis com a seleção do cartão "Motor"
+  function getWindowsForSelection(sel, all){
+    const S = normalizeSel(sel);
+    const brand = all?.[S.brand];
+    if (!brand) return [];
 
-  function checkAgainstSelection(parsed, selection, ranges){
-    const notes = [];
-    let ok = true;
-
-    if (!parsed?.brand || !parsed?.prefix || !parsed?.serial){
-      return { ok:false, notes:["Número de motor inválido ou não reconhecido."] };
-    }
-
-    const brand = parsed.brand;
-    let hits = [], candidates = [];
-
-    if (brand === "Honda"){
-      const m = matchHonda(ranges, parsed.prefix, parsed.serial);
-      hits = m.hits; candidates = m.candidates;
-    } else if (brand === "Mercury"){
-      // regra simples por prefixo/anos (exemplo)
-      const rules = ranges?.Mercury?.serialRules || [];
-      const pfx = String(parsed.prefix||"");
-      const rs = rules.filter(r => pfx.startsWith(r.prefix));
-      candidates = rs;
-      // sem range numérico -> coerência apenas
-      if (!rs.length) { ok = false; notes.push(`⚠️ Sem regras conhecidas para prefixo ${pfx} (Mercury).`); }
-      else {
-        // comparar modelos/anos (se fornecidos na seleção)
-        const wantModel = (selection.model||"").toUpperCase();
-        const wantHp = selection.hp!=null ? parseInt(selection.hp,10) : null;
-        if (wantModel && !rs.some(r => r.models?.some(m => wantModel.includes(String(m))))){
-          ok = false; notes.push(`⚠️ Prefixo ${pfx} não costuma mapear para o modelo ${selection.model}.`);
-        }
-        if (selection.year && !rs.some(r => selection.year >= r.yearFrom && selection.year <= r.yearTo)){
-          ok = false; notes.push(`⚠️ Ano ${selection.year} fora do intervalo comum para ${pfx}.`);
-        }
-        notes.push(`ℹ️ Regras Mercury para ${pfx}: ${rs.map(r=>`${r.models?.join("/")||'?' } @ ${r.yearFrom}-${r.yearTo}`).join("; ")}`);
+    // HONDA: families → codes
+    if (S.brand && S.brand.toLowerCase()==="honda" && brand.families){
+      const out = [];
+      const famKey = S.familyBase || S.family;
+      if (famKey && brand.families[famKey] && brand.families[famKey].codes){
+        const codes = brand.families[famKey].codes;
+        const keys = S.code && codes[S.code] ? [S.code] : Object.keys(codes);
+        keys.forEach(k=>{
+          const r = codes[k];
+          if (hpOk(S.hp, r.hp) && yearsOk(S.year, r.years)){
+            out.push(Object.assign({code:k, family:famKey}, r));
+          }
+        });
+        return out;
       }
+
+      // Se não veio família, mas veio HP → procurar em todas as famílias/códigos que aceitem este HP
+      if (!famKey && S.hp){
+        Object.entries(brand.families).forEach(([fam,def])=>{
+          if (!def.codes) return;
+          Object.entries(def.codes).forEach(([code, r])=>{
+            if (hpOk(S.hp, r.hp) && yearsOk(S.year, r.years)){
+              out.push(Object.assign({code, family:fam}, r));
+            }
+          });
+        });
+        return out;
+      }
+
+      // fallback: todas
+      Object.entries(brand.families).forEach(([fam,def])=>{
+        if (!def.codes) return;
+        Object.entries(def.codes).forEach(([code, r])=>{
+          if (hpOk(S.hp, r.hp) && yearsOk(S.year, r.years)){
+            out.push(Object.assign({code, family:fam}, r));
+          }
+        });
+      });
+      return out;
     }
-    // TODO: Yamaha/Suzuki → coerência por model code/ano (quando não houver ranges públicos)
 
-    if (brand === "Honda"){
-      if (hits.length === 0){
-        notes.push(`⚠️ Série ${parsed.prefix}-${parsed.serial} não encontrada nas faixas conhecidas para Honda.`);
-        if (candidates.length){
-          const models = [...new Set(candidates.map(c => c.model + (c.hp ? ` (${c.hp}hp)` : "")))].slice(0,6);
-          notes.push(`Este prefixo costuma corresponder a: ${models.join(", ")}.`);
+    // MERCURY: prefixes
+    if (brand.prefixes){
+      const out = [];
+      Object.entries(brand.prefixes).forEach(([px, r])=>{
+        if (hpOk(S.hp, r.hp) && yearsOk(S.year, r.years)){
+          out.push(Object.assign({prefix:px}, r));
         }
-        ok = false;
+      });
+      return out;
+    }
+
+    return [];
+  }
+
+  // Validação do nº contra as janelas + notas (mismatch de potência/código)
+  function checkAgainstSelection(parsed, sel, all){
+    const notes = [];
+    const S = normalizeSel(sel);
+
+    if (!parsed || !parsed.serial){
+      notes.push("Número inválido ou sem dígitos suficientes.");
+      return { ok:false, notes };
+    }
+
+    // preparar janelas
+    const wins = getWindowsForSelection(S, all);
+    if (!wins.length){
+      notes.push("Sem janelas oficiais para esta seleção (usar coerência geral).");
+      // Sem janelas → não bloqueamos, mas sinalizamos neutro
+      return { ok:true, notes };
+    }
+
+    // tentar encontrar janela(s) coerentes também por código/prefixo quando possível
+    const codeLike = (parsed.code || parsed.prefix || "").toUpperCase();
+
+    // Honda: se código explícito no SN, prioriza janelas desse código
+    let candidates = wins;
+    if (codeLike){
+      const filtered = wins.filter(w => (w.code ? w.code.toUpperCase()===codeLike : false));
+      if (filtered.length) candidates = filtered;
+    }
+
+    // Verificar pertença a pelo menos uma janela
+    const inSome = candidates.some(w => within(parsed.serial, w.range));
+    let ok = inSome;
+
+    // Notas de mismatch de potência quando aplicável (ex.: BAAL=15/20 vs BF40 selecionado)
+    if (S.brand && S.brand.toLowerCase()==="honda" && codeLike){
+      // procurar definição do código no catálogo, pela família selecionada (ou por todas)
+      const brand = all?.[S.brand]; 
+      const famKey = S.familyBase || S.family;
+      let defs = [];
+      if (famKey && brand?.families?.[famKey]?.codes?.[codeLike]){
+        defs = [ brand.families[famKey].codes[codeLike] ];
       } else {
-        const wantModel = (selection.model||"").toUpperCase();
-        const wantHp    = selection.hp!=null ? parseInt(selection.hp,10) : null;
-
-        const modelMismatch = wantModel && !hits.some(h => (h.model||"").toUpperCase().includes(wantModel));
-        const hpMismatch    = (wantHp!=null) && !hits.some(h => h.hp === wantHp);
-
-        if (modelMismatch){
-          ok = false;
-          const models = [...new Set(hits.map(h => h.model))].join(", ");
-          notes.push(`⚠️ Prefixo ${parsed.prefix} mapeia para ${models}; selecionaste ${selection.model || "(vazio)"}.`);
-        }
-        if (hpMismatch){
-          ok = false;
-          const hps = [...new Set(hits.map(h => h.hp))].join(", ");
-          notes.push(`⚠️ Faixa indica HP ${hps}; tens ${selection.hp || "(vazio)"} hp.`);
-        }
-
-        hits.forEach(h=>{
-          const yr = h.years ? ` [${h.years[0]}–${h.years[1]}]` : "";
-          notes.push(`✅ Dentro da faixa conhecida: ${h.model}${h.hp?` ${h.hp}hp`:''}${yr} (${h.from}–${h.to}).`);
+        // procurar em todas as famílias Honda por esse código
+        Object.values(brand?.families || {}).forEach(def=>{
+          if (def.codes?.[codeLike]) defs.push(def.codes[codeLike]);
         });
       }
+      defs.forEach(def=>{
+        if (def.hp && S.hp && !def.hp.includes(S.hp)){
+          notes.push(`⚠️ Código ${codeLike} está associado a hp ${def.hp.join("/")} — seleção atual: ${S.hp} hp.`);
+          ok = false;
+        }
+      });
     }
 
-    return { ok, notes, hits, candidates };
+    if (!ok){
+      notes.push("Número fora do(s) intervalo(s) esperado(s) para a seleção atual.");
+    } else {
+      notes.push("Número dentro do(s) intervalo(s) esperado(s).");
+    }
+
+    return { ok, notes };
   }
 
-  w.IDMAR_SerialRangeCheck = { loadRanges, checkAgainstSelection };
-})(window, document);
+  // API pública
+  w.IDMAR_SerialRangeCheck = {
+    loadRanges,
+    getWindowsForSelection,
+    checkAgainstSelection
+  };
+})(window);
