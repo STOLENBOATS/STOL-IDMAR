@@ -1,74 +1,77 @@
 ﻿(function (w, d) {
   "use strict";
-
   function q(s){ return d.querySelector(s); }
   function qa(s){ return d.querySelectorAll(s); }
 
-  // Só ativa se a página tiver sinais do Validador Motor
   function isMotorPage(){
-    return !!(q("#engine-picker-hook") || q("#btn-validate-engine") || q("#engine-result-hook"));
+    return !!(q("#engine-picker-hook") || q("#btn-validate-engine") || q("#engine-result-hook") || /Validador\s+Motor/i.test(d.body.innerText||""));
   }
 
-  const FIELD_HTML = [
-    '<div id="engine-serial-field-hook" class="form-row">',
-    '  <label for="engine-sn-raw">Nº do motor / Engine serial</label>',
-    '  <div class="row">',
-    '    <input id="engine-sn-raw" type="text" placeholder="Ex.: BAAL-999123, 1B123456" autocomplete="off" />',
-    '    <div class="sn-kind">',
-    '      <label><input type="radio" name="engine-sn-kind" value="auto" checked> Auto</label>',
-    '      <label><input type="radio" name="engine-sn-kind" value="exterior"> Exterior</label>',
-    '      <label><input type="radio" name="engine-sn-kind" value="interior"> Interior</label>',
-    '    </div>',
-    '  </div>',
-    '  <small class="muted" id="engine-sn-hints"></small>',
-    '</div>'
-  ].join("");
+  const FIELD_HTML = '<div id="engine-serial-field-hook" class="form-row">'
+    + '<label for="engine-sn-raw">Nº do motor / Engine serial</label>'
+    + '<div class="row">'
+    + '  <input id="engine-sn-raw" type="text" placeholder="Ex.: BAAL-999123, 1B123456" autocomplete="off" />'
+    + '  <div class="sn-kind">'
+    + '    <label><input type="radio" name="engine-sn-kind" value="auto" checked> Auto</label>'
+    + '    <label><input type="radio" name="engine-sn-kind" value="exterior"> Exterior</label>'
+    + '    <label><input type="radio" name="engine-sn-kind" value="interior"> Interior</label>'
+    + '  </div>'
+    + '</div>'
+    + '<small class="muted" id="engine-sn-hints"></small>'
+    + '</div>';
+
+  function pickMotorHost(){
+    return q("#engine-picker-hook")
+        || q("#engine-form")
+        || q("section:has(h2), .card:has(h2), main")
+        || d.body;
+  }
 
   function ensureField(){
     if (!isMotorPage()) return false;
     if (q("#engine-sn-raw")) return true;
-    const host = q("#engine-picker-hook") || q("#engine-form") || q("main") || d.body;
-    if (!host) return false;
-    const wrap = d.createElement("div");
-    wrap.innerHTML = FIELD_HTML;
-    // inserir mesmo no topo do picker
+    const host = pickMotorHost(); if (!host) return false;
+    const wrap = d.createElement("div"); wrap.innerHTML = FIELD_HTML;
     host.prepend(wrap.firstChild);
-    console.info("[IDMAR] SN field injected into #engine-picker-hook.");
+    console.info("[IDMAR] SN field injected.");
     return true;
   }
 
-  async function runSNCheck(){
-    const input = q("#engine-sn-raw"); if (!input) return;
-    const sn = (input.value || "").trim();
-    const kindEl = q('input[name="engine-sn-kind"]:checked');
-    const kind = kindEl ? kindEl.value : "auto";
-
+  function getSel(){
     const brand  = (q("#engine-brand, #engine-picker-hook select[name='brand']")?.value || "").trim();
     const model  = (q("#engine-model-code, #engine-model")?.value || "").trim();
     const hpRaw  = (q("#engine-hp, input[name='engine-hp']")?.value || "").trim();
     const hp     = hpRaw ? parseInt(hpRaw.replace(/\D+/g,""),10) : null;
     const yearRaw= (q("#engine-year, input[name='engine-year']")?.value || "").trim();
     const year   = yearRaw ? parseInt(yearRaw.replace(/\D+/g,""),10) : null;
-    const sel = { brand, model, hp, year };
+    return {brand, model, hp, year};
+  }
 
-    const hintsEl = q("#engine-sn-hints");
-    if (!sn){
-      if (hintsEl) hintsEl.textContent = "";
-      // limpa notas
-      const box = q("#engine-result-hook") || q("#engine-result") || d.body;
-      box?.querySelector('[data-idmar-extra-notes="1"]')?.remove();
-      return;
-    }
+  function appendNotes(notes){
+    const box = q("#engine-result-hook") || q("#engine-result") || d.body;
+    const old = box.querySelector('[data-idmar-extra-notes="1"]'); if (old) old.remove();
+    if (!notes || !notes.length) return;
+    const ul = d.createElement("ul"); ul.setAttribute("data-idmar-extra-notes","1");
+    notes.forEach(n=>{ const li = d.createElement("li"); li.textContent = n; ul.appendChild(li); });
+    box.appendChild(ul);
+  }
 
-    // parser
-    let parsed = w.IDMAR_EngineSN?.parse(sn, brand) || null;
+  async function runSNCheck(){
+    const input = q("#engine-sn-raw"); if (!input) return;
+    const sn = (input.value||"").trim();
+    const kind = (q('input[name="engine-sn-kind"]:checked')?.value)||"auto";
+    const sel = getSel();
+    const hints = q("#engine-sn-hints");
 
-    // Honda: distinguir exterior/interior
-    if ((brand||"").toLowerCase()==="honda"){
+    if (!sn){ hints && (hints.textContent=""); appendNotes([]); return; }
+
+    let parsed = w.IDMAR_EngineSN?.parse(sn, sel.brand) || null;
+
+    if ((sel.brand||"").toLowerCase()==="honda"){
       const hasPrefix = /^[A-Z0-9]+[-\s]?\d{4,}$/.test(sn) && /[A-Z]/.test(sn.charAt(0));
-      if (kind === "exterior" && !hasPrefix) parsed = null;
-      if (kind === "interior" && hasPrefix){
-        parsed = { brand:"Honda", prefix:null, serial: parseInt(sn.replace(/\D+/g,""),10) || null, source:"interior" };
+      if (kind==="exterior" && !hasPrefix) parsed=null;
+      if (kind==="interior" && hasPrefix){
+        parsed = {brand:"Honda", prefix:null, serial: parseInt(sn.replace(/\D+/g,""),10)||null, source:"interior"};
       }
     }
 
@@ -78,67 +81,36 @@
       res = { ok:true, notes:["ℹ️ Honda (interior): número de bloco interno. Validação por coerência (sem faixa de prefixo)."] };
     } else {
       res = w.IDMAR_SerialRangeCheck.checkAgainstSelection(parsed, sel, ranges);
-      if ((brand||"").toLowerCase()==="honda" && kind!=="interior" && parsed && (!parsed.prefix || !parsed.serial)){
-        res.notes = (res.notes||[]).concat(["ℹ️ Honda: números exteriores costumam ter prefixo (ex.: BAAL-1234567)."]);
-      }
     }
 
-    // hints
-    if (hintsEl){
-      const bits = [];
+    if (hints){
+      const bits=[];
       if (parsed?.brand)  bits.push(`brand: ${parsed.brand}`);
       if (parsed?.prefix) bits.push(`prefix: ${parsed.prefix}`);
       if (parsed?.serial) bits.push(`serial: ${parsed.serial}`);
-      if ((brand||"").toLowerCase()==="honda") bits.push(`tipo: ${kind}`);
-      hintsEl.textContent = bits.join(" · ");
+      if ((sel.brand||"").toLowerCase()==="honda") bits.push(`tipo: ${kind}`);
+      hints.textContent = bits.join(" · ");
     }
-
-    // render
-    if (typeof w.renderEngineResult === "function"){
-      w.renderEngineResult(true, res.notes || []);
-    } else {
-      const box = q("#engine-result-hook") || q("#engine-result") || d.body;
-      const old = box.querySelector('[data-idmar-extra-notes="1"]'); if (old) old.remove();
-      const ul = d.createElement("ul"); ul.setAttribute("data-idmar-extra-notes","1");
-      (res.notes||[]).forEach(n => { const li = d.createElement("li"); li.textContent = n; ul.appendChild(li); });
-      box.appendChild(ul);
-    }
+    appendNotes(res.notes||[]);
   }
 
-  function wireEvents(){
-    const input = q("#engine-sn-raw");
-    if (!input) return;
-    input.addEventListener("input", runSNCheck, { passive:true });
-    input.addEventListener("blur",  runSNCheck, { passive:true });
-    qa('input[name="engine-sn-kind"]').forEach(r => r.addEventListener("change", runSNCheck));
+  function wire(){
+    const i=q("#engine-sn-raw"); if (!i) return;
+    i.addEventListener("input", runSNCheck, {passive:true});
+    i.addEventListener("blur", runSNCheck, {passive:true});
+    qa('input[name="engine-sn-kind"]').forEach(r=>r.addEventListener("change", runSNCheck));
     q("#btn-validate-engine")?.addEventListener("click", runSNCheck);
   }
 
-  function installObserver(){
-    // injeta assim que #engine-picker-hook aparecer
-    const mo = new MutationObserver(() => {
-      if (!isMotorPage()) return;
-      if (q("#engine-serial-field-hook") && q("#engine-sn-raw")) return;
-      if (q("#engine-picker-hook") || q("#engine-form") || q("#engine-result-hook")){
-        if (ensureField()){ wireEvents(); }
-      }
-    });
-    mo.observe(d.documentElement, { childList:true, subtree:true });
+  function observe(){
+    const mo = new MutationObserver(()=>{ if (!q("#engine-sn-raw")) { if (ensureField()) wire(); } });
+    mo.observe(d.documentElement, {childList:true, subtree:true});
   }
 
-  if (d.readyState === "loading"){
-    d.addEventListener("DOMContentLoaded", () => {
-      if (!isMotorPage()) return;
-      ensureField();
-      wireEvents();
-      installObserver();
-    });
+  if (d.readyState==="loading"){
+    d.addEventListener("DOMContentLoaded", ()=>{ if (!isMotorPage()) return; ensureField(); wire(); observe(); });
   } else {
-    if (!isMotorPage()) return;
-    ensureField();
-    wireEvents();
-    installObserver();
+    if (!isMotorPage()) return; ensureField(); wire(); observe();
   }
-
   console.info("[IDMAR] Engine SN glue v1 (robusto) carregado.");
 })(window, document);
