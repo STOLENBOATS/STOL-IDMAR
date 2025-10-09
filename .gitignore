@@ -1,0 +1,4 @@
+# backups locais
+*.bak
+*.bak*
+js/patch-forense-i18n-ribbon.r1.backup*.js
