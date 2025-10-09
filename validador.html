@@ -1,30 +1,31 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="pt">
-
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>IDMAR  Validador</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IDMAR Validador</title>
   <link rel="icon" href="img/logo-pm.png" />
 
   <!-- CSS base -->
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/theme-soft-light.v1.css"><!-- tema claro -->
-  <link rel="stylesheet" href="css/nav-ribbon.v5.css"><!-- botÃµes "ribbon" v5 -->
+  <link rel="stylesheet" href="css/nav-ribbon.v5.css"><!-- botões "ribbon" v5 -->
 
-   <style>
+  <style>
     :root{--bg:#f8fafc;--fg:#0f172a;--bg-elev:#ffffff;--border:#e5e7eb;--link:#0b6bcb}
     html,body{height:100%}
-    body{background:var(--bg);color:var(--fg);margin:0;display:flex;flex-direction:column;
-         font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial,sans-serif}
+    body{
+      background:var(--bg);color:var(--fg);margin:0;display:flex;flex-direction:column;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial,sans-serif
+    }
     main{flex:1}
-    .container{max-width:1100px;margin:1.25rem auto;padding:0 1rem}
+    .container{max-width:1200px;margin:1.25rem auto;padding:0 1rem}
     .panel{background:var(--bg-elev);border:1px solid var(--border);border-radius:12px;padding:1rem;margin:.75rem 0}
-    .two{display:grid;grid-template-columns:1fr;gap:1rem}
-    @media(min-width:980px){ .two{grid-template-columns:1fr 1fr} }
+
+    /* >>> três cartões lado a lado */
+    .three{display:grid;grid-template-columns:1fr;gap:1rem}
+    @media(min-width:1100px){ .three{grid-template-columns:1fr 1fr 1fr} }
+
     label{display:block;margin:.35rem 0 .25rem}
     input[type="text"], input[type="search"], input[type="file"], select, textarea{
       width:100%;border:1px solid var(--border);background:#fff;border-radius:10px;padding:.5rem .6rem;
@@ -36,12 +37,19 @@
     .badge{display:inline-block;border-radius:999px;padding:.15rem .55rem;font-weight:600}
     .good{background:#10b98120;color:#065f46}
     .bad{background:#ef444420;color:#7f1d1d}
-    details.forense-box{margin-top:.75rem;border:1px dashed var(--border);border-radius:10px;padding:.5rem}
-    .forense-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.5rem;margin-top:.5rem}
     .footer{border-top:1px solid var(--border);padding:1rem;text-align:left;opacity:.85;background:var(--bg-elev)}
+
+    /* utilidades */
+    .mt-2{margin-top:.5rem}
+    .muted{opacity:.75}
+    #engine-sn-window .chip{
+      display:inline-block;border:1px solid var(--border);border-radius:999px;
+      padding:.15rem .5rem;margin:.15rem .25rem 0 0
+    }
+    #engine-sn-result ul{margin:.25rem 0 0 .9rem}
   </style>
-  
-  <!-- Gate de sessÃ£o simples -->
+
+  <!-- Gate de sessão simples -->
   <script>
     (function(){
       try{
@@ -51,7 +59,7 @@
     })();
   </script>
 
-  <!-- VersÃ£o + branding -->
+  <!-- Versão + branding -->
   <script>window.IDMAR_VERSION="Vs 1.3";</script>
   <script defer src="js/idmar-config.v4.js"></script>
 
@@ -59,148 +67,130 @@
   <script defer src="js/idmar-i18n.js"></script>
   <script defer src="js/idmar-header-only.all.v4.js"></script>
 
-  <!-- Overrides (aplicam labels, ribbons e rodapÃ©) -->
+  <!-- Overrides (aplicam labels, ribbons e rodapé) -->
   <script defer src="js/header-override.v4.js"></script>
   <script defer src="js/i18n-boot.js"></script>
   <script defer src="js/idmar-version.v4.js"></script>
 </head>
 
 <body>
-  <!-- header Ã© injetado por JS -->
+  <!-- header é injetado por JS -->
 
   <main class="container">
     <h1>Validador</h1>
 
-    <section class="two">
-  <!-- WIN -->
-  <div class="panel">
-    <h2>Validador WIN</h2>
-    <form id="formWin">
-      <label for="win">WIN / HIN</label>
-      <input id="win" type="text" placeholder="Ex.: PT-ABC12345D404"/>
-      <div style="margin:.5rem 0">
-        <button id="btnWin" type="submit">Validar WIN</button>
-      </div>
-
-      <div style="margin-top:.5rem">
-        <label for="winPhoto">Foto opcional / Optional photo</label>
-        <input id="winPhoto" type="file" accept="image/*"/>
-      </div>
-
-      <div id="winOut" style="margin-top:.75rem"></div>
-
-      <table>
-        <thead>
-          <tr><th>Campo / Field</th><th>Valor / Value</th><th>Interpretação / Meaning</th></tr>
-        </thead>
-        <tbody id="interpWinBody"></tbody>
-      </table>
-    </form>
-  </div>
-
-  <!-- Cartão: Nº do motor (ao lado do Motor) -->
-  <div class="panel" id="engine-sn-panel">
-    <h2>Nº do motor / Engine serial</h2>
-
-    <!-- Entrada única (auto-parse) -->
-    <input id="engine-sn-raw" type="text"
-           placeholder="Ex.: BF40A-BAAL-1234567, BAAL-1234567, 1B123456"
-           autocomplete="off" />
-
-    <!-- (Opcional) avançado: campos separados -->
-    <details class="mt-2">
-      <summary>Modo avançado</summary>
-      <div class="grid2">
-        <div>
-          <label>Família / Family</label>
-          <input id="engine-sn-family" placeholder="Ex.: BF40" />
-        </div>
-        <div>
-          <label>Código / Code</label>
-          <input id="engine-sn-code" placeholder="Ex.: BAAL / HALJ …" />
-        </div>
-        <div>
-          <label>Nº / Serial</label>
-          <input id="engine-sn-num" inputmode="numeric" placeholder="Ex.: 1234567" />
-        </div>
-        <div>
-          <label>Tipo (Honda)</label>
-          <div class="sn-kind">
-            <label><input type="radio" name="engine-sn-kind" value="auto" checked> Auto</label>
-            <label><input type="radio" name="engine-sn-kind" value="exterior"> Exterior</label>
-            <label><input type="radio" name="engine-sn-kind" value="interior"> Interior</label>
+    <section class="three">
+      <!-- WIN -->
+      <div class="panel" id="card-win">
+        <h2>Validador WIN</h2>
+        <form id="formWin">
+          <label for="win">WIN / HIN</label>
+          <input id="win" type="text" placeholder="Ex.: PT-ABC12345D404"/>
+          <div style="margin:.5rem 0">
+            <button id="btnWin" type="submit">Validar WIN</button>
           </div>
-        </div>
-      </div>
-    </details>
 
-    <small id="engine-sn-hints" class="muted"></small>
-    <div id="engine-sn-result" class="mt-2"></div>
-  </div>
+          <div style="margin-top:.5rem">
+            <label for="winPhoto">Foto opcional / Optional photo</label>
+            <input id="winPhoto" type="file" accept="image/*"/>
+          </div>
 
-  <!-- MOTOR -->
-  <div class="panel">
-    <h2>Validador Motor</h2>
-    <form id="formMotor">
-      <label for="brand">Marca</label>
-      <!-- marca -->
-      <select id="brand" data-engine-field="brand">
-        <option>Yamaha</option><option>Honda</option><option>Suzuki</option><option>Tohatsu</option>
-        <option>Mercury</option><option>MerCruiser</option><option>Volvo Penta</option>
-        <option>Yanmar</option><option>Evinrude/Johnson</option>
-      </select>
+          <div id="winOut" style="margin-top:.75rem"></div>
 
-      <!-- aqui o JS pode injetar campos dinâmicos (shaft / par de letras / série, etc.) -->
-      <div id="brandDynamic"></div>
-
-      <div style="margin-top:.5rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.5rem">
-        <div>
-          <label>Modelo (pesquisa)</label>
-          <input id="srch_model" type="text" placeholder="Ex.: DF140A"
-                 data-engine-field="model_code"/>
-        </div>
-        <div>
-          <label>Potência (hp)</label>
-          <input id="srch_power" type="text" placeholder="Ex.: 150"
-                 data-engine-field="power"/>
-        </div>
-        <div>
-          <label>Cilindrada (cc)</label>
-          <input id="srch_disp" type="text" placeholder="Ex.: 2670"
-                 data-engine-field="displacement"/>
-        </div>
-        <div>
-          <label>Ano</label>
-          <input id="srch_year" type="text" placeholder="Ex.: 2017"
-                 data-engine-field="year"/>
-        </div>
-        <div>
-          <label>Origem</label>
-          <input id="srch_origin" type="text" placeholder="Ex.: Japão"
-                 data-engine-field="origin"/>
-        </div>
+          <table>
+            <thead>
+              <tr><th>Campo / Field</th><th>Valor / Value</th><th>Interpretação / Meaning</th></tr>
+            </thead>
+            <tbody id="interpWinBody"></tbody>
+          </table>
+        </form>
       </div>
 
-      <div style="margin:.5rem 0">
-        <button id="btnMotor" type="submit">Validar Motor</button>
+      <!-- MOTOR (como está) -->
+      <div class="panel" id="card-motor">
+        <h2>Validador Motor</h2>
+        <form id="formMotor">
+          <label for="brand">Marca</label>
+          <!-- marca -->
+          <select id="brand" data-engine-field="brand">
+            <option>Yamaha</option><option>Honda</option><option>Suzuki</option><option>Tohatsu</option>
+            <option>Mercury</option><option>MerCruiser</option><option>Volvo Penta</option>
+            <option>Yanmar</option><option>Evinrude/Johnson</option>
+          </select>
+
+          <!-- aqui o JS pode injetar campos dinâmicos (shaft / par de letras / série, etc.) -->
+          <div id="brandDynamic"></div>
+
+          <div style="margin-top:.5rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.5rem">
+            <div>
+              <label>Modelo (pesquisa)</label>
+              <input id="srch_model" type="text" placeholder="Ex.: BF40A ou DF140A"
+                     data-engine-field="model_code"/>
+            </div>
+            <div>
+              <label>Potência (hp)</label>
+              <input id="srch_power" type="text" placeholder="Ex.: 150"
+                     data-engine-field="power"/>
+            </div>
+            <div>
+              <label>Cilindrada (cc)</label>
+              <input id="srch_disp" type="text" placeholder="Ex.: 2670"
+                     data-engine-field="displacement"/>
+            </div>
+            <div>
+              <label>Ano</label>
+              <input id="srch_year" type="text" placeholder="Ex.: 2017"
+                     data-engine-field="year"/>
+            </div>
+            <div>
+              <label>Origem</label>
+              <input id="srch_origin" type="text" placeholder="Ex.: Japão"
+                     data-engine-field="origin"/>
+            </div>
+          </div>
+
+          <div style="margin:.5rem 0">
+            <button id="btnMotor" type="submit">Validar Motor</button>
+          </div>
+
+          <div style="margin-top:.5rem">
+            <label for="motorPhoto">Foto opcional / Optional photo</label>
+            <input id="motorPhoto" type="file" accept="image/*"/>
+          </div>
+
+          <div id="motorOut" style="margin-top:.75rem"></div>
+        </form>
       </div>
 
-      <div style="margin-top:.5rem">
-        <label for="motorPhoto">Foto opcional / Optional photo</label>
-        <input id="motorPhoto" type="file" accept="image/*"/>
+      <!-- Nº de motor — interligado ao cartão do Motor -->
+      <div class="panel" id="card-serial">
+        <h2>Nº do motor / Engine serial</h2>
+
+        <!-- Entrada única (auto-parse) -->
+        <input id="engine-sn-raw" type="text"
+               placeholder="Ex.: BF40A-BAAL-1234567, BAAL-1234567, 1B123456"
+               autocomplete="off" />
+
+        <!-- Honda: exterior/interior (dois números) -->
+        <div class="sn-kind" style="margin-top:.5rem">
+          <label><input type="radio" name="engine-sn-kind" value="auto" checked> Auto</label>
+          <label><input type="radio" name="engine-sn-kind" value="exterior"> Exterior</label>
+          <label><input type="radio" name="engine-sn-kind" value="interior"> Interior</label>
+        </div>
+
+        <!-- Janela(s) de intervalo calculadas a partir do cartão do Motor -->
+        <div id="engine-sn-window" class="mt-2"></div>
+
+        <!-- Resultado/Notas -->
+        <small id="engine-sn-hints" class="muted"></small>
+        <div id="engine-sn-result" class="mt-2"></div>
       </div>
-
-      <div id="motorOut" style="margin-top:.75rem"></div>
-    </form>
-  </div>
-</section>
-
+    </section>
   </main>
 
   <footer class="footer" id="fallback-footer">IDMAR — Identificação Marítima</footer>
 
-
-  <!-- Removido idmar-layout.r3b.js para nÃ£o duplicar header -->
+  <!-- Removido idmar-layout.r3b.js para não duplicar header -->
   <script src="js/validador-win.r3b.js?v=r3b"></script>
   <script src="js/validador-motor.r3d.js?v=r3d"></script>
   <script defer src="js/validator-enhancements.v4.js"></script>
@@ -210,13 +200,13 @@
     src="js/engine_picker.v2.4.js"
     data-catalog="data/engines_catalog.v2.json"></script>
 
-  <!-- Validador de combinaÃ§Ãµes (usa o mesmo catÃ¡logo v2) -->
+  <!-- Validador de combinações (usa o mesmo catálogo v2) -->
   <script defer src="js/engine_validation.v1.js"></script>
 
-  <!-- Admin rÃ¡pido embutido (motores + WIN)  se NO quiseres este bloco na pÃ¡gina, comenta esta linha -->
-  <!-- <script defer src="js/engine_admin_embed.v1.js"></script>
+  <!-- Admin rápido embutido (motores + WIN) — se NÃO quiseres este bloco na página, deixa comentado -->
+  <!-- <script defer src="js/engine_admin_embed.v1.js"></script> -->
 
-  <!-- BotÃ£o "Admin" no ribbon -->
+  <!-- Botão "Admin" no ribbon -->
   <script>window.IDMAR_ADMIN_URL = 'admin-engines.html';</script>
   <script defer src="js/ribbon-admin.v1.js"></script>
 
@@ -224,21 +214,13 @@
   <script type="module"
     src="js/engine_autocomplete_addon.v1.js"
     data-catalog="data/engines_catalog.v1.json"></script>
+
+  <!-- i18n/ribbon/forense patches existentes -->
   <script defer src="js/patch-forense-i18n-ribbon.r1.js?v=r1"></script>
-  <script defer src="js/validators/engine-sn.v1.js?v=r6"></script>
-  <script defer src="js/engine-serial-range-check.v1.js?v=r6"></script>
-  <script defer src="js/engine-sn-glue.v1.js?v=r6"></script>
+
+  <!-- SN: parser + ranges + painel (interligado ao Motor) -->
+  <script defer src="js/validators/engine-sn.v1.js?v=r7"></script>
+  <script defer src="js/engine-serial-range-check.v1.js?v=r7"></script>
+  <script defer src="js/engine-sn-panel.v2.js?v=r1"></script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
