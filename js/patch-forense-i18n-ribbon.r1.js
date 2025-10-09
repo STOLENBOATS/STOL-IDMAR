@@ -142,3 +142,46 @@
   })();
 
 })(window, document);
+(function(){
+  if (Document.prototype.__idmar_qsa_patched__) return;
+  const _qsa = Document.prototype.querySelectorAll;
+
+  // cria array-like com forEach (suficiente para a maioria dos usos)
+  function asList(arr){ arr.forEach = Array.prototype.forEach; return arr; }
+
+  Document.prototype.querySelectorAll = function(selector){
+    try {
+      // primeiro, tenta normal
+      return _qsa.call(this, selector);
+    } catch (e) {
+      try {
+        // 1) corrige padrões inválidos do tipo [data-x]("Texto") -> :contains("Texto")
+        let sel = String(selector).replace(/\[data-x\]\("([^"]+)"\)/g, ':contains("")');
+
+        // 2) divide por vírgulas e processa cada parte
+        const parts = sel.split(',').map(s => s.trim()).filter(Boolean);
+        let out = [];
+        for (const part of parts){
+          // suporta :contains("Texto")
+          const m = part.match(/^(.*?):contains\("([^"]+)"\)$/);
+          if (m){
+            const base = m[1] || '*';
+            const text = m[2].toLowerCase();
+            const nodes = _qsa.call(this, base);
+            out = out.concat(Array.from(nodes).filter(el => (el.textContent||'').toLowerCase().includes(text)));
+            continue;
+          }
+          // tenta novamente com a parte isolada
+          try { out = out.concat(Array.from(_qsa.call(this, part))); } catch(_) { /* ignora */ }
+        }
+        return asList(out);
+      } catch(_) {
+        // último recurso: lista vazia, não rebenta a execução
+        return asList([]);
+      }
+    }
+  };
+
+  Document.prototype.__idmar_qsa_patched__ = true;
+  console.info("[IDMAR shim] querySelectorAll patch: :contains() + fallback ativo.");
+})();
