@@ -1,0 +1,16 @@
+﻿{
+  "Honda": {
+    "prefixes": {
+      "BAAL": [
+        { "model": "BF15", "hp": 15, "from": 1000001, "to": 1199999, "years": [2015, 2017], "source": "official", "confidence": "high" },
+        { "model": "BF20", "hp": 20, "from": 1200000, "to": 1299999, "years": [2015, 2018], "source": "official", "confidence": "high" }
+      ]
+    },
+    "notes": "Exemplo. Substituir/expandir com faixas reais por prefixo/mercado."
+  },
+  "Mercury": {
+    "serialRules": [
+      { "prefix": "1B", "models": ["40","50","60"], "yearFrom": 2005, "yearTo": 2011, "source": "aftermarket", "confidence": "medium" }
+    ]
+  }
+}
