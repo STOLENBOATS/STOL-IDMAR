@@ -1,13 +1,18 @@
-// js/engine-sn-panel.v2.js
+// js/engine-sn-panel.v2.js  (r2)
+// - Lê seleção do cartão "Validador Motor"
+// - Calcula janelas válidas (ranges) para a seleção
+// - Valida o nº introduzido e MOSTRA também os intervalos esperados logo por baixo
 (function(w,d){
   "use strict";
   const q = s => d.querySelector(s);
   const qa= s => d.querySelectorAll(s);
 
-  // Lê a seleção do cartão do Motor (sem mexer nele)
+  // Mantemos as últimas janelas calculadas para mostrar no resultado
+  let lastWindows = [];
+
   function readSelection(){
     const brand  = (q("#brand")?.value || "").trim();
-    const model  = (q("#srch_model")?.value || "").trim();         // ex: "BF40A" ou "DF140A"
+    const model  = (q("#srch_model")?.value || "").trim();         // ex: "BF40A-BAAL" ou "DF140A"
     const hpRaw  = (q("#srch_power")?.value || "").trim();
     const hp     = hpRaw ? parseInt(hpRaw.replace(/\D+/g,""),10) : null;
     const yearRaw= (q("#srch_year")?.value || "").trim();
@@ -23,8 +28,17 @@
     return { brand, family, code, hp, year, model_raw:model };
   }
 
+  function chipText(r){
+    const base = `${r.range?.[0] ?? "?"}–${r.range?.[1] ?? "?"}`;
+    const yrs  = r.years ? ` — ${r.years[0]}–${r.years[1]}` : "";
+    const shaft= r.shaft?.length ? ` — eixo ${r.shaft.join("/")}` : "";
+    const hp   = r.hp?.length ? ` — hp ${r.hp.join("/")}` : "";
+    return base + yrs + shaft + hp;
+  }
+
   function renderWindow(ranges, sel){
     const box = q("#engine-sn-window");
+    if (!box) return;
     box.innerHTML = "";
     if (!ranges || !ranges.length){
       box.innerHTML = '<span class="muted">Sem janelas conhecidas para a seleção atual.</span>';
@@ -36,35 +50,51 @@
     box.appendChild(h);
     ranges.forEach(r=>{
       const chip = d.createElement("span");
-      const yrs = r.years ? ` — ${r.years[0]}–${r.years[1]}` : "";
-      const shaft = r.shaft?.length ? ` — eixo ${r.shaft.join("/")}` : "";
       chip.className="chip";
-      chip.textContent = `${r.range[0]}–${r.range[1]}${yrs}${shaft}`;
+      chip.textContent = chipText(r);
       box.appendChild(chip);
     });
   }
 
-  function renderResult(ok, notes){
+  function renderResult(ok, notes, serialPresent){
     const box = q("#engine-sn-result");
+    if (!box) return;
+
     const cls = ok ? "good" : "bad";
     const lbl = ok ? "Dentro da(s) janela(s)" : "Fora da(s) janela(s)";
-    box.innerHTML = `<span class="badge ${cls}">${lbl}</span>`
-      + (notes?.length ? `<ul>${notes.map(n=>`<li>${n}</li>`).join("")}</ul>` : "");
+    let html = `<span class="badge ${cls}">${lbl}</span>`;
+    if (notes?.length) html += `<ul>${notes.map(n=>`<li>${n}</li>`).join("")}</ul>`;
+
+    // Mostra SEMPRE as janelas conhecidas por baixo do resultado (se houver)
+    if (lastWindows && lastWindows.length){
+      const title = serialPresent
+        ? (ok ? "Intervalo(s) correspondente(s):" : "Intervalo(s) esperado(s):")
+        : "Intervalo(s) esperado(s):";
+      html += `<div class="mt-2 muted">${title}</div>`;
+      html += `<div class="mt-2">` +
+        lastWindows.map(r=>`<span class="chip">${chipText(r)}</span>`).join(" ") +
+        `</div>`;
+    }
+    box.innerHTML = html;
   }
 
   async function recomputeWindows(){
     const sel = readSelection();
-    const win = q("#engine-sn-window");
     const hints = q("#engine-sn-hints");
-    if (hints) hints.textContent = [sel.brand, sel.family, sel.code, sel.hp?.toString(), sel.year?.toString()].filter(Boolean).join(" · ");
+    if (hints) hints.textContent = [sel.brand, sel.family, sel.code, sel.hp?.toString(), sel.year?.toString()]
+      .filter(Boolean).join(" · ");
 
     // carregar dataset de faixas
     const all = await w.IDMAR_SerialRangeCheck.loadRanges();
 
-    // pedir ao checker as janelas possíveis para a seleção atual
-    const cands = w.IDMAR_SerialRangeCheck.getWindowsForSelection
-      ? w.IDMAR_SerialRangeCheck.getWindowsForSelection(sel, all)
-      : fallbackWindows(sel, all);
+    // pedir as janelas possíveis para a seleção atual (se a função existir)
+    let cands = [];
+    if (typeof w.IDMAR_SerialRangeCheck.getWindowsForSelection === "function"){
+      cands = w.IDMAR_SerialRangeCheck.getWindowsForSelection(sel, all) || [];
+    } else {
+      cands = fallbackWindows(sel, all);
+    }
+    lastWindows = cands; // guarda para o renderResult
 
     renderWindow(cands, sel);
 
@@ -94,11 +124,17 @@
     const sel = readSelection();
     const kind = (q('input[name="engine-sn-kind"]:checked')?.value)||"auto";
     const raw  = (q("#engine-sn-raw")?.value || "").trim();
+    const serialPresent = !!raw;
 
-    // parser por marca (já tens este módulo)
+    if (!serialPresent){
+      renderResult(true, ["Introduza o nº para validar contra a(s) janela(s)."], false);
+      return;
+    }
+
+    // parser por marca (módulo existente)
     let parsed = w.IDMAR_EngineSN?.parse(raw, sel.brand) || null;
 
-    // Honda: exterior/interior
+    // Honda: exterior/interior (dois números distintos)
     if ((sel.brand||"").toLowerCase()==="honda"){
       const hasPrefix = /^[A-Z0-9]+[-\s]?\d{4,}$/.test(raw) && /[A-Z]/.test(raw.charAt(0));
       if (kind==="exterior" && !hasPrefix) parsed = null;
@@ -114,7 +150,7 @@
     } else {
       res = w.IDMAR_SerialRangeCheck.checkAgainstSelection(parsed, sel, ranges);
     }
-    renderResult(!!res?.ok, res?.notes||[]);
+    renderResult(!!res?.ok, res?.notes||[], serialPresent);
   }
 
   function wire(){
@@ -132,12 +168,12 @@
   }
 
   d.addEventListener("DOMContentLoaded", ()=>{
-    // garantir módulos base existem
     if (!w.IDMAR_SerialRangeCheck || !w.IDMAR_EngineSN){
       console.warn("[IDMAR] Falta engine-serial-range-check ou engine-sn parser.");
       return;
     }
     wire();
     recomputeWindows();
+    console.info("[IDMAR] engine-sn-panel v2 (r2) pronto.");
   });
 })(window, document);
