@@ -1,7 +1,24 @@
-﻿//// sw.js — gerado por tools/build-sw.ps1
-const CACHE_NAME = 'idmar-cache-20251010160753';
+﻿// sw.js — gerado por tools/build-sw.ps1
+const CACHE_NAME = 'idmar-cache-20251010161041';
 const ASSETS = [
-  ''
+  '/STOL-IDMAR/css/nav-ribbon.v5.css',
+  '/STOL-IDMAR/css/styles.css',
+  '/STOL-IDMAR/css/theme-soft-light.v1.css',
+  '/STOL-IDMAR/img/logo-pm.png',
+  '/STOL-IDMAR/js/engine_admin_embed.v1.js',
+  '/STOL-IDMAR/js/engine_autocomplete_addon.v1.js',
+  '/STOL-IDMAR/js/engine_picker.v2.4.js',
+  '/STOL-IDMAR/js/engine_validation.v1.js',
+  '/STOL-IDMAR/js/header-override.v4.js',
+  '/STOL-IDMAR/js/i18n-boot.js',
+  '/STOL-IDMAR/js/idmar-config.v4.js',
+  '/STOL-IDMAR/js/idmar-header-only.all.v4.js',
+  '/STOL-IDMAR/js/idmar-i18n.js',
+  '/STOL-IDMAR/js/idmar-version.v4.js',
+  '/STOL-IDMAR/js/ribbon-admin.v1.js',
+  '/STOL-IDMAR/js/validator-enhancements.v4.js',
+  '/STOL-IDMAR/manifest.webmanifest',
+  '/STOL-IDMAR/validador.html'
 ];
 
 self.addEventListener('install', (e) => {
@@ -35,8 +52,9 @@ self.addEventListener('fetch', (e) => {
         return res;
       }).catch(() => {
         // fallback html
-        const fallback = '/validador.html';
-        if (req.headers.get('accept')?.includes('text/html')) {
+        const fallback = '/STOL-IDMAR/validador.html';
+        const accept = req.headers.get('accept');
+        if (accept && accept.indexOf('text/html') !== -1) {
           return caches.match(fallback);
         }
       });
