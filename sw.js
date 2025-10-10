@@ -1,5 +1,5 @@
 ﻿//// sw.js — gerado por tools/build-sw.ps1
-const CACHE_NAME = 'idmar-cache-20251010160710';
+const CACHE_NAME = 'idmar-cache-20251010160753';
 const ASSETS = [
   ''
 ];
