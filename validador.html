@@ -2,7 +2,31 @@
 <html lang="pt">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <script>
+(function(){
+  // fetch polyfill
+  if (!('fetch' in window)) {
+    var s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/whatwg-fetch@3.6.20/dist/fetch.umd.min.js';
+    document.head.appendChild(s);
+  }
+  // Promise polyfill
+  if (!('Promise' in window)) {
+    var s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js';
+    document.head.appendChild(s);
+  }
+})();
+</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0b6bcb">
+
+
+  
   <title>IDMAR Validador</title>
   <link rel="icon" href="img/logo-pm.png" />
 
@@ -10,8 +34,25 @@
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/theme-soft-light.v1.css"><!-- tema claro -->
   <link rel="stylesheet" href="css/nav-ribbon.v5.css"><!-- botões "ribbon" v5 -->
+  <link rel="apple-touch-icon" href="img/logo-pm.png">
+
 
   <style>
+
+/* Overlay de orientação (aparece em portrait até ~1024px) */
+#rotate-overlay{display:none;position:fixed;inset:0;background:#0008;color:#fff;z-index:9999;
+  backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
+  align-items:center;justify-content:center;text-align:center;padding:2rem}
+#rotate-overlay .box{background:#111c;padding:1rem 1.25rem;border-radius:12px;max-width:22rem}
+@media (orientation:portrait) and (max-width: 1024px){
+  #rotate-overlay{display:flex}
+}
+
+/* grelha responsiva (por se quiseres cair para 2→1 colunas) */
+.cards{display:grid;grid-template-columns:1fr;gap:1rem}
+@media(min-width: 860px){ .cards{grid-template-columns:1fr 1fr} }
+@media(min-width:1100px){ .cards{grid-template-columns:1fr 1fr 1fr} }
+
     :root{--bg:#f8fafc;--fg:#0f172a;--bg-elev:#ffffff;--border:#e5e7eb;--link:#0b6bcb}
     html,body{height:100%}
     body{
@@ -74,6 +115,13 @@
 </head>
 
 <body>
+  <div id="rotate-overlay" aria-live="polite">
+  <div class="box">
+    <h3 style="margin:0 0 .5rem">Melhor em modo horizontal</h3>
+    <p style="margin:0">Rode o dispositivo para <strong>landscape</strong> para ver os três cartões lado a lado.</p>
+  </div>
+</div>
+
   <!-- header é injetado por JS -->
 
   <main class="container">
@@ -223,5 +271,31 @@
   
   <script defer src="js/engine-serial-range-check.v1.js?v=r8"></script>
   <script defer src="js/engine-sn-panel.v2.js?v=r2"></script>
+
+  <script>
+(function(){
+  // Tentar bloquear para landscape (nota: iOS Safari ignora; Android Chrome honra em apps instaladas)
+  async function tryLockLandscape(){
+    try {
+      if (screen.orientation && screen.orientation.lock) {
+        await screen.orientation.lock('landscape');
+      }
+    } catch(e){ /* alguns browsers não permitem — tudo bem */ }
+  }
+  // Só tentamos após um gesto do utilizador (maior compatibilidade)
+  document.addEventListener('click', tryLockLandscape, { once:true });
+
+  // Ajuste de viewport em iOS para zoom correto (opcional, seguro)
+  function tweakIOSViewport(){
+    var meta = document.querySelector('meta[name=viewport]');
+    if (!meta) return;
+    var isiOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    if (isiOS) meta.setAttribute('content','width=device-width, initial-scale=1, viewport-fit=cover');
+  }
+  tweakIOSViewport();
+})();
+</script>
+
+  
 </body>
 </html>
