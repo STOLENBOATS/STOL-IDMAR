@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="pt">
 <head>
   <meta charset="utf-8">
@@ -33,13 +33,13 @@
   <!-- CSS base -->
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/theme-soft-light.v1.css"><!-- tema claro -->
-  <link rel="stylesheet" href="css/nav-ribbon.v5.css"><!-- botões "ribbon" v5 -->
+  <link rel="stylesheet" href="css/nav-ribbon.v5.css"><!-- botÃµes "ribbon" v5 -->
   <link rel="apple-touch-icon" href="img/logo-pm.png">
 
 
   <style>
 
-/* Overlay de orientação (aparece em portrait até ~1024px) */
+/* Overlay de orientaÃ§Ã£o (aparece em portrait atÃ© ~1024px) */
 #rotate-overlay{display:none;position:fixed;inset:0;background:#0008;color:#fff;z-index:9999;
   backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
   align-items:center;justify-content:center;text-align:center;padding:2rem}
@@ -48,7 +48,7 @@
   #rotate-overlay{display:flex}
 }
 
-/* grelha responsiva (por se quiseres cair para 2→1 colunas) */
+/* grelha responsiva (por se quiseres cair para 2â†’1 colunas) */
 .cards{display:grid;grid-template-columns:1fr;gap:1rem}
 @media(min-width: 860px){ .cards{grid-template-columns:1fr 1fr} }
 @media(min-width:1100px){ .cards{grid-template-columns:1fr 1fr 1fr} }
@@ -63,7 +63,7 @@
     .container{max-width:1200px;margin:1.25rem auto;padding:0 1rem}
     .panel{background:var(--bg-elev);border:1px solid var(--border);border-radius:12px;padding:1rem;margin:.75rem 0}
 
-    /* >>> três cartões lado a lado */
+    /* >>> trÃªs cartÃµes lado a lado */
     .three{display:grid;grid-template-columns:1fr;gap:1rem}
     @media(min-width:1100px){ .three{grid-template-columns:1fr 1fr 1fr} }
 
@@ -90,7 +90,7 @@
     #engine-sn-result ul{margin:.25rem 0 0 .9rem}
   </style>
 
-  <!-- Gate de sessão simples -->
+  <!-- Gate de sessÃ£o simples -->
   <script>
     (function(){
       try{
@@ -100,7 +100,7 @@
     })();
   </script>
 
-  <!-- Versão + branding -->
+  <!-- VersÃ£o + branding -->
   <script>window.IDMAR_VERSION="Vs 1.3";</script>
   <script defer src="js/idmar-config.v4.js"></script>
 
@@ -108,7 +108,7 @@
   <script defer src="js/idmar-i18n.js"></script>
   <script defer src="js/idmar-header-only.all.v4.js"></script>
 
-  <!-- Overrides (aplicam labels, ribbons e rodapé) -->
+  <!-- Overrides (aplicam labels, ribbons e rodapÃ©) -->
   <script defer src="js/header-override.v4.js"></script>
   <script defer src="js/i18n-boot.js"></script>
   <script defer src="js/idmar-version.v4.js"></script>
@@ -119,13 +119,13 @@
   <div class="box">
     <h3 style="margin:0 0 .5rem">Melhor em modo horizontal / Best viewed in landscape</h3>
     <p style="margin:0">
-      Rode o dispositivo para <strong>landscape</strong> para ver os três cartões lado a lado.<br>
+      Rode o dispositivo para <strong>landscape</strong> para ver os trÃªs cartÃµes lado a lado.<br>
       Please rotate your device to <strong>landscape</strong> to view the three cards side by side.
     </p>
   </div>
 </div>
 
-  <!-- header é injetado por JS -->
+  <!-- header Ã© injetado por JS -->
 
   <main class="container">
     <h1>Validador</h1>
@@ -150,14 +150,14 @@
 
           <table>
             <thead>
-              <tr><th>Campo / Field</th><th>Valor / Value</th><th>Interpretação / Meaning</th></tr>
+              <tr><th>Campo / Field</th><th>Valor / Value</th><th>InterpretaÃ§Ã£o / Meaning</th></tr>
             </thead>
             <tbody id="interpWinBody"></tbody>
           </table>
         </form>
       </div>
 
-      <!-- MOTOR (como está) -->
+      <!-- MOTOR (como estÃ¡) -->
       <div class="panel" id="card-motor">
         <h2>Validador Motor</h2>
         <form id="formMotor">
@@ -169,7 +169,7 @@
             <option>Yanmar</option><option>Evinrude/Johnson</option>
           </select>
 
-          <!-- aqui o JS pode injetar campos dinâmicos (shaft / par de letras / série, etc.) -->
+          <!-- aqui o JS pode injetar campos dinÃ¢micos (shaft / par de letras / sÃ©rie, etc.) -->
           <div id="brandDynamic"></div>
 
           <div style="margin-top:.5rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.5rem">
@@ -179,7 +179,7 @@
                      data-engine-field="model_code"/>
             </div>
             <div>
-              <label>Potência (hp)</label>
+              <label>PotÃªncia (hp)</label>
               <input id="srch_power" type="text" placeholder="Ex.: 150"
                      data-engine-field="power"/>
             </div>
@@ -195,7 +195,7 @@
             </div>
             <div>
               <label>Origem</label>
-              <input id="srch_origin" type="text" placeholder="Ex.: Japão"
+              <input id="srch_origin" type="text" placeholder="Ex.: JapÃ£o"
                      data-engine-field="origin"/>
             </div>
           </div>
@@ -213,23 +213,23 @@
         </form>
       </div>
 
-      <!-- Nº de motor — interligado ao cartão do Motor -->
+      <!-- NÂº de motor â€” interligado ao cartÃ£o do Motor -->
       <div class="panel" id="card-serial">
-        <h2>Nº do motor / Engine serial</h2>
+        <h2>NÂº do motor / Engine serial</h2>
 
-        <!-- Entrada única (auto-parse) -->
+        <!-- Entrada Ãºnica (auto-parse) -->
         <input id="engine-sn-raw" type="text"
                placeholder="Ex.: BF40A-BAAL-1234567, BAAL-1234567, 1B123456"
                autocomplete="off" />
 
-        <!-- Honda: exterior/interior (dois números) -->
+        <!-- Honda: exterior/interior (dois nÃºmeros) -->
         <div class="sn-kind" style="margin-top:.5rem">
           <label><input type="radio" name="engine-sn-kind" value="auto" checked> Auto</label>
           <label><input type="radio" name="engine-sn-kind" value="exterior"> Exterior</label>
           <label><input type="radio" name="engine-sn-kind" value="interior"> Interior</label>
         </div>
 
-        <!-- Janela(s) de intervalo calculadas a partir do cartão do Motor -->
+        <!-- Janela(s) de intervalo calculadas a partir do cartÃ£o do Motor -->
         <div id="engine-sn-window" class="mt-2"></div>
 
         <!-- Resultado/Notas -->
@@ -239,9 +239,9 @@
     </section>
   </main>
 
-  <footer class="footer" id="fallback-footer">IDMAR — Identificação Marítima</footer>
+  <footer class="footer" id="fallback-footer">IDMAR â€” IdentificaÃ§Ã£o MarÃ­tima</footer>
 
-  <!-- Removido idmar-layout.r3b.js para não duplicar header -->
+  <!-- Removido idmar-layout.r3b.js para nÃ£o duplicar header -->
   <script src="js/validador-win.r3b.js?v=r3b"></script>
   <script src="js/validador-motor.r3d.js?v=r3d"></script>
   <script defer src="js/validator-enhancements.v4.js"></script>
@@ -251,13 +251,13 @@
     src="js/engine_picker.v2.4.js"
     data-catalog="data/engines_catalog.v2.json"></script>
 
-  <!-- Validador de combinações (usa o mesmo catálogo v2) -->
+  <!-- Validador de combinaÃ§Ãµes (usa o mesmo catÃ¡logo v2) -->
   <script defer src="js/engine_validation.v1.js"></script>
 
-  <!-- Admin rápido embutido (motores + WIN) — se NÃO quiseres este bloco na página, deixa comentado -->
+  <!-- Admin rÃ¡pido embutido (motores + WIN) â€” se NÃƒO quiseres este bloco na pÃ¡gina, deixa comentado -->
   <!-- <script defer src="js/engine_admin_embed.v1.js"></script> -->
 
-  <!-- Botão "Admin" no ribbon -->
+  <!-- BotÃ£o "Admin" no ribbon -->
   <script>window.IDMAR_ADMIN_URL = 'admin-engines.html';</script>
   <script defer src="js/ribbon-admin.v1.js"></script>
 
@@ -283,9 +283,9 @@
       if (screen.orientation && screen.orientation.lock) {
         await screen.orientation.lock('landscape');
       }
-    } catch(e){ /* alguns browsers não permitem — tudo bem */ }
+    } catch(e){ /* alguns browsers nÃ£o permitem â€” tudo bem */ }
   }
-  // Só tentamos após um gesto do utilizador (maior compatibilidade)
+  // SÃ³ tentamos apÃ³s um gesto do utilizador (maior compatibilidade)
   document.addEventListener('click', tryLockLandscape, { once:true });
 
   // Ajuste de viewport em iOS para zoom correto (opcional, seguro)
@@ -300,5 +300,13 @@
 </script>
 
   
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('/STOL-IDMAR/sw.js').catch(console.error);
+  });
+}
+</script>
 </body>
 </html>
+
