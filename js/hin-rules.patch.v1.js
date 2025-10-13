@@ -1,5 +1,5 @@
-ï»¿
-// js/hin-rules.patch.v1.js Ã¢â¬â non-intrusive validator augment (runs after validador-win.js)
+
+// js/hin-rules.patch.v1.js — non-intrusive validator augment (runs after validador-win.js)
 (function(){
   const MIN_YEAR = 1998;
 
@@ -24,7 +24,7 @@
     t = t.replace(/[^A-Z0-9]/g,'');
     const cc = t.slice(0,2);
     const mic = t.slice(2,5);
-    const serial = t.slice(5,10);   // positions 6Ã¢â¬â10
+    const serial = t.slice(5,10);   // positions 6–10
     const tail = t.slice(10);       // remaining (dates/version)
     let yy = NaN;
     const m = tail.match(/(\d{2})$/); 
@@ -58,9 +58,9 @@
       const country = Codebooks.countryName(hinInfo.cc);
       const maker   = Codebooks.micName(hinInfo.mic);
       const items = [];
-      if (country) items.push(`<b>PaÃÂ­s</b>: ${country} (${hinInfo.cc})`);
+      if (country) items.push(`<b>País</b>: ${country} (${hinInfo.cc})`);
       if (maker)   items.push(`<b>Fabricante</b>: ${maker} (${hinInfo.mic})`);
-      items.push(`<b>Serial (pos. 6Ã¢â¬â10)</b>: ${hinInfo.serial||'Ã¢â¬â'}`);
+      items.push(`<b>Serial (pos. 6–10)</b>: ${hinInfo.serial||'—'}`);
       if (Number.isFinite(hinInfo.year)) items.push(`<b>Ano decodificado</b>: ${hinInfo.year}`);
       const html = `<ul class="kv">${items.map(i=>`<li>${i}</li>`).join('')}</ul>`;
       const div = document.createElement('div');
@@ -76,8 +76,8 @@
       const certOk = !!certCb?.checked || (!!certNumber?.value?.trim() && !!certIssuer?.value?.trim());
 
       let problems = [];
-      if (badSerial) problems.push('Serial (pos. 6Ã¢â¬â10) deve ser alfanumÃÂ©rico (5 chars).');
-      if (needsCert && !certOk) problems.push(`Ano < ${MIN_YEAR} sÃÂ³ ÃÂ© aceite com Certificado de Conformidade.`);
+      if (badSerial) problems.push('Serial (pos. 6–10) deve ser alfanumérico (5 chars).');
+      if (needsCert && !certOk) problems.push(`Ano < ${MIN_YEAR} só é aceite com Certificado de Conformidade.`);
 
       if (problems.length){
         resultBox.insertAdjacentHTML('afterbegin', `<div class="alert err">${problems.join(' ')}</div>`);
@@ -109,6 +109,7 @@
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', enhance);
   else enhance();
+})();
 })();
 
 
