@@ -1,9 +1,9 @@
-ï»¿<!doctype html>
+<!doctype html>
 <html lang="pt">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>IDMAR ï¿½ Admin motores (overrides locais)</title>
+  <title>IDMAR ? Admin motores (overrides locais)</title>
   <link rel="icon" href="img/logo-pm.png"/>
 
   <!-- CSS base (mesmos da app) -->
@@ -31,7 +31,7 @@
     pre{background:#f6f7f9;border:1px solid var(--border);border-radius:10px;padding:.75rem;overflow:auto}
   </style>
 
-  <!-- Gate de sessï¿½o simples -->
+  <!-- Gate de sess?o simples -->
   <script>
     (function(){
       try{
@@ -41,7 +41,7 @@
     })();
   </script>
 
-  <!-- Versï¿½o + header iguais ï¿½s outras pï¿½ginas -->
+  <!-- Vers?o + header iguais ?s outras p?ginas -->
   <script>window.IDMAR_VERSION="Vs 1.3";</script>
   <script defer src="js/idmar-config.v4.js"></script>
   <script defer src="js/idmar-i18n.js"></script>
@@ -52,14 +52,14 @@
 </head>
 
 <body>
-  <!-- header ï¿½ injetado por JS -->
+  <!-- header ? injetado por JS -->
 
   <main class="container">
     <h1 style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap">
       <button onclick="location.href='validador.html'" class="btn-secondary" title="Voltar ao Validador / Back to Validator">? Voltar ao Validador</button>
-      <span>Admin ï¿½ Overrides de Catï¿½logo (localStorage)</span>
+      <span>Admin ? Overrides de Cat?logo (localStorage)</span>
     </h1>
-    <p class="small">Escreve em <code>localStorage["IDMAR_ENGINE_OVERRIDES"]</code>. ï¿½til para testar novas entradas sem editar o JSON. Apï¿½s guardar, o Validador atualiza o picker automaticamente.</p>
+    <p class="small">Escreve em <code>localStorage["IDMAR_ENGINE_OVERRIDES"]</code>. ?til para testar novas entradas sem editar o JSON. Ap?s guardar, o Validador atualiza o picker automaticamente.</p>
 
     <div class="panel">
       <div class="row">
@@ -71,35 +71,35 @@
           </select>
         </div>
         <div>
-          <label>Famï¿½lia / Family (opcional)</label>
+          <label>Fam?lia / Family (opcional)</label>
           <input id="family" placeholder="ex.: F115B / DF140A / BF100 / etc.">
         </div>
       </div>
 
-      <label>Modelo / Model code (vï¿½rgulas)</label>
+      <label>Modelo / Model code (v?rgulas)</label>
       <textarea id="model" rows="2" placeholder="ex.: F115B,F150D,VF150,XTO425"></textarea>
 
-      <label>Potï¿½ncia (hp) / Power (vï¿½rgulas)</label>
+      <label>Pot?ncia (hp) / Power (v?rgulas)</label>
       <textarea id="hp" rows="2" placeholder="ex.: 2.5,4,6,8,9.9,15,20,25,30,40,50,60,70,90,115,150,175,200,225,250,300,425"></textarea>
 
       <div class="row">
         <div>
-          <label>Cilindrada (cc) / Displacement (vï¿½rgulas)</label>
+          <label>Cilindrada (cc) / Displacement (v?rgulas)</label>
           <input id="disp" placeholder="ex.: 5559,4169,2785,1832,996">
         </div>
         <div>
-          <label>Anos / Years (vï¿½rgulas)</label>
+          <label>Anos / Years (v?rgulas)</label>
           <input id="years" placeholder="ex.: 1998,1999,...,2025">
         </div>
       </div>
 
       <div class="row">
         <div>
-          <label>Comando / Rigging (vï¿½rgulas)</label>
+          <label>Comando / Rigging (v?rgulas)</label>
           <input id="rig" placeholder="ex.: DEC/DBW,Mechanical,Tiller">
         </div>
         <div>
-          <label>Altura / Shaft (vï¿½rgulas)</label>
+          <label>Altura / Shaft (v?rgulas)</label>
           <input id="shaft" placeholder="ex.: S,L,X,XL,U,UL,XX">
         </div>
       </div>
@@ -112,15 +112,15 @@
     </div>
 
     <div class="panel">
-      <div class="small" style="margin-bottom:.5rem">Conteï¿½do atual de <strong>IDMAR_ENGINE_OVERRIDES</strong></div>
+      <div class="small" style="margin-bottom:.5rem">Conte?do atual de <strong>IDMAR_ENGINE_OVERRIDES</strong></div>
       <pre id="out">{}</pre>
     </div>
   </main>
 
-  <footer class="footer">IDMAR ï¿½ Identificaï¿½ï¿½o Marï¿½tima</footer>
+  <footer class="footer">IDMAR ? Identifica??o Mar?tima</footer>
 
   <script>
-    // ===== lï¿½gica dos overrides (igual ï¿½ tua, sï¿½ com family e UX) =====
+    // ===== l?gica dos overrides (igual ? tua, s? com family e UX) =====
     const KEY='IDMAR_ENGINE_OVERRIDES';
     const $=id=>document.getElementById(id);
     const parseList=(str, mapFn)=> (str||'').split(',').map(s=>s.trim()).filter(Boolean).map(mapFn||((x)=>x));
@@ -141,7 +141,7 @@
 
       const all=load();
       all[brand]=all[brand]||{};
-      // estrutura por famï¿½lias (v2); se o picker estiver em v1, tambï¿½m lemos listas no nï¿½vel da marca
+      // estrutura por fam?lias (v2); se o picker estiver em v1, tamb?m lemos listas no n?vel da marca
       all[brand].families = all[brand].families || {};
       const F = all[brand].families[family] = all[brand].families[family] || {};
 
@@ -152,7 +152,7 @@
       if(rig.length)  F.rigging = (F.rigging||[]).concat(rig);
       if(shaft.length)F.shaft_options = (F.shaft_options||[]).concat(shaft);
 
-      // tambï¿½m populamos nï¿½vel de marca para fallback v1
+      // tamb?m populamos n?vel de marca para fallback v1
       if(hp.length)   all[brand].hp_list = (all[brand].hp_list||[]).concat(hp);
       if(disp.length) all[brand].displacement_list = (all[brand].displacement_list||[]).concat(disp);
       if(model.length)all[brand].model_code_list = (all[brand].model_code_list||[]).concat(model);
@@ -162,7 +162,7 @@
 
       save(all);
       render();
-      // dica: se vieres do Validador aberto numa outra aba, um reload lï¿½ jï¿½ lï¿½ os novos overrides
+      // dica: se vieres do Validador aberto numa outra aba, um reload l? j? l? os novos overrides
     };
 
     $('clear').onclick = function(){
@@ -173,6 +173,8 @@
   </script>
 </body>
 </html>
+
+
 
 
 
