@@ -1,5 +1,4 @@
-ï»¿
-// IDMAR layout r3c ï¿½ header unificado (idioma + tema) e estilo consistente
+// IDMAR layout r3c — header unificado (idioma + tema) e estilo consistente
 (function(w,d){
   w.IDMAR = w.IDMAR || {};
   const CSS = `
@@ -36,15 +35,15 @@
     if(!bar) return;
     bar.classList.add('topbar');
     bar.innerHTML = `
-      <img src="img/logo-pm.png" alt="Polï¿½cia Marï¿½tima"/>
+      <img src="img/logo-pm.png" alt="Polícia Marítima"/>
       <div class="brand">
         <span class="app">IDMAR</span>
-        <small>Identificaï¿½ï¿½o Marï¿½tima ï¿½ Cascos & Motores</small>
+        <small>Identificação Marítima — Cascos & Motores</small>
       </div>
       <nav class="main" style="margin-left:auto">
         <a href="validador.html">Validador</a>
-        <a href="historico_win.html">Histï¿½rico WIN</a>
-        <a href="historico_motor.html">Histï¿½rico Motor</a>
+        <a href="historico_win.html">Histórico WIN</a>
+        <a href="historico_motor.html">Histórico Motor</a>
         <a href="forense.html">Forense</a>
         <a href="#" id="idmar-logout">Sair</a>
       </nav>
@@ -53,7 +52,7 @@
           <option value="pt">PT</option>
           <option value="en">EN</option>
         </select>
-        <button id="idmar-theme" title="Alternar tema">??</button>
+        <button id="idmar-theme" title="Alternar tema">🌗</button>
       </div>
     `;
 
@@ -102,10 +101,7 @@
   if(d.readyState !== 'loading') init();
   else d.addEventListener('DOMContentLoaded', init);
 
-  // expï¿½e se precisares
+  // expõe se precisares
   w.IDMAR_renderHeader = renderHeader;
 
 })(window, document);
-
-
-
