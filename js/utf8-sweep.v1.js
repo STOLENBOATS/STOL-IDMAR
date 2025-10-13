@@ -1,4 +1,4 @@
-// utf8-sweep.v1.js — tenta reparar mojibake visível no DOM (labels, placeholders, options)
+﻿// utf8-sweep.v1.js — tenta reparar mojibake visível no DOM (labels, placeholders, options)
 (function () {
   "use strict";
 
@@ -80,3 +80,4 @@
     run();
   }
 })();
+

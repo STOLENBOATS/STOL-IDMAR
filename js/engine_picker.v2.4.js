@@ -1,4 +1,4 @@
-/* MIEC / IDMAR — validador-win.js (Fase 1: mensagens PT + dica EN, histórico intacto)
+﻿/* MIEC / IDMAR — validador-win.js (Fase 1: mensagens PT + dica EN, histórico intacto)
    Data: 2025-09-18  |  Escopo: apenas JS, sem tocar em HTML/CSS, sem deps externas.
    Regras WIN (resumo aplicado):
    - UE (14): 1–2 país [A-Z], 3–5 fabricante [A-Z], 6–10 livre [A-Z0-9], 11 mês [A-H,J,K,L,M,N,P,R,S,T,U,V,W,X,Y,Z], 12 ano [0-9], 13–14 modelo [0-9]
@@ -295,3 +295,4 @@ function recordHistoryWIN(winStr, verdict) {
     bootstrap();
   }
 })();
+

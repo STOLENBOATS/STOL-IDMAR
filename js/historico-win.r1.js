@@ -1,4 +1,4 @@
-ï»¿/* IDMAR ï¿½ Histï¿½rico WIN r1 (filtros + CSV + compat keys) */
+﻿/* IDMAR ï¿½ Histï¿½rico WIN r1 (filtros + CSV + compat keys) */
 (() => {
   function readKey(k){ try{ const raw=localStorage.getItem(k); if(!raw) return []; const arr=JSON.parse(raw); return Array.isArray(arr)?arr:[]; }catch{return []} }
   function sanitize(x){
@@ -109,5 +109,6 @@
   }
   if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', bind); else bind();
 })();
+
 
 

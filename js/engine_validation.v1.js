@@ -1,4 +1,4 @@
-// engine_validation.v1.js — valida combinações segundo catálogo v2 (PT/EN)
+﻿// engine_validation.v1.js — valida combinações segundo catálogo v2 (PT/EN)
 (function(w,d){
   const NS = (w.IDMAR_VALIDATION = w.IDMAR_VALIDATION || {});
   async function loadJSON(url){ const r=await fetch(url,{cache:'no-store'}); if(!r.ok) throw new Error('catalog fetch failed '+r.status); return r.json(); }
@@ -38,3 +38,4 @@
     return {ok:errors.length===0, errors};
   };
 })(window, document);
+

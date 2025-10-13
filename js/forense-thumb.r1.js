@@ -1,4 +1,4 @@
-/* IDMAR — forense-thumb.r1
+﻿/* IDMAR — forense-thumb.r1
    Gera thumbnail base64 (<=320px) quando anexas ficheiro no Validador ou Forense.
    Requer: ForenseAttachCompat (para guardar no histórico).
 */
@@ -58,5 +58,6 @@
     document.addEventListener('DOMContentLoaded', ()=>{ hookValidators(); hookForense(); });
   } else { hookValidators(); hookForense(); }
 })();
+
 
 

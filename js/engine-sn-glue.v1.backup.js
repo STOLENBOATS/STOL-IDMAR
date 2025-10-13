@@ -1,4 +1,4 @@
-ï»¿(function (w, d) {
+﻿(function (w, d) {
   "use strict";
 
   function q(sel){ return d.querySelector(sel); }
@@ -86,6 +86,7 @@
   });
 
 })(window, document);
+
 
 
 

@@ -1,4 +1,4 @@
-ï»¿// js/engine-serial-range-check.v1.js (r8)
+﻿// js/engine-serial-range-check.v1.js (r8)
 // - Lï¿½ data/engine_serial_ranges.json (cache)
 // - Entrega janelas (intervalos) coerentes com a seleï¿½ï¿½o do cartï¿½o "Motor"
 // - Valida nï¿½ de motor (dentro/fora) e devolve notas claras (inclui mismatch de potï¿½ncia/cï¿½digo)
@@ -187,6 +187,7 @@
     checkAgainstSelection
   };
 })(window);
+
 
 
 

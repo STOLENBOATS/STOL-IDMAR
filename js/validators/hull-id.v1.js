@@ -1,4 +1,4 @@
-ï»¿/*! IDMAR ï¿½ validateHullId() ï¿½ CIN/HIN/WIN validator (v1) */
+﻿/*! IDMAR ï¿½ validateHullId() ï¿½ CIN/HIN/WIN validator (v1) */
 (function(){
   'use strict';
   const MONTHS = {A:'Jan',B:'Feb',C:'Mar',D:'Apr',E:'May',F:'Jun',G:'Jul',H:'Aug',J:'Sep',K:'Oct',L:'Nov'};
@@ -38,5 +38,6 @@
   window.IDMARValidators.validateHullId = validateHullId;
   window.IDMARValidators.validateWin = validateHullId; // alias
 })();
+
 
 

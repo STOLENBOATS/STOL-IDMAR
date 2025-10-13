@@ -1,4 +1,4 @@
-// IDMAR history bilingual enhancer v2
+﻿// IDMAR history bilingual enhancer v2
 (function(){
   const mapReason = [
     [/^Estrutura válida\.?$/i, "Structure valid"],
@@ -53,6 +53,7 @@
     obs.observe(document.body, {subtree:true, childList:true});
   });
 })();
+
 
 
 

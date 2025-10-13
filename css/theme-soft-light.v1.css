@@ -1,4 +1,4 @@
-/* theme-soft-light.v1.css — Soft Light override (v1) */
+﻿/* theme-soft-light.v1.css — Soft Light override (v1) */
 html, body { background:#f6f8fb; color:#0f172a; }
 header, .app-header { background:#ffffff !important; border-bottom:1px solid #e5e7eb; }
 .panel, .card, .box, .container .panel, section.panel, main .panel, .workspace, .toolbox {

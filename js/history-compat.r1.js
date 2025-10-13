@@ -1,4 +1,4 @@
-/* IDMAR — history-compat.r1
+﻿/* IDMAR — history-compat.r1
    - Sincroniza (history_win <-> historyWin) e (history_motor <-> historyMotor)
    - Normaliza shape: id, ts, valid/estado/estadoLabel/resultado, foto, meta.forense
    - Copia 'foto' do primeiro anexo se estiver vazio
@@ -75,3 +75,4 @@
     console.log('[history-compat.r1] synced',{win:nW, motor:nM});
   }catch(e){ console.error('[history-compat.r1]', e); }
 })();
+

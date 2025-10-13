@@ -1,4 +1,4 @@
-/* IDMAR i18n (plus) — History/Validator/Login/Forense */
+﻿/* IDMAR i18n (plus) — History/Validator/Login/Forense */
 (() => {
   const DICT = {
     pt: {
@@ -135,3 +135,4 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ()=>apply());
   else apply();
 })();
+

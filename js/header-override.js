@@ -1,4 +1,4 @@
-ï»¿// Header/UI overrides without touching core header script
+﻿// Header/UI overrides without touching core header script
 (function(w,d){
   var APP_NAME  = w.IDMAR_APP_NAME || "IDMAR";
   var APP_SUB   = w.IDMAR_APP_SUB  || "Identificaï¿½ï¿½o Marï¿½tima ï¿½ Cascos & Motores";
@@ -44,6 +44,7 @@
   if(d.readyState==='loading') d.addEventListener('DOMContentLoaded', tweakHeader);
   else tweakHeader();
 })(window, document);
+
 
 
 

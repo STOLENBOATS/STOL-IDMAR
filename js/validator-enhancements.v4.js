@@ -1,4 +1,4 @@
-ï»¿// IDMAR validator enhancements v4 (DOM-observer based)
+﻿// IDMAR validator enhancements v4 (DOM-observer based)
 (function(){
   function enstyle(){ 
     if(!document.querySelector('style#idmar-en-style')){
@@ -163,5 +163,6 @@
     observeInterp();
   });
 })();
+
 
 

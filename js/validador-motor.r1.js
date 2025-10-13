@@ -1,4 +1,4 @@
-ï»¿/* IDMAR ï¿½ validador-motor.r1 (campos dinï¿½micos + histï¿½rico compat) */
+﻿/* IDMAR ï¿½ validador-motor.r1 (campos dinï¿½micos + histï¿½rico compat) */
 (()=> {
   const selBrand=['select[name="marca"]','#marcaMotor','.js-motor-marca','#motorMarca','#brand'];
   const selSN=['#snMotor','input[name="sn"]','.js-motor-sn','#serialNumber'];
@@ -97,6 +97,7 @@
   }
   (document.readyState==='loading')?document.addEventListener('DOMContentLoaded',bind):bind();
 })();
+
 
 
 

@@ -1,4 +1,4 @@
-/* IDMAR — histórico Motor (Fase 3)
+﻿/* IDMAR — histórico Motor (Fase 3)
    - Ordena mais recente → mais antigo
    - Filtros: estado + data (de/até) + pesquisa (S/N, marca, justificação)
    - Export CSV (UTF-8 + BOM)
@@ -163,3 +163,4 @@
   if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 })();
  
+

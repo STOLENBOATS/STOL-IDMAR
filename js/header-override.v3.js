@@ -1,4 +1,4 @@
-ï»¿// [IDMAR] override v3 ï¿½ applies branding/labels/ribbon after header injection
+﻿// [IDMAR] override v3 ï¿½ applies branding/labels/ribbon after header injection
 (function (w, d) {
   console.log("[IDMAR] override v3 carregado");
   var APP_NAME = w.IDMAR_APP_NAME || "IDMAR";
@@ -59,6 +59,7 @@
   if(d.readyState==='loading') d.addEventListener('DOMContentLoaded', readyAfterHeader);
   else readyAfterHeader();
 })(window, document);
+
 
 
 

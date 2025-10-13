@@ -1,4 +1,4 @@
-// validador-motor.r3c.js — histórico + validação (PT/EN)
+﻿// validador-motor.r3c.js — histórico + validação (PT/EN)
 (function(w,d){
 
   console.info('[IDMAR] validador-motor ATIVO: r3d');
@@ -213,6 +213,7 @@
   }
   if (document.readyState === 'loading') d.addEventListener('DOMContentLoaded', wire); else wire();
 })(window, document);
+
 
 
 

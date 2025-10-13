@@ -1,4 +1,4 @@
-ï»¿// validador-motor.r3c.js ï¿½ histï¿½rico + validaï¿½ï¿½o (PT/EN)
+﻿// validador-motor.r3c.js ï¿½ histï¿½rico + validaï¿½ï¿½o (PT/EN)
 (function(w,d){
   w.IDMAR=w.IDMAR||{}; w.NAV=w.NAV||w.IDMAR;
   NAV.STORAGE = NAV.STORAGE || { SESSION:'IDMAR_SESSION', WIN_HISTORY:'hist_win', MOTOR_HISTORY:'hist_motor' };
@@ -57,5 +57,6 @@
   function wire(){ const form=$id('formMotor'); if(form && !form.dataset.bound){ form.addEventListener('submit', onSubmit); form.dataset.bound='1'; } }
   if(document.readyState==='loading') d.addEventListener('DOMContentLoaded', wire); else wire();
 })(window, document);
+
 
 

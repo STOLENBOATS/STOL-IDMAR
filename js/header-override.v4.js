@@ -1,4 +1,4 @@
-// [IDMAR] header override v4 — branding + ribbons + timing-safe
+﻿// [IDMAR] header override v4 — branding + ribbons + timing-safe
 (function (w, d) {
   console.log("[IDMAR] override v4 carregado");
   var APP_NAME = w.IDMAR_APP_NAME || "IDMAR";
@@ -38,6 +38,7 @@
   }
   if(d.readyState==='loading') d.addEventListener('DOMContentLoaded', arm); else arm();
 })(window, document);
+
 
 
 

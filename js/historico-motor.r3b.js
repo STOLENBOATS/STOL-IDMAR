@@ -1,4 +1,4 @@
-// IDMAR — Histórico MOTOR (r3b) — filtros, ordenação, CSV, miniatura e forense
+﻿// IDMAR — Histórico MOTOR (r3b) — filtros, ordenação, CSV, miniatura e forense
 (function(w,d){
   w.IDMAR=w.IDMAR||{}; w.NAV=w.NAV||w.IDMAR;
   NAV.STORAGE = NAV.STORAGE || { SESSION:'IDMAR_SESSION', WIN_HISTORY:'hist_win', MOTOR_HISTORY:'hist_motor' };
@@ -139,6 +139,7 @@
 
   ready(function(){ wire(); render(); });
 })(window, document);
+
 
 
 

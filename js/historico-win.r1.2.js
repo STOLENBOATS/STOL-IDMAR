@@ -1,4 +1,4 @@
-/* IDMAR — Histórico WIN r1.2 (foto a partir de meta.forense + “Ver anexos”) */
+﻿/* IDMAR — Histórico WIN r1.2 (foto a partir de meta.forense + “Ver anexos”) */
 (()=>{
 // modal (só cria uma vez)
 if(!window.IDMAR_openAttachmentsModal){
@@ -86,6 +86,7 @@ function downloadCSV(){ const rows=readAll(); const blob=new Blob([toCSV(rows)],
 function bind(){ ['input','change'].forEach(ev=>{ $q&&$q.addEventListener(ev,applyFilters); $fEst&&$fEst.addEventListener(ev,applyFilters); $from&&$from.addEventListener(ev,applyFilters); $to&&$to.addEventListener(ev,applyFilters); }); $btnCSV&&$btnCSV.addEventListener('click',e=>{e.preventDefault();downloadCSV();}); applyFilters(); }
 (document.readyState==='loading')?document.addEventListener('DOMContentLoaded',bind):bind();
 })();
+
 
 
 

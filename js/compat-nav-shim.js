@@ -1,4 +1,4 @@
-ï»¿/*! IDMAR compat shim r3 ï¿½ fornece window.NAV para mï¿½dulos antigos */
+﻿/*! IDMAR compat shim r3 ï¿½ fornece window.NAV para mï¿½dulos antigos */
 (function (w) {
   w.IDMAR = w.IDMAR || {};
   w.NAV = w.NAV || w.IDMAR;
@@ -17,6 +17,7 @@
   NAV.toast = NAV.toast || function(){/* noop */};
   NAV.log = NAV.log || function(){/* noop */};
 })(window);
+
 
 
 

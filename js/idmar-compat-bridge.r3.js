@@ -1,4 +1,4 @@
-/*! IDMAR compat bridge r3
+﻿/*! IDMAR compat bridge r3
  *  - Define NAV.STORAGE constants esperados (SESSION, WIN_HISTORY, MOTOR_HISTORY)
  *  - Polyfills: loadFromLS, saveToLS, readFileAsDataURL
  *  - DOM aliases: suporta IDs antigos (formWin/formMotor, win, winOut, interpWinBody, brand, brandDynamic, motorOut, motorPhoto, etc.)
@@ -86,3 +86,4 @@
     }
   }catch(e){}
 })(window, document);
+

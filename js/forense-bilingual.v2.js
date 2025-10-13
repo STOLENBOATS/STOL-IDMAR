@@ -1,4 +1,4 @@
-// forense-bilingual.v2.js — PT/EN para a página Forense (sem :contains)
+﻿// forense-bilingual.v2.js — PT/EN para a página Forense (sem :contains)
 (function (d) {
   const q = sel => d.querySelector(sel);
   const qa = sel => Array.from(d.querySelectorAll(sel));
@@ -73,3 +73,4 @@
   if (d.readyState === 'loading') d.addEventListener('DOMContentLoaded', boot);
   else boot();
 })(document);
+

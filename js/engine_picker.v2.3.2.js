@@ -1,4 +1,4 @@
-ï»¿// engine_picker.v2.3.2.js ï¿½ enriched v1 + overrides + brand change + stable sorting
+﻿// engine_picker.v2.3.2.js ï¿½ enriched v1 + overrides + brand change + stable sorting
 (function(){
   const el = id => document.getElementById(id);
   const C = (...a)=>console.log('[engine_picker]', ...a);
@@ -105,5 +105,6 @@
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 })();
+
 
 

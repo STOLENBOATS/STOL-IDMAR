@@ -1,4 +1,4 @@
-ï»¿(function(w,d){
+﻿(function(w,d){
   "use strict";
 
   // ===== i18n helpers =====
@@ -90,6 +90,7 @@
   });
 
 })(window, document);
+
 
 
 

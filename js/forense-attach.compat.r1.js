@@ -1,4 +1,4 @@
-ï»¿/* IDMAR ï¿½ Forense attach compat r1 (leve, sem thumbs base64) */
+﻿/* IDMAR ï¿½ Forense attach compat r1 (leve, sem thumbs base64) */
 (function(){
   if (window.__IDMAR_FORENSE_ATTACH_R1__) return; window.__IDMAR_FORENSE_ATTACH_R1__=true;
 
@@ -84,6 +84,7 @@
 
   if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', install); else install();
 })();
+
 
 
 

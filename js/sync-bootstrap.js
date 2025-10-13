@@ -1,4 +1,4 @@
-
+﻿
 // js/sync-bootstrap.js
 (function(){
   const onReady = async () => {
@@ -26,3 +26,4 @@
   document.addEventListener("idmar:auth-ready", onReady, { once: true });
   setTimeout(onReady, 800);
 })();
+

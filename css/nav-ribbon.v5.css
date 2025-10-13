@@ -1,4 +1,4 @@
-/* nav-ribbon.v5.css — Stylish, accessible PM ribbons */
+﻿/* nav-ribbon.v5.css — Stylish, accessible PM ribbons */
 :root{
   --btn-radius: 16px;
   --btn-minh: 46px;
@@ -36,3 +36,4 @@
 @media (max-width: 720px){
   header nav a.nav-ribbon, .nav a.nav-ribbon, .top-nav a.nav-ribbon, .menu a.nav-ribbon{ width:100%; }
 }
+

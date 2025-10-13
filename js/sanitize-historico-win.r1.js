@@ -1,4 +1,4 @@
-// IDMAR — sanitize-historico-win.r1
+﻿// IDMAR — sanitize-historico-win.r1
 // Normaliza histórico WIN: garante .foto e .thumb no nível raiz
 (() => {
   const K1 = 'history_win', K2 = 'historyWin';
@@ -25,3 +25,4 @@
   }
   console.log('[sanitize-win.r1] OK');
 })();
+

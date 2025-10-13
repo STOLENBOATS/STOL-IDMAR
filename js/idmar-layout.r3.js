@@ -1,4 +1,4 @@
-ï»¿
+﻿
 // IDMAR Layout helper (r3) ï¿½ header/footer + theme (default: light)
 (function(w,d){
   function ready(fn){ if(d.readyState==='loading'){ d.addEventListener('DOMContentLoaded', fn); } else { fn(); } }
@@ -65,6 +65,7 @@
     if(lo){ lo.addEventListener('click', function(ev){ ev.preventDefault(); try{ sessionStorage.clear(); }catch(e){} location.href='login.html'; }); }
   });
 })(window, document);
+
 
 
 

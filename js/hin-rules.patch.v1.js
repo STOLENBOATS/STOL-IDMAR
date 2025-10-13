@@ -1,4 +1,4 @@
-
+﻿
 // js/hin-rules.patch.v1.js — non-intrusive validator augment (runs after validador-win.js)
 (function(){
   const MIN_YEAR = 1998;
@@ -111,5 +111,6 @@
   else enhance();
 })();
 })();
+
 
 

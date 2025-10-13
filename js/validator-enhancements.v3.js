@@ -1,4 +1,4 @@
-ï»¿
+﻿
 // IDMAR validator enhancements v3
 (function(){
   function enstyle(){ 
@@ -114,6 +114,7 @@
     patchWIN();
   });
 })();
+
 
 
 

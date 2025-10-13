@@ -1,4 +1,4 @@
-// IDMAR i18n r3c — aplica traduções por data-i18n e data-i18n-ph
+﻿// IDMAR i18n r3c — aplica traduções por data-i18n e data-i18n-ph
 (function(w,d){
   const dict = {
     pt: {
@@ -124,3 +124,4 @@
   if(d.readyState !== 'loading') init();
   else d.addEventListener('DOMContentLoaded', init);
 })(window, document);
+

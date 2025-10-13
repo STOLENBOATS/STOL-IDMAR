@@ -1,4 +1,4 @@
-
+﻿
 // auth-stub.js — neutral; no real session.
 window.IDMAR_AUTH = (function(){
   const api = {};
@@ -6,3 +6,4 @@ window.IDMAR_AUTH = (function(){
   document.dispatchEvent(new CustomEvent("idmar:auth-ready", { detail: { session: null } }));
   return api;
 })();
+

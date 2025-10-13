@@ -1,4 +1,4 @@
-// js/i18n-messages.js (patched loader)
+﻿// js/i18n-messages.js (patched loader)
 (function queueLoad(dict){
   function doLoad() {
     if (!window.I18N) return setTimeout(doLoad, 0); // wait for core
@@ -104,3 +104,4 @@
     }
   }
 });
+

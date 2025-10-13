@@ -1,4 +1,4 @@
-ï»¿/*! IDMAR UI renderers r3 ï¿½ WIN & Motor */
+﻿/*! IDMAR UI renderers r3 ï¿½ WIN & Motor */
 (function () {
   function el(tag, cls){ const e=document.createElement(tag); if(cls) e.className=cls; return e; }
   function badge(status){
@@ -55,6 +55,7 @@
     }
   };
 })();
+
 
 
 

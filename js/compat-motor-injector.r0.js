@@ -1,4 +1,4 @@
-ï»¿/* IDMAR compat ï¿½ Motor injector r0 (nï¿½o destrutivo)
+﻿/* IDMAR compat ï¿½ Motor injector r0 (nï¿½o destrutivo)
    Escuta o submit/click do formulï¿½rio do Motor e grava no histï¿½rico
    (history_motor + historyMotor), sem alterar o teu validador.
 */
@@ -87,6 +87,7 @@
 
   if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', hook); else hook();
 })();
+
 
 
 

@@ -1,4 +1,4 @@
-/* IDMAR — Forense r2.1 (export PNG + hash + thumbnail + anexo ao histórico) */
+﻿/* IDMAR — Forense r2.1 (export PNG + hash + thumbnail + anexo ao histórico) */
 (() => {
   function $(sel){ return document.querySelector(sel); }
   function findCanvas(){
@@ -86,5 +86,6 @@
   }
   if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', bind); else bind();
 })();
+
 
 

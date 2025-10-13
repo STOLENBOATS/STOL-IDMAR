@@ -1,4 +1,4 @@
-ï»¿(function (w, d) {
+﻿(function (w, d) {
   "use strict";
 
   function q(s){ return d.querySelector(s); }
@@ -142,6 +142,7 @@
 
   console.info("[IDMAR] Engine SN glue v1 (robusto) carregado.");
 })(window, document);
+
 
 
 

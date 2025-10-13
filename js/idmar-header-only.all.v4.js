@@ -1,4 +1,4 @@
-/* IDMAR — Header Only v4 (com PT/EN) */
+﻿/* IDMAR — Header Only v4 (com PT/EN) */
 (() => {
   if (document.querySelector('.app-header[data-idmar="header-only"]')) return;
 
@@ -101,6 +101,7 @@
 })();
 
   })(); // <— fecha o IIFE do header v4
+
 
 
 

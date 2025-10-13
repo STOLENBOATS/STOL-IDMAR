@@ -1,4 +1,4 @@
-/* IDMAR — Forense r2 (export PNG + hash + anexar ao histórico) */
+﻿/* IDMAR — Forense r2 (export PNG + hash + anexar ao histórico) */
 (() => {
 
   function $(sel){ return document.querySelector(sel); }
@@ -74,4 +74,5 @@
   }
   if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', bind); else bind();
 })();
+
 

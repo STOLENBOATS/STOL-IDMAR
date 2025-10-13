@@ -1,4 +1,4 @@
-/* IDMAR — histórico WIN (Fase 3)
+﻿/* IDMAR — histórico WIN (Fase 3)
    - Ordena mais recente → mais antigo
    - Filtros: estado (Todos/Válido/Inválido) + data (de/até) + pesquisa (WIN/justificação)
    - Export CSV (UTF-8 + BOM)
@@ -189,6 +189,7 @@
 
   if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 })();
+
 
 
 

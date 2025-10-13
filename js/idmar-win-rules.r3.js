@@ -1,4 +1,4 @@
-/*! IDMAR — WIN Rules Add‑on (r3)
+﻿/*! IDMAR — WIN Rules Add‑on (r3)
  * Drop‑in. Não altera validadores existentes.
  * Incluir DEPOIS de js/validador-win.js
  * Funções: interpretação mínima + lista de regras + (opcional) renderWinResult().
@@ -133,3 +133,4 @@
   }
   if(d.readyState!=='loading') hook(); else d.addEventListener('DOMContentLoaded', hook);
 })(window, document);
+

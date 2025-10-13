@@ -1,4 +1,4 @@
-/* IDMAR header-only (compact v3) */
+﻿/* IDMAR header-only (compact v3) */
 (() => {
   if (document.querySelector('.app-header[data-idmar="header-only"]')) return;
 
@@ -50,6 +50,7 @@
   head.append(left,right);
   document.body.insertBefore(head, document.body.firstChild);
 })();
+
 
 
 

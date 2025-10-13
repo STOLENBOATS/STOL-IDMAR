@@ -1,4 +1,4 @@
-// IDMAR Layout helper (r3b) — header/footer + tema claro por defeito
+﻿// IDMAR Layout helper (r3b) — header/footer + tema claro por defeito
 // Remove fallback (#fallback-topbar / #fallback-footer) para evitar duplicados.
 (function(w,d){
   function ready(fn){ if(d.readyState==='loading'){ d.addEventListener('DOMContentLoaded', fn); } else { fn(); } }
@@ -73,6 +73,7 @@
     if(lo){ lo.addEventListener('click', function(ev){ ev.preventDefault(); try{ sessionStorage.clear(); }catch(e){} location.href='login.html'; }); }
   });
 })(window, document);
+
 
 
 

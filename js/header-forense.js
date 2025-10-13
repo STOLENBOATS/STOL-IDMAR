@@ -1,4 +1,4 @@
-/* IDMAR Header — Forense • 2025-09-18 */
+﻿/* IDMAR Header — Forense • 2025-09-18 */
 (() => {
   const ACTIVE = 'forense.html';
   injectHeader(ACTIVE);
@@ -55,5 +55,6 @@
   function styleFlex(el,g){ el.style.display='flex'; el.style.alignItems='center'; el.style.gap=g||'.5rem'; }
   function styleHeader(el){ el.style.display='flex'; el.style.alignItems='center'; el.style.justifyContent='space-between'; el.style.gap='1rem'; el.style.padding='.75rem 1rem'; el.style.borderBottom='1px solid #e5e7eb'; el.style.background='#fff'; }
 })();
+
 
 

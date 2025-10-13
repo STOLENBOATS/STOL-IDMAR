@@ -1,4 +1,4 @@
-/* IDMAR — patch-motor-guard.r1
+﻿/* IDMAR — patch-motor-guard.r1
    - Remove entradas “vazias” em history_motor / historyMotor (sem SN e sem anexos)
    - Garante foto a partir de meta.forense[0].file quando existir
    - Ordena por ts desc e sincroniza ambas as chaves
@@ -33,3 +33,4 @@
     console.error('[patch-motor-guard.r1]', e);
   }
 })();
+

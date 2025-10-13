@@ -1,4 +1,4 @@
-/* IDMAR • Forense r1a (fix coords + A/B UX) • 2025-09-18 */
+﻿/* IDMAR • Forense r1a (fix coords + A/B UX) • 2025-09-18 */
 (() => {
 
   const $ = (s) => document.querySelector(s);
@@ -334,6 +334,7 @@
   function init(){ setupCanvas(); bindUI(); }
   if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
+
 
 
 

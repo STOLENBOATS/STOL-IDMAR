@@ -1,4 +1,4 @@
-/*! IDMAR One r3 — bootstrap único para todas as páginas
+﻿/*! IDMAR One r3 — bootstrap único para todas as páginas
  *  Inclui: NAV shim, tema (light por defeito), i18n, histórico (core+hook),
  *          UI interpretativa (renderWinResult/renderMotorResult).
  *  Seguro para carregar em TODAS as páginas (idempotente).
@@ -225,3 +225,4 @@
   })();
 
 })(window, document);
+

@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "metadata": {
-    "note": "Catálogo v2 por famílias/variantes. Campos: families.{name,years,hp,rigging,shaft,rotation,color,gearcase,variants[{code,hp,rigging,shaft,rotation,color,gearcase}]}.",
+    "note": "CatÃ¡logo v2 por famÃ­lias/variantes. Campos: families.{name,years,hp,rigging,shaft,rotation,color,gearcase,variants[{code,hp,rigging,shaft,rotation,color,gearcase}]}.",
     "i18n": {
       "labels_pt_en": true
     }
@@ -244,7 +244,7 @@
             }
           ]
         },
-        "Midrange 1.8–2.1L": {
+        "Midrange 1.8â€“2.1L": {
           "years": [
             2010,
             2025
@@ -1433,7 +1433,7 @@
     },
     "Tohatsu": {
       "families": {
-        "MFS100–140": {
+        "MFS100â€“140": {
           "years": [
             2019,
             2025
@@ -1468,7 +1468,7 @@
             }
           ]
         },
-        "MFS40–90": {
+        "MFS40â€“90": {
           "years": [
             2014,
             2025

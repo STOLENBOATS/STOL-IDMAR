@@ -1,4 +1,4 @@
-ï»¿/* IDMAR ï¿½ validador-win.r1 (PT + dica EN | histï¿½rico compat) */
+﻿/* IDMAR ï¿½ validador-win.r1 (PT + dica EN | histï¿½rico compat) */
 (()=> {
   const selInput = ['#win','#winInput','input[name="win"]','.js-win','#hin','#hinInput','input[name="hin"]'];
   const selButton=['#btnValidar','#validateBtn','.js-validate','button[type="submit"]'];
@@ -93,6 +93,7 @@
   }
   (document.readyState==='loading')?document.addEventListener('DOMContentLoaded',bind):bind();
 })();
+
 
 
 

@@ -1,4 +1,4 @@
-ï»¿
+﻿
 // IDMAR validator addons v2 (forense PT/EN + Pre-1998 enrich + evidence thumbnail)
 (function(){
   function enstyle(){ 
@@ -113,6 +113,7 @@
     patchWIN();
   });
 })();
+
 
 
 

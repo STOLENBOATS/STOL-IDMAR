@@ -1,4 +1,4 @@
-// IDMAR — Forense Add-on (r3)
+﻿// IDMAR — Forense Add-on (r3)
 // Uso: incluir DEPOIS dos validadores (win & motor).
 // - Injeta UI "Forense (opcional)" nos formulários de WIN e Motor.
 // - Captura flags + notas e, se existir foto, calcula SHA-256 do ficheiro.
@@ -164,3 +164,4 @@
     }
   });
 })(window, document);
+

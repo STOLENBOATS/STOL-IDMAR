@@ -1,4 +1,4 @@
-ï»¿(function(w,d){
+﻿(function(w,d){
   "use strict";
 
   // ========= utils i18n =========
@@ -185,6 +185,7 @@
   Document.prototype.__idmar_qsa_patched__ = true;
   console.info("[IDMAR shim] querySelectorAll patch: :contains() + fallback ativo.");
 })();
+
 
 
 

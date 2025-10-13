@@ -1,4 +1,4 @@
-
+﻿
 // IDMAR — forense-enable-uploader.r1
 // Liga o input de ficheiro e mostra preview no #forenseWorkspace
 (() => {
@@ -28,3 +28,4 @@
 
   console.log('[forense-enable-uploader.r1] ligado');
 })();
+

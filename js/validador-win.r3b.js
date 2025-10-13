@@ -1,4 +1,4 @@
-// IDMAR — Validador WIN (r3b + compat histórico + PT/EN)
+﻿// IDMAR — Validador WIN (r3b + compat histórico + PT/EN)
 (function (w, d) {
   console.info("[IDMAR] validador-win ATIVO: r3b+hist");
 
@@ -346,6 +346,7 @@
   if (d.readyState === "loading") d.addEventListener("DOMContentLoaded", wire); else wire();
 
 })(window, document);
+
 
 
 

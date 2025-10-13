@@ -1,4 +1,4 @@
-// utils.js — IDMAR helpers (safe to overwrite or keep your existing if already robust)
+﻿// utils.js — IDMAR helpers (safe to overwrite or keep your existing if already robust)
 function fmtDate(d){
   try{
     if (d == null) return '—';
@@ -19,3 +19,4 @@ function downloadCSV(filename, rows){
   const a = document.createElement('a'); a.href=url; a.download=filename; a.style.display='none';
   document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(()=>URL.revokeObjectURL(url), 1000);
 }
+

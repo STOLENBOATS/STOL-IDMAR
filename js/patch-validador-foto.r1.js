@@ -1,4 +1,4 @@
-/* IDMAR — patch-validador-foto.r1
+﻿/* IDMAR — patch-validador-foto.r1
    Redundância segura: após a submissão, se houver ficheiro nos inputs,
    chama o attach compat. (Não interfere se já correu forense-thumb.r1)
 */
@@ -39,3 +39,4 @@
     bind();
   }
 })();
+

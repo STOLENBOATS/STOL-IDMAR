@@ -1,4 +1,4 @@
-// validador-i18n.v1.js — overlay PT/EN para a página Validador
+﻿// validador-i18n.v1.js — overlay PT/EN para a página Validador
 (function () {
   "use strict";
 
@@ -127,3 +127,4 @@
     apply();
   }
 })();
+

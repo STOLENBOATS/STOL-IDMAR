@@ -1,4 +1,4 @@
-ï»¿// engine_picker.v2.1.js ï¿½ tolera schema v1 e v2 e loga diagnï¿½stico
+﻿// engine_picker.v2.1.js ï¿½ tolera schema v1 e v2 e loga diagnï¿½stico
 (function(){
   const $ = s => document.querySelector(s);
   const el = id => document.getElementById(id);
@@ -142,5 +142,6 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
 })();
+
 
 

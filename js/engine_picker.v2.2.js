@@ -1,4 +1,4 @@
-ï»¿// engine_picker.v2.2.js ï¿½ compatï¿½vel com schema v1 e v2, sem Python-isms
+﻿// engine_picker.v2.2.js ï¿½ compatï¿½vel com schema v1 e v2, sem Python-isms
 (function(){
   const $ = s => document.querySelector(s);
   const el = id => document.getElementById(id);
@@ -144,5 +144,6 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
 })();
+
 
 

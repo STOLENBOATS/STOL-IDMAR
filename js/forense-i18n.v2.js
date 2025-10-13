@@ -1,4 +1,4 @@
-// forense-i18n.v2.js — PT/EN overlay para a página Forense (não altera HTML)
+﻿// forense-i18n.v2.js — PT/EN overlay para a página Forense (não altera HTML)
 (function () {
   "use strict";
 

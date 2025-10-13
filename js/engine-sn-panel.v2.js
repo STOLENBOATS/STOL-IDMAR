@@ -1,4 +1,4 @@
-ï»¿// js/engine-sn-panel.v2.js  (r2)
+﻿// js/engine-sn-panel.v2.js  (r2)
 // - Lï¿½ seleï¿½ï¿½o do cartï¿½o "Validador Motor"
 // - Calcula janelas vï¿½lidas (ranges) para a seleï¿½ï¿½o
 // - Valida o nï¿½ introduzido e MOSTRA tambï¿½m os intervalos esperados logo por baixo
@@ -177,6 +177,7 @@
     console.info("[IDMAR] engine-sn-panel v2 (r2) pronto.");
   });
 })(window, document);
+
 
 
 

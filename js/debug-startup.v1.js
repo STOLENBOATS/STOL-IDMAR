@@ -1,4 +1,4 @@
-// debug-startup.v1.js — surfaces JS errors early to help diagnose blank pages
+﻿// debug-startup.v1.js — surfaces JS errors early to help diagnose blank pages
 (function(){
   function banner(msg){
     var b = document.createElement('div');
@@ -16,3 +16,4 @@
     banner('[PROMISE REJECTION] ' + (ev.reason && (ev.reason.message||String(ev.reason))));
   });
 })();
+

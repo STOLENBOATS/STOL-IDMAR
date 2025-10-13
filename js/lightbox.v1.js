@@ -1,4 +1,4 @@
-// js/lightbox.v1.js
+﻿// js/lightbox.v1.js
 (function(){
   function ensureOverlay(){
     let back = document.querySelector('.miec-lightbox-backdrop');

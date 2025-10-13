@@ -1,4 +1,4 @@
-// js/i18n-swapper.js
+﻿// js/i18n-swapper.js
 (function(){
   const LS_KEY = "IDMAR_LANG";
   const getLang = () => (localStorage.getItem(LS_KEY) || "pt").toLowerCase();
@@ -53,3 +53,4 @@
 
   boot();
 })();
+

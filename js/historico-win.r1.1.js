@@ -1,4 +1,4 @@
-/* IDMAR — Histórico WIN r1.1 (filtros + CSV + compat keys + foto from meta.forense) */
+﻿/* IDMAR — Histórico WIN r1.1 (filtros + CSV + compat keys + foto from meta.forense) */
 (() => {
   function readKey(k){ try{ const raw=localStorage.getItem(k); if(!raw) return []; const arr=JSON.parse(raw); return Array.isArray(arr)?arr:[]; }catch{return []} }
   function deriveFoto(r){
@@ -130,6 +130,7 @@
   }
   if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', bind); else bind();
 })();
+
 
 
 

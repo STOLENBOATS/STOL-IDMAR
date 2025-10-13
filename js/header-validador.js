@@ -1,4 +1,4 @@
-/* IDMAR Header — Validador • 2025-09-18 */
+﻿/* IDMAR Header — Validador • 2025-09-18 */
 (() => {
   const ACTIVE = 'validador.html';
   injectHeader(ACTIVE);
@@ -71,3 +71,4 @@
     el.style.gap='1rem'; el.style.padding='.75rem 1rem'; el.style.borderBottom='1px solid #e5e7eb'; el.style.background='#fff';
   }
 })();
+

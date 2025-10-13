@@ -1,4 +1,4 @@
-/* MIEC / IDMAR — validador-motor.js (Fase 2: campos dinâmicos + PT/EN + histórico compat)
+﻿/* MIEC / IDMAR — validador-motor.js (Fase 2: campos dinâmicos + PT/EN + histórico compat)
    Data: 2025-09-18 | JS-only (zero deps). Mantém HTML/CSS intactos.
 
    Marcas:
@@ -267,3 +267,4 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bootstrap);
   else bootstrap();
 })();
+

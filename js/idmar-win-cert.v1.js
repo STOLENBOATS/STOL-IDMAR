@@ -1,4 +1,4 @@
-/*! IDMAR – Certificado de Conformidade (drop-in) v1.2
+﻿/*! IDMAR – Certificado de Conformidade (drop-in) v1.2
  * Uso: inclui UMA vez, de preferência após os scripts do validador WIN:
  *   <script src="js/idmar-win-cert.v1.js?v=1.2"></script>
  * Não altera HTML existente. Cria e gere um painel próprio no bloco do WIN.
@@ -155,3 +155,4 @@
   }
   boot();
 })(window, document);
+

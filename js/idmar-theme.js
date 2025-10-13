@@ -1,4 +1,4 @@
-/*! IDMAR theme r3 — default LIGHT + toggle */
+﻿/*! IDMAR theme r3 — default LIGHT + toggle */
 (function(){
   try{
     // default para light se não houver preferências guardadas
@@ -18,3 +18,4 @@
     if(btn){ btn.addEventListener('click', function(){ IDMAR_setTheme(); }); }
   }catch(e){}
 })();
+

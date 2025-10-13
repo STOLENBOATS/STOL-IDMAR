@@ -1,4 +1,4 @@
-/* IDMAR i18n mini • zero deps (fix) */
+﻿/* IDMAR i18n mini • zero deps (fix) */
 (() => {
   const DICT = {
     pt: {
@@ -116,3 +116,4 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ()=>apply());
   else apply();
 })();
+

@@ -1,4 +1,4 @@
-// js/idmar-body-i18n.v2.js
+﻿// js/idmar-body-i18n.v2.js
 // PT default; EN when selected in header or localStorage.IDMAR_LANG.
 // Works with: data-en / data-en-placeholder, bilingual "PT / EN", and a PT->EN dictionary.
 (function(){
@@ -224,5 +224,6 @@
     mo.observe(document.body, {childList:true, subtree:true});
   }catch(e){}
 })();
+
 
 

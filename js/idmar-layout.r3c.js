@@ -1,4 +1,4 @@
-// IDMAR layout r3c — header unificado (idioma + tema) e estilo consistente
+﻿// IDMAR layout r3c — header unificado (idioma + tema) e estilo consistente
 (function(w,d){
   w.IDMAR = w.IDMAR || {};
   const CSS = `
@@ -105,3 +105,4 @@
   w.IDMAR_renderHeader = renderHeader;
 
 })(window, document);
+

@@ -1,4 +1,4 @@
-/* IDMAR — Header Only v5 (PT/EN + normalize + nav oculto no login) */
+﻿/* IDMAR — Header Only v5 (PT/EN + normalize + nav oculto no login) */
 (() => {
   // evita duplicar
   if (document.querySelector('.app-header[data-idmar="header-only"]')) return;
@@ -119,3 +119,4 @@
     document.head.appendChild(style);
   })();
 })();
+

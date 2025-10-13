@@ -1,4 +1,4 @@
-// IDMAR — Histórico WIN (r3b) — filtros, ordenação, CSV, foto/miniatura, razão e forense
+﻿// IDMAR — Histórico WIN (r3b) — filtros, ordenação, CSV, foto/miniatura, razão e forense
 (function(w,d){
   w.IDMAR=w.IDMAR||{}; w.NAV=w.NAV||w.IDMAR;
   NAV.STORAGE = NAV.STORAGE || { SESSION:'IDMAR_SESSION', WIN_HISTORY:'hist_win', MOTOR_HISTORY:'hist_motor' };
@@ -143,6 +143,7 @@
 
   ready(function(){ wire(); render(); });
 })(window, document);
+
 
 
 

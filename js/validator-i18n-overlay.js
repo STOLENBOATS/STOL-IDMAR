@@ -1,4 +1,4 @@
-ï»¿// js/validator-i18n-overlay.js (v3 - resilient)
+﻿// js/validator-i18n-overlay.js (v3 - resilient)
 (function(){
   const LS_KEY = "IDMAR_LANG";
   const isEN = () => {
@@ -110,6 +110,7 @@
 
   boot();
 })();
+
 
 
 

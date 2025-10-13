@@ -1,4 +1,4 @@
-// IDMAR history bilingual enhancer v3 (unchanged from v3)
+﻿// IDMAR history bilingual enhancer v3 (unchanged from v3)
 (function(){
   const mapReason = [
     [/^Estrutura válida\.?$/i, "Structure valid"],
@@ -47,5 +47,6 @@
   const obs = new MutationObserver(tryPatch);
   window.addEventListener("DOMContentLoaded", ()=>{ tryPatch(); obs.observe(document.body, {subtree:true, childList:true}); });
 })();
+
 
 

@@ -1,4 +1,4 @@
-ï»¿// Auto footer version injector (configurable)
+﻿// Auto footer version injector (configurable)
 // Pattern: "IDMAR - POLÃÂCIA MARÃÂTIMA - Vs XXX - YYYY-MM-DD"
 (function(w,d){
   function today(){
@@ -37,5 +37,6 @@
   }
   if(d.readyState==='loading') d.addEventListener('DOMContentLoaded', inject); else inject();
 })(window, document);
+
 
 

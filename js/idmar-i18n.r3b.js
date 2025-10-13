@@ -1,4 +1,4 @@
-/ IDMAR i18n r3b — non-invasive i18n with MutationObserver for common dynamic labels.
+﻿/ IDMAR i18n r3b — non-invasive i18n with MutationObserver for common dynamic labels.
 (function(w,d){
   const KEY = 'IDMAR_LANG';
   const i18n = {
@@ -282,3 +282,4 @@
   // expose
   w.IDMAR_i18n = { t, getLang };
 })(window, document);
+

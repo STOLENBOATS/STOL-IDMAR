@@ -1,4 +1,4 @@
-// Forensic rules rendering per brand (skeleton; to be enriched with your domain notes)
+﻿// Forensic rules rendering per brand (skeleton; to be enriched with your domain notes)
 (function(){
   const q = new URLSearchParams(location.search);
   const initial = q.get('brand') || '';
@@ -90,3 +90,4 @@
   // If brand passed in URL, render immediately
   if(initial){ render(); }
 })();
+

@@ -1,4 +1,4 @@
-ï»¿// engine_picker.v2.js ï¿½ configurador por selects (sem texto livre)
+﻿// engine_picker.v2.js ï¿½ configurador por selects (sem texto livre)
 (function(){
   const el = sel => document.querySelector(sel);
   const create = (tag, attrs={}) => Object.assign(document.createElement(tag), attrs);
@@ -162,6 +162,7 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
 })();
+
 
 
 

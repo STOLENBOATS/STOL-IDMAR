@@ -1,4 +1,4 @@
-// engine_admin_embed.v1.js — “Admin rápido” no Validador (após Forense), PT/EN
+﻿// engine_admin_embed.v1.js — “Admin rápido” no Validador (após Forense), PT/EN
 (function(w,d){
   const LS_ENGINE = 'IDMAR_ENGINE_OVERRIDES';
   const LS_MIC    = 'IDMAR_MIC_OVERRIDES';
@@ -198,6 +198,7 @@
   if(d.readyState==='loading') d.addEventListener('DOMContentLoaded', boot);
   else boot();
 })(window, document);
+
 
 
 

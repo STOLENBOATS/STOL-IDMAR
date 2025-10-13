@@ -1,10 +1,10 @@
-﻿(function (w) {
+(function (w) {
   "use strict";
 
   function norm(x){ return (x||"").trim().toUpperCase(); }
 
   function splitPrefixNumber(sn){
-    // BAAL-999123 / BAAL999123 / BAAL 999123 / 6C1-1234567 …
+    // BAAL-999123 / BAAL999123 / BAAL 999123 / 6C1-1234567 �
     const s = norm(sn).replace(/\s+/g,'');
     const m = s.match(/^([A-Z0-9]+)[-\s]?(\d{4,})$/);
     if (m) return { prefix: m[1], serial: parseInt(m[2],10) };
