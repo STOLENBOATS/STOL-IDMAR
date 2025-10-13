@@ -1,30 +1,33 @@
 // forense-i18n.v2.js — PT/EN overlay para a página Forense (não altera HTML)
 (function () {
-  // util: aplica tradução sem quebrar HTML interno
-  const small = (en) => ' / ' + en;
+  "use strict";
 
+  // util: aplica tradução sem quebrar HTML interno
   function setTextSafely(el, textPt, textEn) {
-    const onlyText = el.childNodes.length === 1 && el.firstChild && el.firstChild.nodeType === 3;
-    if (onlyText) {
-      el.textContent = textPt + ' / ' + textEn;
-    } else {
-      const base = (el.textContent || '').trim();
-      el.title = (base ? base + ' — ' : '') + textPt + ' / ' + textEn;
-    }
+    try {
+      const onlyText = el.childNodes.length === 1 &&
+                       el.firstChild && el.firstChild.nodeType === 3;
+      if (onlyText) {
+        el.textContent = textPt + " / " + textEn;
+      } else {
+        const base = (el.textContent || "").trim();
+        el.setAttribute("title", (base ? base + " — " : "") + textPt + " / " + textEn);
+      }
+    } catch (_) {}
   }
 
   const byText = (root, selector, map) => {
     root.querySelectorAll(selector).forEach(el => {
-      const t = (el.textContent || '').trim();
+      const t = (el.textContent || "").trim();
       const key = Object.keys(map).find(k => {
-        if (k.endsWith('*')) return t.toLowerCase().startsWith(k.slice(0, -1).toLowerCase());
+        if (k.endsWith("*")) return t.toLowerCase().startsWith(k.slice(0, -1).toLowerCase());
         return t.toLowerCase() === k.toLowerCase();
       });
       if (!key) return;
       const val = map[key];
-      if (typeof val === 'string') {
+      if (typeof val === "string") {
         const onlyText = el.childNodes.length === 1 && el.firstChild && el.firstChild.nodeType === 3;
-        if (onlyText) el.textContent = val; else el.title = val;
+        if (onlyText) el.textContent = val; else el.setAttribute("title", val);
       } else {
         setTextSafely(el, val.pt, val.en);
       }
@@ -35,58 +38,56 @@
     const root = document;
 
     // Cabeçalho
-    byText(root, 'h1, h2, summary', {
-      'Forense — Índice': { pt: 'Forense — Índice', en: 'Forensic — Index' },
-      'Carregar evidências': { pt: 'Carregar evidências', en: 'Upload evidence' },
-      'Workspace': { pt: 'Workspace', en: 'Workspace' },
-      'Forense (opcional)*': { pt: 'Forense (opcional)', en: 'Forensic (optional)' },
+    byText(root, "h1, h2, summary", {
+      "Forense — Índice": { pt: "Forense — Índice", en: "Forensic — Index" },
+      "Carregar evidências": { pt: "Carregar evidências", en: "Upload evidence" },
+      "Workspace": { pt: "Workspace", en: "Workspace" },
+      "Forense (opcional)*": { pt: "Forense (opcional)", en: "Forensic (optional)" },
     });
 
     // Botões / controlos
-    byText(root, 'button, .btn, [role="button"]', {
-      'Anexar ao histórico mais recente': { pt: 'Anexar ao histórico mais recente', en: 'Attach to latest history' },
-      'Abrir lightbox': { pt: 'Abrir lightbox', en: 'Open lightbox' },
-      'Comparar': { pt: 'Comparar', en: 'Compare' },
-      'Anotar (rect)': { pt: 'Anotar (rect)', en: 'Annotate (rect)' },
-      'Limpar anotações': { pt: 'Limpar anotações', en: 'Clear annotations' },
-      'Exportar PNG anotado': { pt: 'Exportar PNG anotado', en: 'Export annotated PNG' },
+    byText(root, "button, .btn, [role='button']", {
+      "Anexar ao histórico mais recente": { pt: "Anexar ao histórico mais recente", en: "Attach to latest history" },
+      "Abrir lightbox": { pt: "Abrir lightbox", en: "Open lightbox" },
+      "Comparar": { pt: "Comparar", en: "Compare" },
+      "Anotar (rect)": { pt: "Anotar (rect)", en: "Annotate (rect)" },
+      "Limpar anotações": { pt: "Limpar anotações", en: "Clear annotations" },
+      "Exportar PNG anotado": { pt: "Exportar PNG anotado", en: "Export annotated PNG" },
       'Guardar “bundle” (JSON)': { pt: 'Guardar “bundle” (JSON)', en: 'Save bundle (JSON)' },
-      'Guardar "bundle" (JSON)': { pt: 'Guardar “bundle” (JSON)', en: 'Save bundle (JSON)' }, // fallback aspas normais
+      'Guardar "bundle" (JSON)': { pt: 'Guardar “bundle” (JSON)', en: 'Save bundle (JSON)' }
     });
 
     // Rótulos/legendas que costumam aparecer como texto simples
-    byText(root, 'label, .label, .panel > .title, .panel label', {
-      'Contexto:*': 'Contexto / Context:',
-      'Contexto:': 'Contexto / Context:',
+    byText(root, "label, .label, .panel > .title, .panel label", {
+      "Contexto:*": "Contexto / Context:",
+      "Contexto:": "Contexto / Context:",
     });
 
-    // Tooltips úteis (sem :contains)
-    const tips = [
-      { needle: 'comparar', title: 'Arraste o slider / Drag the slider' },
-      { needle: 'anotar', title: 'Clique e arraste para desenhar / Click and drag to draw' },
-      { needle: 'exportar png anotado', title: 'Guarda a imagem com as anotações / Save image with annotations' },
+    // Tooltips úteis (heurística simples por texto)
+    const tooltipRules = [
+      { needle: "comparar", title: "Arraste o slider / Drag the slider" },
+      { needle: "anotar",   title: "Clique e arraste para desenhar / Click and drag to draw" },
+      { needle: "exportar png anotado", title: "Guarda a imagem com as anotações / Save image with annotations" }
     ];
-    document.querySelectorAll('button, .btn, [role="button"]').forEach(el => {
-      const t = (el.textContent || '').trim().toLowerCase();
-      tips.forEach(({ needle, title }) => {
-        if (t.includes(needle)) el.title = title;
+    document.querySelectorAll("button, .btn, [role='button']").forEach(el => {
+      const t = (el.textContent || "").trim().toLowerCase();
+      tooltipRules.forEach(rule => {
+        if (t.includes(rule.needle)) el.title = rule.title;
       });
-      // heurística adicional
-      if (/exportar.*png/.test(t)) el.title = 'Guarda a imagem com as anotações / Save image with annotations';
     });
 
     // “Contexto: WIN/HIN” → “Contexto / Context: WIN/HIN”
-    document.querySelectorAll('*').forEach(el => {
+    document.querySelectorAll("*").forEach(el => {
       if (!el.firstChild || el.firstChild.nodeType !== 3) return;
-      const raw = el.firstChild.nodeValue || '';
+      const raw = el.firstChild.nodeValue || "";
       const m = raw.match(/^Contexto:\s*(.*)$/i);
       if (!m) return;
-      el.firstChild.nodeValue = 'Contexto / Context: ' + m[1];
+      el.firstChild.nodeValue = "Contexto / Context: " + m[1];
     });
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', applyBilingual);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", applyBilingual);
   } else {
     applyBilingual();
   }

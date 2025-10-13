@@ -1,44 +1,39 @@
-﻿$ErrorActionPreference = "Stop"
+param(
+  [string]$Root = ".",
+  [switch]$NoBom
+)
+$ErrorActionPreference = 'Stop'
 
-# 0) snapshot
-git add -A | Out-Null
-try { git commit -m "backup: antes de normalizar UTF-8" | Out-Null } catch {}
+function Fix-Mojibake {
+  param([string]$Path)
 
-# 1) ficheiros alvo
-$patterns = @('*.js','*.html','*.css','*.json','*.md','*.yml','*.yaml')
-$files = Get-ChildItem -Recurse -Include $patterns | Where-Object { -not $_.PSIsContainer }
+  if (!(Test-Path $Path)) { return }
 
-function Has-Mojibake([string]$s){ return ($s -match 'Ã' -or $s -match '�') }
-function Score([string]$s){
-  $good = ([regex]::Matches($s,'[\u00C0-\u017F]')).Count
-  $bad  = ([regex]::Matches($s,'Ã|�')).Count * 5
-  return $good - $bad
+  $raw   = Get-Content -Raw -Path $Path -Encoding byte
+
+  # Tentativa de reinterpretação CP1252 -> UTF8
+  $cp1252 = [Text.Encoding]::GetEncoding(1252)
+  $as1252 = $cp1252.GetString($raw)
+  $fixed  = [Text.Encoding]::UTF8.GetBytes($as1252)
+
+  # Se a versão corrigida reduzir padrões de mojibake, usa-a
+  $bad   = ([Text.Encoding]::UTF8.GetString($raw)   -match '[ÃÂ�]')
+  $goodr = ([Text.Encoding]::UTF8.GetString($fixed) -match '[ÃÂ�]') -eq $false
+
+  $finalBytes = if ($bad -and $goodr) { $fixed } else { $raw }
+
+  if ($NoBom) {
+    $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+    [IO.File]::WriteAllText($Path, [Text.Encoding]::UTF8.GetString($finalBytes), $utf8NoBom)
+  } else {
+    Set-Content -Path $Path -Value ([Text.Encoding]::UTF8.GetString($finalBytes)) -Encoding UTF8
+  }
+  Write-Host "OK: $Path"
 }
 
-[int]$changed = 0
-foreach ($f in $files) {
-  $bytes  = [IO.File]::ReadAllBytes($f.FullName)
-  $asUtf8 = [Text.Encoding]::UTF8.GetString($bytes)
-  if (-not (Has-Mojibake $asUtf8)) { continue }
+$exts = @("*.html","*.js","*.css","*.json")
+$files = Get-ChildItem -Path $Root -Recurse -Include $exts | Where-Object { -not $_.PSIsContainer }
 
-  $cp1252 = [Text.Encoding]::GetEncoding(1252).GetString($bytes)
-  $latin1 = [Text.Encoding]::GetEncoding(28591).GetString($bytes)
-
-  $cands = @(
-    @{ name='cp1252'; text=$cp1252; score=(Score $cp1252) },
-    @{ name='latin1'; text=$latin1; score=(Score $latin1) }
-  ) | Sort-Object score -Descending
-
-  if ($cands[0].score -le (Score $asUtf8)) { continue }
-
-  $utf8Bytes = [Text.Encoding]::UTF8.GetBytes($cands[0].text)
-  [IO.File]::WriteAllBytes($f.FullName, $utf8Bytes)
-  Write-Host ("Fix UTF-8 → {0} (via {1})" -f $f.FullName, $cands[0].name)
-  $changed++
-}
-
-Write-Host "Convertidos: $changed ficheiro(s)."
-if ($changed -gt 0) {
-  git add -A | Out-Null
-  git commit -m "fix(utf8): normalizar fontes para UTF-8 (cp1252/latin1 -> UTF-8)" | Out-Null
+foreach($f in $files){
+  try { Fix-Mojibake -Path $f.FullName } catch { Write-Host "ERRO: $($f.FullName) — $_" -f Red }
 }
