@@ -1,11 +1,11 @@
-ï»¿/* IDMAR header-only (compact v3) */
+/* IDMAR header-only (compact v3) */
 (() => {
   if (document.querySelector('.app-header[data-idmar="header-only"]')) return;
 
   const HREFS = [
     ['validador.html','Validador'],
-    ['historico_win.html','Histï¿½rico WIN'],
-    ['historico_motor.html','Histï¿½rico Motor'],
+    ['historico_win.html','Histórico WIN'],
+    ['historico_motor.html','Histórico Motor'],
     ['forense.html','Forense'],
     ['#logout','Sair'],
   ];
