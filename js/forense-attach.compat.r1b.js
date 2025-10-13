@@ -1,6 +1,5 @@
-ï»¿
-/* IDMAR Ã¢â¬â forense-attach.compat.r1b.js
-   Atualiza o ÃÂºltimo registo (ÃÂ­ndice 0) com `foto` e `meta.forense[]`.
+/* IDMAR — forense-attach.compat.r1b.js
+   Atualiza o último registo (índice 0) com `foto` e `meta.forense[]`.
    Seguro com os dois aliases: history_* e history*.
 */
 (function () {
@@ -76,5 +75,3 @@
     attach
   });
 })();
-
-
