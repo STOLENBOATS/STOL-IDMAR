@@ -1,7 +1,7 @@
-ï»¿/*! IDMAR theme r3 ï¿½ default LIGHT + toggle */
+/*! IDMAR theme r3 — default LIGHT + toggle */
 (function(){
   try{
-    // default para light se nï¿½o houver preferï¿½ncias guardadas
+    // default para light se não houver preferências guardadas
     var pref = localStorage.getItem('idmar-theme');
     if(!pref){ pref = 'light'; localStorage.setItem('idmar-theme', pref); }
     document.documentElement.setAttribute('data-theme', pref);
@@ -13,11 +13,8 @@
       document.documentElement.setAttribute('data-theme', next);
     };
 
-    // atalho: se existir um botï¿½o com idmar-theme-toggle, liga-o
+    // atalho: se existir um botão com idmar-theme-toggle, liga-o
     var btn = document.getElementById('idmar-theme-toggle');
     if(btn){ btn.addEventListener('click', function(){ IDMAR_setTheme(); }); }
   }catch(e){}
 })();
-
-
-
