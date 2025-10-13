@@ -1,4 +1,4 @@
-ï»¿// engine_admin_embed.v1.js ï¿½ ï¿½Admin rï¿½pidoï¿½ no Validador (apï¿½s Forense), PT/EN
+// engine_admin_embed.v1.js — “Admin rápido” no Validador (após Forense), PT/EN
 (function(w,d){
   const LS_ENGINE = 'IDMAR_ENGINE_OVERRIDES';
   const LS_MIC    = 'IDMAR_MIC_OVERRIDES';
@@ -19,7 +19,7 @@
       <details id="adminQuick_${scope}" class="forense-box" open>
         <summary>Admin (local) / Admin (local)</summary>
         <div class="small" style="margin:.25rem 0 .5rem">
-          Guardar no dispositivo valores confirmados em campo (nï¿½o sincroniza).
+          Guardar no dispositivo valores confirmados em campo (não sincroniza).
           / Save confirmed values locally on this device (no sync).
         </div>
         <div id="adminQuick_${scope}_body"></div>
@@ -32,7 +32,7 @@
     const out = $id('motorOut');
     if(!out) return {ok:false, text:''};
     const txt=(out.textContent||'').toLowerCase();
-    return { ok: /vï¿½lido|valid/.test(txt) && !/invï¿½lido|invalid/.test(txt), text: out.textContent||'' };
+    return { ok: /válido|valid/.test(txt) && !/inválido|invalid/.test(txt), text: out.textContent||'' };
   }
   function getMotorSelection(){
     const pick = id => ($id(id)?.value)||'';
@@ -58,21 +58,21 @@
     body.innerHTML = `
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.5rem">
         <div><label>Marca / Brand</label><input id="adm_m_brand" type="text" readonly></div>
-        <div><label>Famï¿½lia / Family</label><input id="adm_m_family" type="text"></div>
+        <div><label>Família / Family</label><input id="adm_m_family" type="text"></div>
         <div><label>Modelo / Model code</label><input id="adm_m_model" type="text"></div>
-        <div><label>Potï¿½ncia (hp) / Power</label><input id="adm_m_hp" type="text"></div>
+        <div><label>Potência (hp) / Power</label><input id="adm_m_hp" type="text"></div>
         <div><label>Cilindrada (cc) / Displacement</label><input id="adm_m_disp" type="text"></div>
         <div><label>Ano / Year</label><input id="adm_m_year" type="text"></div>
         <div><label>Comando / Rigging</label><input id="adm_m_rig" type="text" placeholder="DEC/DBW, Mechanical..."></div>
         <div><label>Altura / Shaft</label><input id="adm_m_shaft" type="text" placeholder="S/L/X/UL..."></div>
-        <div><label>Rotaï¿½ï¿½o / Rotation</label><input id="adm_m_rot" type="text" placeholder="STD/CCW"></div>
+        <div><label>Rotação / Rotation</label><input id="adm_m_rot" type="text" placeholder="STD/CCW"></div>
       </div>
       <div style="margin-top:.5rem;display:flex;gap:.5rem;flex-wrap:wrap">
-        <button id="adm_m_add" class="btn">Adicionar ao catï¿½logo (local) / Add to catalog (local)</button>
+        <button id="adm_m_add" class="btn">Adicionar ao catálogo (local) / Add to catalog (local)</button>
         <span id="adm_m_status" class="small"></span>
       </div>`;
 
-    // Prefill com a seleï¿½ï¿½o atual
+    // Prefill com a seleção atual
     const s = getMotorSelection();
     $id('adm_m_brand').value  = s.brand || '';
     $id('adm_m_family').value = s.family || '';
@@ -84,12 +84,12 @@
     $id('adm_m_shaft').value  = s.shaft || '';
     $id('adm_m_rot').value    = s.rotation || '';
 
-    // Sï¿½ ativa o botï¿½o se a validaï¿½ï¿½o for Vï¿½lida
+    // Só ativa o botão se a validação for Válida
     const valid = latestValidityMotor().ok;
     const btn   = $id('adm_m_add'); const status=$id('adm_m_status');
     btn.disabled = !valid;
-    status.textContent = valid ? 'Vï¿½lido ï¿½ pronto a adicionar / Valid ï¿½ ready to add'
-                               : 'Aguardando validaï¿½ï¿½o vï¿½lida / Waiting for a valid result';
+    status.textContent = valid ? 'Válido — pronto a adicionar / Valid — ready to add'
+                               : 'Aguardando validação válida / Waiting for a valid result';
 
     btn.addEventListener('click', ()=>{
       const brand = $id('adm_m_brand').value.trim();
@@ -104,7 +104,7 @@
       f.hp_list          = uniqPush(f.hp_list||[], $id('adm_m_hp').value.trim());
       f.model_code_list  = uniqPush(f.model_code_list||[], $id('adm_m_model').value.trim());
       f.displacement_list= uniqPush(f.displacement_list||[], $id('adm_m_disp').value.trim());
-      // years: aceita ï¿½2015ï¿½ ou ï¿½2014ï¿½2017ï¿½
+      // years: aceita “2015” ou “2014–2017”
       const yraw = $id('adm_m_year').value.trim();
       if(yraw){
         if(/^\d{4}\s*-\s*\d{4}$/.test(yraw)){
@@ -128,13 +128,13 @@
     const out = $id('winOut');
     if(!out) return {ok:false,text:''};
     const txt=(out.textContent||'').toLowerCase();
-    return { ok: /vï¿½lido|valid/.test(txt) && !/invï¿½lido|invalid/.test(txt), text: out.textContent||'' };
+    return { ok: /válido|valid/.test(txt) && !/inválido|invalid/.test(txt), text: out.textContent||'' };
   }
   function parseCurrentWin(){
     const win = $id('win')?.value.trim() || '';
     const maker = (d.querySelector('#interpWinBody tr:nth-child(2) td strong')?.textContent || '').trim().slice(0,3) || '';
     const makerLabelCell = d.querySelector('#interpWinBody tr:nth-child(2) td:last-child');
-    const makerName = makerLabelCell ? (makerLabelCell.textContent.split('?')[1]||'').trim() : '';
+    const makerName = makerLabelCell ? (makerLabelCell.textContent.split('→')[1]||'').trim() : '';
     return { win, maker, makerName };
   }
   function adminWinUI(){
@@ -144,10 +144,10 @@
 
     body.innerHTML = `
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.5rem">
-        <div><label>Fabricante (cï¿½digo) / Maker code</label><input id="adm_w_maker" type="text" maxlength="3"></div>
+        <div><label>Fabricante (código) / Maker code</label><input id="adm_w_maker" type="text" maxlength="3"></div>
         <div><label>Nome / Name</label><input id="adm_w_name" type="text" placeholder="Jeanneau, Beneteau..."></div>
         <div><label>Exemplo WIN / Sample WIN</label><input id="adm_w_sample" type="text" placeholder="PT-ABC12345D404"></div>
-        <div style="grid-column:1/-1"><label>Notas / Notes</label><input id="adm_w_notes" type="text" placeholder="Observaï¿½ï¿½es ï¿½teis..."></div>
+        <div style="grid-column:1/-1"><label>Notas / Notes</label><input id="adm_w_notes" type="text" placeholder="Observações úteis..."></div>
       </div>
       <div style="margin-top:.5rem;display:flex;gap:.5rem;flex-wrap:wrap">
         <button id="adm_w_add" class="btn">Adicionar (local) / Add (local)</button>
@@ -163,13 +163,13 @@
     const valid = latestValidityWin().ok;
     const btn   = $id('adm_w_add'); const status=$id('adm_w_status');
     btn.disabled = !valid;
-    status.textContent = valid ? 'Vï¿½lido ï¿½ pronto a adicionar / Valid ï¿½ ready to add'
-                               : 'Aguardando validaï¿½ï¿½o vï¿½lida / Waiting for a valid result';
+    status.textContent = valid ? 'Válido — pronto a adicionar / Valid — ready to add'
+                               : 'Aguardando validação válida / Waiting for a valid result';
 
     btn.addEventListener('click', ()=>{
       const maker = ($id('adm_w_maker').value||'').toUpperCase().trim();
       const name  = $id('adm_w_name').value.trim();
-      if(!maker || maker.length!==3){ status.textContent='Cï¿½digo maker invï¿½lido / Invalid maker code'; return; }
+      if(!maker || maker.length!==3){ status.textContent='Código maker inválido / Invalid maker code'; return; }
 
       const ov = loadLS(LS_MIC, {});
       ov[maker] = ov[maker] || { name:'', notes:'', samples:[] };
@@ -190,7 +190,7 @@
     // WIN
     if($id('formWin')) adminWinUI();
 
-    // Atualiza estado quando houver nova submissï¿½o
+    // Atualiza estado quando houver nova submissão
     if($id('formMotor')) $id('formMotor').addEventListener('submit', ()=>setTimeout(adminMotorUI, 0));
     if($id('formWin'))   $id('formWin').addEventListener('submit', ()=>setTimeout(adminWinUI, 0));
   }
@@ -198,6 +198,7 @@
   if(d.readyState==='loading') d.addEventListener('DOMContentLoaded', boot);
   else boot();
 })(window, document);
+
 
 
 
