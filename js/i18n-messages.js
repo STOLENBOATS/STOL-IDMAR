@@ -1,4 +1,4 @@
-ï»¿// js/i18n-messages.js (patched loader)
+// js/i18n-messages.js (patched loader)
 (function queueLoad(dict){
   function doLoad() {
     if (!window.I18N) return setTimeout(doLoad, 0); // wait for core
@@ -11,46 +11,46 @@
       name: "IDMAR",
       subtitle: "Maritime Identification & Engine Checker",
       language: "Idioma",
-      portuguese: "Portuguï¿½s",
-      english: "Inglï¿½s"
+      portuguese: "Português",
+      english: "Inglês"
     },
     nav: {
       validator: "Validador",
       forensics: "Forense",
-      history: "Histï¿½rico"
+      history: "Histórico"
     },
     validator: {
       title: "Validador de HIN/WIN",
       inputPlaceholder: "Introduz o HIN/WIN aqui",
       validateBtn: "Validar",
-      ok: "Nï¿½mero vï¿½lido.",
-      nok: "Nï¿½mero invï¿½lido: {reason}",
-      saved: "Registo guardado no histï¿½rico."
+      ok: "Número válido.",
+      nok: "Número inválido: {reason}",
+      saved: "Registo guardado no histórico."
     },
     engine: {
       title: "Validador de Motor",
       brand: "Marca",
-      serialPlaceholder: "N.ï¿½ de sï¿½rie do motor",
+      serialPlaceholder: "N.º de série do motor",
       validateBtn: "Validar Motor",
-      nok: "S/N invï¿½lido: {reason}"
+      nok: "S/N inválido: {reason}"
     },
     forensics: {
-      title: "Validaï¿½ï¿½o Forense Visual",
-      drop: "Larga a fotografia aqui ou clica para escolherï¿½",
-      analyzing: "A analisar imagemï¿½",
-      result_ok: "Padrï¿½es e layout consistentes.",
-      result_nok: "Inconsistï¿½ncias detetadas: {reason}"
+      title: "Validação Forense Visual",
+      drop: "Larga a fotografia aqui ou clica para escolher…",
+      analyzing: "A analisar imagem…",
+      result_ok: "Padrões e layout consistentes.",
+      result_nok: "Inconsistências detetadas: {reason}"
     },
     history: {
-      title: "Histï¿½rico de Verificaï¿½ï¿½es",
+      title: "Histórico de Verificações",
       empty: "Sem registos ainda.",
       winTab: "HIN/WIN",
       motorTab: "Motores",
       back: "Voltar ao Validador"
     },
     toast: {
-      syncOn: "Sincronizaï¿½ï¿½o ativa.",
-      syncOff: "Sem sessï¿½o: em modo offline.",
+      syncOn: "Sincronização ativa.",
+      syncOff: "Sem sessão: em modo offline.",
       photoSaved: "Fotografia associada ao registo."
     }
   },
@@ -85,8 +85,8 @@
     },
     forensics: {
       title: "Visual Forensic Validation",
-      drop: "Drop a photo here or click to selectï¿½",
-      analyzing: "Analyzing imageï¿½",
+      drop: "Drop a photo here or click to select…",
+      analyzing: "Analyzing image…",
       result_ok: "Patterns and layout consistent.",
       result_nok: "Inconsistencies found: {reason}"
     },
@@ -104,5 +104,3 @@
     }
   }
 });
-
-
