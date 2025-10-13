@@ -1,18 +1,18 @@
-﻿{
+ï»¿{
   "AT": {
-    "pt": "�ustria",
+    "pt": "ï¿½ustria",
     "en": "Austria"
   },
   "BE": {
-    "pt": "B�lgica",
+    "pt": "Bï¿½lgica",
     "en": "Belgium"
   },
   "BG": {
-    "pt": "Bulg�ria",
+    "pt": "Bulgï¿½ria",
     "en": "Bulgaria"
   },
   "HR": {
-    "pt": "Cro�cia",
+    "pt": "Croï¿½cia",
     "en": "Croatia"
   },
   "CY": {
@@ -20,7 +20,7 @@
     "en": "Cyprus"
   },
   "CZ": {
-    "pt": "Ch�quia",
+    "pt": "Chï¿½quia",
     "en": "Czechia"
   },
   "DK": {
@@ -28,15 +28,15 @@
     "en": "Denmark"
   },
   "EE": {
-    "pt": "Est�nia",
+    "pt": "Estï¿½nia",
     "en": "Estonia"
   },
   "FI": {
-    "pt": "Finl�ndia",
+    "pt": "Finlï¿½ndia",
     "en": "Finland"
   },
   "FR": {
-    "pt": "Fran�a",
+    "pt": "Franï¿½a",
     "en": "France"
   },
   "DE": {
@@ -44,7 +44,7 @@
     "en": "Germany"
   },
   "GR": {
-    "pt": "Gr�cia",
+    "pt": "Grï¿½cia",
     "en": "Greece"
   },
   "HU": {
@@ -56,15 +56,15 @@
     "en": "Ireland"
   },
   "IT": {
-    "pt": "It�lia",
+    "pt": "Itï¿½lia",
     "en": "Italy"
   },
   "LV": {
-    "pt": "Let�nia",
+    "pt": "Letï¿½nia",
     "en": "Latvia"
   },
   "LT": {
-    "pt": "Litu�nia",
+    "pt": "Lituï¿½nia",
     "en": "Lithuania"
   },
   "LU": {
@@ -76,11 +76,11 @@
     "en": "Malta"
   },
   "NL": {
-    "pt": "Pa�ses Baixos",
+    "pt": "Paï¿½ses Baixos",
     "en": "Netherlands"
   },
   "PL": {
-    "pt": "Pol�nia",
+    "pt": "Polï¿½nia",
     "en": "Poland"
   },
   "PT": {
@@ -88,15 +88,15 @@
     "en": "Portugal"
   },
   "RO": {
-    "pt": "Rom�nia",
+    "pt": "Romï¿½nia",
     "en": "Romania"
   },
   "SK": {
-    "pt": "Eslov�quia",
+    "pt": "Eslovï¿½quia",
     "en": "Slovakia"
   },
   "SI": {
-    "pt": "Eslov�nia",
+    "pt": "Eslovï¿½nia",
     "en": "Slovenia"
   },
   "ES": {
@@ -104,11 +104,11 @@
     "en": "Spain"
   },
   "SE": {
-    "pt": "Su�cia",
+    "pt": "Suï¿½cia",
     "en": "Sweden"
   },
   "IS": {
-    "pt": "Isl�ndia",
+    "pt": "Islï¿½ndia",
     "en": "Iceland"
   },
   "LI": {
@@ -120,7 +120,7 @@
     "en": "Norway"
   },
   "CH": {
-    "pt": "Su��a",
+    "pt": "Suï¿½ï¿½a",
     "en": "Switzerland"
   },
   "GB": {

@@ -1,4 +1,4 @@
-﻿{
+ï»¿{
   "Honda": {
     "families": {
       "BF15": {
@@ -33,7 +33,7 @@
         }
       }
     },
-    "interior_hint": "Honda pode ter n� exterior (com prefixo/c�digo) e n� interior (bloco). Interior valida por coer�ncia geral."
+    "interior_hint": "Honda pode ter nï¿½ exterior (com prefixo/cï¿½digo) e nï¿½ interior (bloco). Interior valida por coerï¿½ncia geral."
   },
 
   "Mercury": {
