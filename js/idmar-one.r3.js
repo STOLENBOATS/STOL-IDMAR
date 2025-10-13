@@ -1,12 +1,12 @@
-ï»¿/*! IDMAR One r3 ï¿½ bootstrap ï¿½nico para todas as pï¿½ginas
- *  Inclui: NAV shim, tema (light por defeito), i18n, histï¿½rico (core+hook),
+/*! IDMAR One r3 — bootstrap único para todas as páginas
+ *  Inclui: NAV shim, tema (light por defeito), i18n, histórico (core+hook),
  *          UI interpretativa (renderWinResult/renderMotorResult).
- *  Seguro para carregar em TODAS as pï¿½ginas (idempotente).
+ *  Seguro para carregar em TODAS as páginas (idempotente).
  */
 (function(w,d){
   if (w.__IDMAR_ONE_R3__) return; w.__IDMAR_ONE_R3__ = true;
 
-  /* --- 0) NAV shim sï¿½ncrono (para validadores legados) --- */
+  /* --- 0) NAV shim síncrono (para validadores legados) --- */
   w.IDMAR = w.IDMAR || {};
   w.NAV   = w.NAV   || w.IDMAR;
   NAV.util = NAV.util || {
@@ -34,10 +34,10 @@
     }catch(e){}
   })();
 
-  /* --- 2) i18n mï¿½nimo PT/EN via data-i18n --- */
+  /* --- 2) i18n mínimo PT/EN via data-i18n --- */
   (function(){
     var DICT = {
-      pt: { field:'Campo', value:'Valor', meaning:'Interpretaï¿½ï¿½o', rules:'Regras aplicadas' },
+      pt: { field:'Campo', value:'Valor', meaning:'Interpretação', rules:'Regras aplicadas' },
       en: { field:'Field', value:'Value', meaning:'Meaning', rules:'Applied rules' }
     };
     function apply(lang, root){
@@ -53,9 +53,9 @@
     };
   })();
 
-  /* --- 3) Histï¿½rico core (localStorage) --- */
+  /* --- 3) Histórico core (localStorage) --- */
   (function(g){
-    if (g.IDMAR_HIST) return; // jï¿½ definido?
+    if (g.IDMAR_HIST) return; // já definido?
     var KEYS = { win:'hist_win', motor:'hist_motor' };
     function now(){ return Date.now(); }
     function iso(ts){ try{ return new Date(ts).toISOString(); }catch(e){ return ''; } }
@@ -108,11 +108,11 @@
       URL.revokeObjectURL(a.href);
     }
     g.IDMAR_HIST = { save:save, all:all, clear:clear, filter:filter, toCSV:toCSV };
-    // ponte para NAV.history se ainda nï¿½o tiver
+    // ponte para NAV.history se ainda não tiver
     if (!NAV.history) NAV.history = g.IDMAR_HIST;
   })(w);
 
-  /* --- 4) Hook (sï¿½ ativa se a pï¿½gina tiver os elementos) --- */
+  /* --- 4) Hook (só ativa se a página tiver os elementos) --- */
   function domReady(fn){ if(d.readyState!=='loading') fn(); else d.addEventListener('DOMContentLoaded', fn); }
   domReady(function(){
     // WIN
@@ -122,7 +122,7 @@
     function grabWinStatus(){
       var el = d.querySelector('#win-output .status, #win-output .resultado, #winResult .status, #winResult, .win-result .status');
       var txt = el && el.textContent || ''; var s='';
-      if(/inv[aï¿½]lid/i.test(txt)) s='invï¿½lido'; else if(/v[aï¿½]lid/i.test(txt)) s='vï¿½lido'; return s;
+      if(/inv[aá]lid/i.test(txt)) s='inválido'; else if(/v[aá]lid/i.test(txt)) s='válido'; return s;
     }
     function saveWin(){
       var val = (winInput && winInput.value || '').trim(); if(!val) return;
@@ -141,7 +141,7 @@
     function grabMotorStatus(){
       var el = d.querySelector('#motor-output .status, #motor-output .resultado, #motorResult .status, #motorResult, .motor-result .status');
       var txt = el && el.textContent || ''; var s='';
-      if(/inv[aï¿½]lid/i.test(txt)) s='invï¿½lido'; else if(/v[aï¿½]lid/i.test(txt)) s='vï¿½lido'; return s;
+      if(/inv[aá]lid/i.test(txt)) s='inválido'; else if(/v[aá]lid/i.test(txt)) s='válido'; return s;
     }
     function saveMotor(){
       var sn = (snInput && snInput.value || '').trim(); if(!sn) return;
@@ -153,7 +153,7 @@
     if(motorForm){ motorForm.addEventListener('submit', function(){ setTimeout(saveMotor, 80); }); }
     if(motorBtn ){ motorBtn .addEventListener('click',  function(){ setTimeout(saveMotor, 80); }); }
 
-    // HISTï¿½RICO (sï¿½ se a tabela existir)
+    // HISTÓRICO (só se a tabela existir)
     var tbd = d.querySelector('#hist-tbl tbody');
     if(tbd){
       var TYPE = d.body.dataset.hist || 'win';
@@ -190,19 +190,19 @@
       [inpQ, selEstado, selMarca, inpFrom, inpTo].forEach(function(el){
         if(el){ el.addEventListener('input', apply); if(el.tagName==='SELECT'){ el.addEventListener('change', apply); } }
       });
-      if(btnClear) btnClear.addEventListener('click', function(){ if(confirm('Limpar histï¿½rico?')){ w.IDMAR_HIST && IDMAR_HIST.clear(TYPE); apply(); } });
+      if(btnClear) btnClear.addEventListener('click', function(){ if(confirm('Limpar histórico?')){ w.IDMAR_HIST && IDMAR_HIST.clear(TYPE); apply(); } });
       if(btnCSV)   btnCSV  .addEventListener('click', function(){ var all=(w.IDMAR_HIST && IDMAR_HIST.all(TYPE))||[]; var filtered=(w.IDMAR_HIST && IDMAR_HIST.filter(all,{ query:(inpQ&&inpQ.value||'').trim() }))||[]; w.IDMAR_HIST && IDMAR_HIST.toCSV(TYPE, filtered); });
       apply();
     }
   });
 
-  /* --- 5) UI interpretativa (renderizadores pï¿½blicos) --- */
+  /* --- 5) UI interpretativa (renderizadores públicos) --- */
   (function(){
     if (w.renderWinResult && w.renderMotorResult) return;
     function el(tag, cls){ var e=d.createElement(tag); if(cls) e.className=cls; return e; }
-    function badge(status){ var b=el('span','badge '+(status==='vï¿½lido'?'ok':'nok')); b.textContent=status||''; return b; }
+    function badge(status){ var b=el('span','badge '+(status==='válido'?'ok':'nok')); b.textContent=status||''; return b; }
     function table(fields){
-      var t=el('table','tbl'); t.innerHTML='<thead><tr><th data-i18n="field">Campo</th><th data-i18n="value">Valor</th><th data-i18n="meaning">Interpretaï¿½ï¿½o</th></tr></thead><tbody></tbody>';
+      var t=el('table','tbl'); t.innerHTML='<thead><tr><th data-i18n="field">Campo</th><th data-i18n="value">Valor</th><th data-i18n="meaning">Interpretação</th></tr></thead><tbody></tbody>';
       var tb=t.querySelector('tbody'); (fields||[]).forEach(function(r){ var tr=d.createElement('tr'); tr.innerHTML='<td>'+(r.label||'')+'</td><td>'+(r.value||'')+'</td><td>'+(r.meaning||'')+'</td>'; tb.appendChild(tr); });
       return t;
     }
@@ -225,6 +225,3 @@
   })();
 
 })(window, document);
-
-
-
