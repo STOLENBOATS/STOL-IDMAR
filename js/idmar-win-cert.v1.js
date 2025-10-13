@@ -1,7 +1,7 @@
-ï»¿/*! IDMAR ï¿½ Certificado de Conformidade (drop-in) v1.2
- * Uso: inclui UMA vez, de preferï¿½ncia apï¿½s os scripts do validador WIN:
+/*! IDMAR – Certificado de Conformidade (drop-in) v1.2
+ * Uso: inclui UMA vez, de preferência após os scripts do validador WIN:
  *   <script src="js/idmar-win-cert.v1.js?v=1.2"></script>
- * Nï¿½o altera HTML existente. Cria e gere um painel prï¿½prio no bloco do WIN.
+ * Não altera HTML existente. Cria e gere um painel próprio no bloco do WIN.
  */
 (function (w, d) {
   if (w.__IDMAR_WIN_CERT_V12__) return; w.__IDMAR_WIN_CERT_V12__ = true;
@@ -19,15 +19,15 @@
   function fix2(n) { return (n >= 70 ? 1900 + n : 2000 + n); }
   function parseModelYear(code) {
     const c = sanitize(code); if (!c) return null;
-    // EU CIN (ISO 10087): 14 chars, ï¿½ltimos 2 dï¿½gitos = ano modelo
+    // EU CIN (ISO 10087): 14 chars, últimos 2 dígitos = ano modelo
     if (c.length === 14 && /^\w{14}$/.test(c)) {
       const yy = c.slice(-2); if (/^\d{2}$/.test(yy)) return fix2(+yy);
     }
-    // US HIN (1984+): 12 chars, ï¿½ltimos 2 dï¿½gitos = ano modelo
+    // US HIN (1984+): 12 chars, últimos 2 dígitos = ano modelo
     if (c.length === 12 && /^\w{12}$/.test(c)) {
       const yy = c.slice(-2); if (/^\d{2}$/.test(yy)) return fix2(+yy);
     }
-    // Fallback: 2 dï¿½gitos finais
+    // Fallback: 2 dígitos finais
     const m = c.match(/(\d{2})$/);
     if (m) return fix2(+m[1]);
     return null;
@@ -38,32 +38,32 @@
     if (year == null) return {
       level: "info", code: "CE_UNKNOWN",
       title: t("Certificado de Conformidade", "Certificate of Conformity"),
-      detail: t("Sem ano de modelo ï¿½ nï¿½o ï¿½ possï¿½vel determinar obrigaï¿½ï¿½o CE.",
-                "No model year ï¿½ cannot determine CE obligation.")
+      detail: t("Sem ano de modelo — não é possível determinar obrigação CE.",
+                "No model year — cannot determine CE obligation.")
     };
     if (year < 1998) return {
       level: "ok", code: "CE_NOT_REQUIRED",
       title: t("Certificado de Conformidade", "Certificate of Conformity"),
-      detail: t("Dispensado (anterior a 1998 ï¿½ fora do ï¿½mbito RCD).",
-                "Not required (before 1998 ï¿½ outside RCD scope).")
+      detail: t("Dispensado (anterior a 1998 — fora do âmbito RCD).",
+                "Not required (before 1998 — outside RCD scope).")
     };
-    // Construï¿½ï¿½o amadora ou importado usado extra-UE ? PCA
+    // Construção amadora ou importado usado extra-UE → PCA
     if (flags.pca) return {
       level: "warn", code: "CE_PCA_REQUIRED",
       title: t("Certificado de Conformidade (PCA)", "Certificate of Conformity (PCA)"),
-      detail: t("Requer Avaliaï¿½ï¿½o Pï¿½s-Construï¿½ï¿½o (PCA) com Declaraï¿½ï¿½o UE de Conformidade.",
+      detail: t("Requer Avaliação Pós-Construção (PCA) com Declaração UE de Conformidade.",
                 "Requires Post Construction Assessment (PCA) with EU Declaration of Conformity.")
     };
     if (year >= 2016) return {
       level: "need", code: "CE_EU_DOC_REQUIRED",
-      title: t("Declaraï¿½ï¿½o UE de Conformidade", "EU Declaration of Conformity"),
-      detail: t("Obrigatï¿½ria ao abrigo da Diretiva 2013/53/EU (RCD II).",
+      title: t("Declaração UE de Conformidade", "EU Declaration of Conformity"),
+      detail: t("Obrigatória ao abrigo da Diretiva 2013/53/EU (RCD II).",
                 "Mandatory under Directive 2013/53/EU (RCD II).")
     };
     return {
       level: "need", code: "CE_DOC_REQUIRED",
-      title: t("Declaraï¿½ï¿½o de Conformidade CE", "CE Declaration of Conformity"),
-      detail: t("Obrigatï¿½ria ao abrigo da Diretiva 94/25/CE (RCD I).",
+      title: t("Declaração de Conformidade CE", "CE Declaration of Conformity"),
+      detail: t("Obrigatória ao abrigo da Diretiva 94/25/CE (RCD I).",
                 "Mandatory under Directive 94/25/EC (RCD I).")
     };
   }
@@ -88,12 +88,12 @@
       qs("#formWin") || qs("main") || d.body;
     anchor.appendChild(host);
 
-    // flags + ï¿½certificado apresentadoï¿½
+    // flags + “certificado apresentado”
     const controls = d.createElement("div");
     controls.style.cssText = "display:flex;gap:10px;flex-wrap:wrap;margin:0 0 .5rem 0";
     controls.innerHTML = `
       <label style="display:flex;gap:.35rem;align-items:center">
-        <input type="checkbox" id="flagHome"> <span>${t("Construï¿½ï¿½o amadora","Home-built")}</span>
+        <input type="checkbox" id="flagHome"> <span>${t("Construção amadora","Home-built")}</span>
       </label>
       <label style="display:flex;gap:.35rem;align-items:center">
         <input type="checkbox" id="flagImported"> <span>${t("Importado usado (extra-UE)","Imported used (non-EU)")}</span>
@@ -126,7 +126,7 @@
     body.innerHTML = `
       <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;margin:.25rem 0 .35rem 0">
         ${badge(r)}
-        <small style="opacity:.8">${t("Modelo","Model year")}: ${year ?? "ï¿½"}</small>
+        <small style="opacity:.8">${t("Modelo","Model year")}: ${year ?? "—"}</small>
       </div>
       <div style="font-size:.95em;opacity:.9;margin-top:.2rem">${r.detail}</div>`;
   }
@@ -138,13 +138,13 @@
       input.addEventListener("input", render);
     }
     render();
-    // Reagir a alteraï¿½ï¿½es no bloco de resultados
+    // Reagir a alterações no bloco de resultados
     try {
       const targets = [qs("#winOut"), qs("#winResult"), qs("#interpWinBody")?.parentElement].filter(Boolean);
       const mo = new MutationObserver(render);
       targets.forEach(t => mo.observe(t, { childList: true, subtree: true }));
     } catch (e) {}
-    // Mudanï¿½a de idioma
+    // Mudança de idioma
     d.addEventListener("idmar:ui-updated", render);
     w.addEventListener("storage", e => { if (e.key === LS_KEY) render(); });
   }
@@ -155,6 +155,3 @@
   }
   boot();
 })(window, document);
-
-
-
