@@ -30,17 +30,17 @@
   function buildHeader(){
     if(d.getElementById('idmar-topbar')) return;
     var h=d.createElement('header'); h.id='idmar-topbar'; h.className='topbar';
-    h.innerHTML = '<img src="img/logo-pm.png" alt="Polï¿½cia Marï¿½tima">'
-      + '<div class="brand"><span class="app">IDMAR</span><small>Identificaï¿½ï¿½o Marï¿½tima ï¿½ Cascos & Motores</small></div>'
-      + '<nav><a href="validador.html">Validador</a><a href="historico_win.html">Histï¿½rico WIN</a><a href="historico_motor.html">Histï¿½rico Motor</a><a href="forense.html">Forense</a><a href="#" id="idmar-logout">Sair</a></nav>'
-      + '<button id="idmar-theme" style="margin-left:auto" title="Dia/Noite">??</button>';
+    h.innerHTML = '<img src="img/logo-pm.png" alt="Polícia Marítima">'
+      + '<div class="brand"><span class="app">IDMAR</span><small>Identificação Marítima — Cascos & Motores</small></div>'
+      + '<nav><a href="validador.html">Validador</a><a href="historico_win.html">Histórico WIN</a><a href="historico_motor.html">Histórico Motor</a><a href="forense.html">Forense</a><a href="#" id="idmar-logout">Sair</a></nav>'
+      + '<button id="idmar-theme" style="margin-left:auto" title="Dia/Noite">🌗</button>';
     return h;
   }
   function buildFooter(){
     if(d.getElementById('idmar-footer')) return;
     var f=d.createElement('footer'); f.id='idmar-footer'; f.className='footer';
     var v=(w.IDMAR_VERSION||'v2.2.7-baseline+merge-r2.3');
-    f.textContent='IDMAR ï¿½ ' + v;
+    f.textContent='IDMAR — ' + v;
     return f;
   }
   function setTheme(theme){
