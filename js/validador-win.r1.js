@@ -1,4 +1,4 @@
-﻿/* IDMAR � validador-win.r1 (PT + dica EN | hist�rico compat) */
+ï»¿/* IDMAR ï¿½ validador-win.r1 (PT + dica EN | histï¿½rico compat) */
 (()=> {
   const selInput = ['#win','#winInput','input[name="win"]','.js-win','#hin','#hinInput','input[name="hin"]'];
   const selButton=['#btnValidar','#validateBtn','.js-validate','button[type="submit"]'];
@@ -17,41 +17,41 @@
 
   function validateEU14(w){
     const c=w.slice(0,2), m=w.slice(2,5), free=w.slice(5,10), mon=w[10], yr=w[11], model=w.slice(12,14);
-    if(!reAZ.test(c)) return fail('Pa�s inv�lido','Invalid country');
-    if(!reAZ.test(m)) return fail('Fabricante inv�lido','Invalid manufacturer');
-    if(!reAZ09.test(free))return fail('S�rie inv�lida','Free block invalid');
-    if(!MONTH.has(mon))  return fail('M�s inv�lido (sem I/O/Q)','Invalid month');
-    if(!re09.test(yr))   return fail('Ano inv�lido','Invalid year');
-    if(!re09.test(model))return fail('Modelo inv�lido','Invalid model');
-    return ok('Formato UE (14) v�lido','EU 14 valid',{country:c,manufacturer:m,month:mon,year:yr,model});
+    if(!reAZ.test(c)) return fail('Paï¿½s invï¿½lido','Invalid country');
+    if(!reAZ.test(m)) return fail('Fabricante invï¿½lido','Invalid manufacturer');
+    if(!reAZ09.test(free))return fail('Sï¿½rie invï¿½lida','Free block invalid');
+    if(!MONTH.has(mon))  return fail('Mï¿½s invï¿½lido (sem I/O/Q)','Invalid month');
+    if(!re09.test(yr))   return fail('Ano invï¿½lido','Invalid year');
+    if(!re09.test(model))return fail('Modelo invï¿½lido','Invalid model');
+    return ok('Formato UE (14) vï¿½lido','EU 14 valid',{country:c,manufacturer:m,month:mon,year:yr,model});
   }
   function validateUS14(w){
     const c=w.slice(0,2), m=w.slice(2,5), free=w.slice(5,12), mon=w[12], yr=w[13];
-    if(!reAZ.test(c)) return fail('Pa�s inv�lido','Invalid country');
-    if(!reAZ.test(m)) return fail('Fabricante inv�lido','Invalid manufacturer');
-    if(!reAZ09.test(free))return fail('S�rie inv�lida','Free block invalid');
-    if(!MONTH.has(mon))  return fail('M�s inv�lido (sem I/O/Q)','Invalid month');
-    if(!re09.test(yr))   return fail('Ano inv�lido','Invalid year');
-    return ok('Formato EUA (14) v�lido','US 14 valid',{country:c,manufacturer:m,month:mon,year:yr});
+    if(!reAZ.test(c)) return fail('Paï¿½s invï¿½lido','Invalid country');
+    if(!reAZ.test(m)) return fail('Fabricante invï¿½lido','Invalid manufacturer');
+    if(!reAZ09.test(free))return fail('Sï¿½rie invï¿½lida','Free block invalid');
+    if(!MONTH.has(mon))  return fail('Mï¿½s invï¿½lido (sem I/O/Q)','Invalid month');
+    if(!re09.test(yr))   return fail('Ano invï¿½lido','Invalid year');
+    return ok('Formato EUA (14) vï¿½lido','US 14 valid',{country:c,manufacturer:m,month:mon,year:yr});
   }
   function validateUS16(w){
     const c=w.slice(0,2), m=w.slice(2,5), free=w.slice(5,12), mon=w[12], yr=w[13], model=w.slice(14,16);
-    if(!reAZ.test(c)) return fail('Pa�s inv�lido','Invalid country');
-    if(!reAZ.test(m)) return fail('Fabricante inv�lido','Invalid manufacturer');
-    if(!reAZ09.test(free))return fail('S�rie inv�lida','Free block invalid');
-    if(!MONTH.has(mon))  return fail('M�s inv�lido (sem I/O/Q)','Invalid month');
-    if(!re09.test(yr))   return fail('Ano inv�lido','Invalid year');
-    if(!re09.test(model))return fail('Modelo inv�lido','Invalid model');
-    return ok('Formato EUA (16) v�lido','US 16 valid',{country:c,manufacturer:m,month:mon,year:yr,model});
+    if(!reAZ.test(c)) return fail('Paï¿½s invï¿½lido','Invalid country');
+    if(!reAZ.test(m)) return fail('Fabricante invï¿½lido','Invalid manufacturer');
+    if(!reAZ09.test(free))return fail('Sï¿½rie invï¿½lida','Free block invalid');
+    if(!MONTH.has(mon))  return fail('Mï¿½s invï¿½lido (sem I/O/Q)','Invalid month');
+    if(!re09.test(yr))   return fail('Ano invï¿½lido','Invalid year');
+    if(!re09.test(model))return fail('Modelo invï¿½lido','Invalid model');
+    return ok('Formato EUA (16) vï¿½lido','US 16 valid',{country:c,manufacturer:m,month:mon,year:yr,model});
   }
 
   function validate(raw){
     let w=norm(raw);
     if(!w) return fail('Campo vazio','Empty field');
-    if(/[^A-Z0-9-]/.test(w)) return fail('Caracteres inv�lidos','Invalid chars');
+    if(/[^A-Z0-9-]/.test(w)) return fail('Caracteres invï¿½lidos','Invalid chars');
     if(/^..-./.test(w)) w=stripHyph2(w);
     const len=detectLen(w);
-    if(len==='INVALID_15') return fail('Formato EUA (15) inv�lido','US 15 invalid');
+    if(len==='INVALID_15') return fail('Formato EUA (15) invï¿½lido','US 15 invalid');
     if(len==='EU_OR_US_14'){
       const eu=validateEU14(w); if(eu.valid) return {...eu,meta:{...eu.meta,format:'EU-14',normalized:w}};
       const us14=validateUS14(w); if(us14.valid) return {...us14,meta:{...us14.meta,format:'US-14',normalized:w}};
@@ -70,7 +70,7 @@
       win: verdict?.meta?.normalized || (raw||'').toUpperCase(),
       valid: !!verdict.valid,
       estado: verdict.valid?'ok':'erro',
-      estadoLabel: verdict.valid?'V�lido':'Inv�lido',
+      estadoLabel: verdict.valid?'Vï¿½lido':'Invï¿½lido',
       justificacao: verdict.message||'',
       foto:'',
       meta:{...verdict.meta,module:'WIN'}

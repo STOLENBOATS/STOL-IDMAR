@@ -1,4 +1,4 @@
-﻿// validador-motor.r3c.js � hist�rico + valida��o (PT/EN)
+ï»¿// validador-motor.r3c.js ï¿½ histï¿½rico + validaï¿½ï¿½o (PT/EN)
 (function(w,d){
   w.IDMAR=w.IDMAR||{}; w.NAV=w.NAV||w.IDMAR;
   NAV.STORAGE = NAV.STORAGE || { SESSION:'IDMAR_SESSION', WIN_HISTORY:'hist_win', MOTOR_HISTORY:'hist_motor' };
@@ -20,13 +20,13 @@
     gear: v('eng_gear'),
     origin: ($id('srch_origin')?.value)||''
   };}
-  function badge(ok, errs){ if(ok) return '<span class="badge good">V�lido / Valid</span>'; const lis=(errs||[]).map(e=>'<li>'+e+'</li>').join(''); return '<span class="badge bad">Inv�lido / Invalid</span><ul style="margin:.4rem 0 .2rem .9rem">'+lis+'</ul>'; }
+  function badge(ok, errs){ if(ok) return '<span class="badge good">Vï¿½lido / Valid</span>'; const lis=(errs||[]).map(e=>'<li>'+e+'</li>').join(''); return '<span class="badge bad">Invï¿½lido / Invalid</span><ul style="margin:.4rem 0 .2rem .9rem">'+lis+'</ul>'; }
   async function onSubmit(e){
     e.preventDefault();
     const out=$id('motorOut'); if(!out) return;
     const s=getSel();
     if(!s.brand){ out.innerHTML=badge(false,["Selecione a marca / Select the brand"]); return; }
-    if(!s.model && !s.hp){ out.innerHTML=badge(false,["Preencha Modelo ou Pot�ncia / Fill Model or Power"]); return; }
+    if(!s.model && !s.hp){ out.innerHTML=badge(false,["Preencha Modelo ou Potï¿½ncia / Fill Model or Power"]); return; }
     let res={ok:true,errors:[]};
     try{
       if(w.IDMAR_VALIDATION && typeof w.IDMAR_VALIDATION.validateSelection==='function'){
@@ -34,25 +34,25 @@
           brand:s.brand,family:s.family,model:s.model,hp:s.hp,rigging:s.rigging,shaft:s.shaft,rotation:s.rotation,year:s.year,displacement:s.displacement
         }, {catalogUrl:'data/engines_catalog.v2.json'});
       }
-    }catch(e){ res={ok:false,errors:["Erro de valida��o / Validation error"]}; }
+    }catch(e){ res={ok:false,errors:["Erro de validaï¿½ï¿½o / Validation error"]}; }
     const photo=$id('motorPhoto'); let photoName='', photoData='';
     if(photo && photo.files && photo.files[0]){
       photoName=photo.files[0].name;
       try{ const fr=new FileReader(); photoData=await new Promise((res,rej)=>{ fr.onload=()=>res(fr.result); fr.onerror=rej; fr.readAsDataURL(photo.files[0]); }); }catch(e){}
     }
     const parts=[];
-    if(s.family) parts.push(`Fam�lia/Family: ${s.family}`);
+    if(s.family) parts.push(`Famï¿½lia/Family: ${s.family}`);
     if(s.model) parts.push(`Modelo/Model: ${s.model}`);
-    if(s.hp) parts.push(`Pot�ncia/Power: ${s.hp} hp`);
+    if(s.hp) parts.push(`Potï¿½ncia/Power: ${s.hp} hp`);
     if(s.rigging) parts.push(`Comando/Rigging: ${s.rigging}`);
     if(s.shaft) parts.push(`Coluna/Shaft: ${s.shaft}`);
-    if(s.rotation) parts.push(`Rota��o/Rotation: ${s.rotation}`);
+    if(s.rotation) parts.push(`Rotaï¿½ï¿½o/Rotation: ${s.rotation}`);
     if(s.displacement) parts.push(`Cilindrada/Displacement: ${s.displacement} cc`);
     if(s.year) parts.push(`Ano/Year: ${s.year}`);
     if(s.origin) parts.push(`Origem/Origin: ${s.origin}`);
     out.innerHTML = badge(res.ok,res.errors) + ' ' + parts.join(' | ');
-    const rec = {date:nowISO(), ...s, valid:!!res.ok, reason: res.ok? "Combina��o compat�vel / Combination valid" : (res.errors||[]).join(' ; '), photoName, photoData};
-    try{ const key= NAV.STORAGE.MOTOR_HISTORY || 'hist_motor'; const arr=load(key); arr.unshift(rec); save(key, arr); }catch(e){ console.error('Falha ao gravar hist�rico', e); }
+    const rec = {date:nowISO(), ...s, valid:!!res.ok, reason: res.ok? "Combinaï¿½ï¿½o compatï¿½vel / Combination valid" : (res.errors||[]).join(' ; '), photoName, photoData};
+    try{ const key= NAV.STORAGE.MOTOR_HISTORY || 'hist_motor'; const arr=load(key); arr.unshift(rec); save(key, arr); }catch(e){ console.error('Falha ao gravar histï¿½rico', e); }
   }
   function wire(){ const form=$id('formMotor'); if(form && !form.dataset.bound){ form.addEventListener('submit', onSubmit); form.dataset.bound='1'; } }
   if(document.readyState==='loading') d.addEventListener('DOMContentLoaded', wire); else wire();

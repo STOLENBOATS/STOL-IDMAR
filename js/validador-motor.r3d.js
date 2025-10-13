@@ -1,4 +1,4 @@
-﻿// validador-motor.r3d.js � valida��o refor�ada + hist�rico compat�vel (PT/EN)
+ï»¿// validador-motor.r3d.js ï¿½ validaï¿½ï¿½o reforï¿½ada + histï¿½rico compatï¿½vel (PT/EN)
 (function (w, d) {
   console.info('[IDMAR] validador-motor ATIVO: r3d');
   w.IDMAR = w.IDMAR || {};
@@ -50,12 +50,12 @@
 
   function buildSummaryPTEN(s) {
     const parts = [];
-    if (s.family) parts.push(`Fam�lia/Family: ${s.family}`);
+    if (s.family) parts.push(`Famï¿½lia/Family: ${s.family}`);
     if (s.model) parts.push(`Modelo/Model: ${s.model}`);
-    if (s.hp) parts.push(`Pot�ncia/Power: ${s.hp} hp`);
+    if (s.hp) parts.push(`Potï¿½ncia/Power: ${s.hp} hp`);
     if (s.rigging) parts.push(`Comando/Rigging: ${s.rigging}`);
     if (s.shaft) parts.push(`Coluna/Shaft: ${s.shaft}`);
-    if (s.rotation) parts.push(`Rota��o/Rotation: ${s.rotation}`);
+    if (s.rotation) parts.push(`Rotaï¿½ï¿½o/Rotation: ${s.rotation}`);
     if (s.displacement) parts.push(`Cilindrada/Displacement: ${s.displacement} cc`);
     if (s.year) parts.push(`Ano/Year: ${s.year}`);
     if (s.origin) parts.push(`Origem/Origin: ${s.origin}`);
@@ -81,12 +81,12 @@
   }
 
   function badge(ok, errs) {
-    if (ok) return '<span class="badge good">V�lido / Valid</span>';
+    if (ok) return '<span class="badge good">Vï¿½lido / Valid</span>';
     const lis = (errs || []).map(e => '<li>' + e + '</li>').join('');
-    return '<span class="badge bad">Inv�lido / Invalid</span><ul style="margin:.4rem 0 .2rem .9rem">' + lis + '</ul>';
+    return '<span class="badge bad">Invï¿½lido / Invalid</span><ul style="margin:.4rem 0 .2rem .9rem">' + lis + '</ul>';
   }
 
-  // --------- HIST�RICO: compat total + resiliente a quota ----------
+  // --------- HISTï¿½RICO: compat total + resiliente a quota ----------
   function cryptoRandomId() {
     try {
       const a = new Uint8Array(8); crypto.getRandomValues(a);
@@ -104,7 +104,7 @@
       const a2 = arr.map(r => ({ ...r, photoData: '' }));
       try { tryWrite(a2); return; }
       catch (e2) {
-        // �ltima defesa: encurtar a lista at� caber
+        // ï¿½ltima defesa: encurtar a lista atï¿½ caber
         let a3 = a2.slice();
         while (a3.length > 1) {
           try { tryWrite(a3); break; }
@@ -136,7 +136,7 @@
 
     if (!s.brand) { out.innerHTML = badge(false, ["Selecione a marca / Select the brand"]); return; }
 
-    // 1) valida��o por cat�logo (se engine_validation estiver carregado)
+    // 1) validaï¿½ï¿½o por catï¿½logo (se engine_validation estiver carregado)
     let ok = true, errs = [];
     try {
       if (w.IDMAR_VALIDATION && typeof w.IDMAR_VALIDATION.validateSelection === 'function') {
@@ -146,36 +146,36 @@
         );
         ok = !!res.ok; errs = res.errors || [];
       }
-    } catch (e) { ok = false; errs.push("Erro de valida��o / Validation error"); }
+    } catch (e) { ok = false; errs.push("Erro de validaï¿½ï¿½o / Validation error"); }
 
-    // 2) valida��o EXTRA (texto livre vs envelope da marca/fam�lia)
+    // 2) validaï¿½ï¿½o EXTRA (texto livre vs envelope da marca/famï¿½lia)
     try {
       const cat = await loadCatalog();
       const env = gatherEnv(cat, s.brand, s.family);
       if (s.model) {
         const found = env.models.includes(String(s.model).toLowerCase());
-        if (!found) { ok = false; errs.push("Modelo (texto) n�o corresponde a c�digos conhecidos da marca/fam�lia / Free-text model not found for brand/family"); }
+        if (!found) { ok = false; errs.push("Modelo (texto) nï¿½o corresponde a cï¿½digos conhecidos da marca/famï¿½lia / Free-text model not found for brand/family"); }
       }
       if (s.hp) {
         const hpNum = String(s.hp).trim();
         if (env.hp.length && !env.hp.includes(hpNum)) {
-          ok = false; errs.push("Pot�ncia (texto) fora das op��es para a marca/fam�lia / Free-text power not in catalog for brand/family");
+          ok = false; errs.push("Potï¿½ncia (texto) fora das opï¿½ï¿½es para a marca/famï¿½lia / Free-text power not in catalog for brand/family");
         }
       }
       if (s.year) {
         const yr = String(s.year).trim();
         if (env.years.length && !env.years.includes(yr)) {
-          ok = false; errs.push("Ano (texto) fora do intervalo da fam�lia / Free-text year outside family range");
+          ok = false; errs.push("Ano (texto) fora do intervalo da famï¿½lia / Free-text year outside family range");
         }
       }
       if (s.displacement) {
         if (env.displacement.length && !env.displacement.includes(String(s.displacement))) {
-          ok = false; errs.push("Cilindrada (texto) n�o coincide com registos / Free-text displacement not in records");
+          ok = false; errs.push("Cilindrada (texto) nï¿½o coincide com registos / Free-text displacement not in records");
         }
       }
-    } catch (e) { /* cat�logo indispon�vel ? segue s� com o que houver */ }
+    } catch (e) { /* catï¿½logo indisponï¿½vel ? segue sï¿½ com o que houver */ }
 
-    // Sa�da & Hist�rico
+    // Saï¿½da & Histï¿½rico
     const summary = buildSummaryPTEN(s);
     out.innerHTML = badge(ok, errs) + ' ' + summary;
 
@@ -193,16 +193,16 @@
       date: nowISO(),
       brand: s.brand,
       model: s.model || (s.family ? `${s.family}` : null),
-      sn: summary,                               // compat�vel com a coluna "S/N" do hist�rico
+      sn: summary,                               // compatï¿½vel com a coluna "S/N" do histï¿½rico
       valid: !!ok,
-      reason: ok ? "Combina��o compat�vel / Combination valid" : (errs || []).join(' ; '),
+      reason: ok ? "Combinaï¿½ï¿½o compatï¿½vel / Combination valid" : (errs || []).join(' ; '),
       photoName, photoData,
-      // campos adicionais �teis para filtros futuros
+      // campos adicionais ï¿½teis para filtros futuros
       estado: ok ? 'ok' : 'erro',
-      estadoLabel: ok ? 'V�lido' : 'Inv�lido'
+      estadoLabel: ok ? 'Vï¿½lido' : 'Invï¿½lido'
     };
 
-    // grava em TODAS as chaves que alguma p�gina possa ler
+    // grava em TODAS as chaves que alguma pï¿½gina possa ler
     recordHistoryMotorCompat(rec);
   }
 

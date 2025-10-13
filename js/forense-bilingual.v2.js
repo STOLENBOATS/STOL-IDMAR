@@ -1,4 +1,4 @@
-﻿// forense-bilingual.v2.js � PT/EN para a p�gina Forense (sem :contains)
+ï»¿// forense-bilingual.v2.js ï¿½ PT/EN para a pï¿½gina Forense (sem :contains)
 (function (d) {
   const q = sel => d.querySelector(sel);
   const qa = sel => Array.from(d.querySelectorAll(sel));
@@ -17,13 +17,13 @@
   }
 
   function boot(){
-    // T�tulo
+    // Tï¿½tulo
     const h1 = q('h1');
-    if (h1 && /forense/i.test(h1.textContent)) setText(h1, 'Forense � �ndice / Forensics � Index');
+    if (h1 && /forense/i.test(h1.textContent)) setText(h1, 'Forense ï¿½ ï¿½ndice / Forensics ï¿½ Index');
 
-    // Sec��es
+    // Secï¿½ï¿½es
     const secUp = findByText(['h2','h3'].flatMap(t=>qa(t)), /Carregar evid/i);
-    if (secUp) setText(secUp, 'Carregar evid�ncias / Upload evidence');
+    if (secUp) setText(secUp, 'Carregar evidï¿½ncias / Upload evidence');
 
     const secWs = findByText(['h2','h3'].flatMap(t=>qa(t)), /Workspace/i);
     if (secWs) setText(secWs, 'Workspace / Workspace');
@@ -32,23 +32,23 @@
     const ctxLbl = findByText('label', /^Contexto\b/i);
     if (ctxLbl) setHTML(ctxLbl, 'Contexto', 'Context');
 
-    // Bot�o anexar
-    const btnAttach = findByText('button, a[role=button]', /Anexar ao hist�rico/i);
+    // Botï¿½o anexar
+    const btnAttach = findByText('button, a[role=button]', /Anexar ao histï¿½rico/i);
     if (btnAttach){
-      setText(btnAttach, 'Anexar ao hist�rico mais recente / Attach to most recent history');
+      setText(btnAttach, 'Anexar ao histï¿½rico mais recente / Attach to most recent history');
       setTitle(btnAttach, 'Anexa ao registo mais recente do contexto selecionado. / Attach to newest record in selected context.');
     }
 
     // Slider "Comparar"
-    // (n�o usamos :contains � filtramos por texto)
+    // (nï¿½o usamos :contains ï¿½ filtramos por texto)
     renameAllByText('label', /^Comparar$/i, 'Comparar / Compare');
 
-    // Bot�es de ferramentas
+    // Botï¿½es de ferramentas
     renameAllByText('button, a[role=button]', /Abrir lightbox/i,        'Abrir lightbox / Open lightbox');
     renameAllByText('button, a[role=button]', /^Anotar/i,               'Anotar (rect) / Annotate (rect)');
-    renameAllByText('button, a[role=button]', /Limpar anota��es/i,      'Limpar anota��es / Clear annotations');
+    renameAllByText('button, a[role=button]', /Limpar anotaï¿½ï¿½es/i,      'Limpar anotaï¿½ï¿½es / Clear annotations');
     renameAllByText('button, a[role=button]', /Exportar PNG/i,          'Exportar PNG anotado / Export annotated PNG');
-    renameAllByText('button, a[role=button]', /Guardar.*bundle/i,       'Guardar �bundle� (JSON) / Save �bundle� (JSON)');
+    renameAllByText('button, a[role=button]', /Guardar.*bundle/i,       'Guardar ï¿½bundleï¿½ (JSON) / Save ï¿½bundleï¿½ (JSON)');
 
     // Acessibilidade nos file pickers
     qa('input[type=file]').forEach(inp=>{
@@ -59,7 +59,7 @@
     const range = q('input[type=range]');
     if (range) setTitle(range, 'Ajusta opacidade entre imagens A/B / Adjust opacity between A/B images');
 
-    // Op��es do contexto (se forem estas palavras)
+    // Opï¿½ï¿½es do contexto (se forem estas palavras)
     const sel = q('select');
     if (sel) {
       qa('option', sel).forEach(o=>{

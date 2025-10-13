@@ -1,4 +1,4 @@
-﻿// IDMAR � Hist�rico WIN (r3b) � filtros, ordena��o, CSV, foto/miniatura, raz�o e forense
+ï»¿// IDMAR ï¿½ Histï¿½rico WIN (r3b) ï¿½ filtros, ordenaï¿½ï¿½o, CSV, foto/miniatura, razï¿½o e forense
 (function(w,d){
   w.IDMAR=w.IDMAR||{}; w.NAV=w.NAV||w.IDMAR;
   NAV.STORAGE = NAV.STORAGE || { SESSION:'IDMAR_SESSION', WIN_HISTORY:'hist_win', MOTOR_HISTORY:'hist_motor' };
@@ -19,24 +19,24 @@
     if(!pt) return '';
     const s=(''+pt).trim();
     // Common reasons
-    if(/Estrutura v[a�]lida/i.test(s)) return s + ' / <span class="en">Structure valid</span>';
-    if(/Ano de produ[c�][a�]o inconsistente/i.test(s)) return s + ' / <span class="en">Production year inconsistent</span>';
+    if(/Estrutura v[aï¿½]lida/i.test(s)) return s + ' / <span class="en">Structure valid</span>';
+    if(/Ano de produ[cï¿½][aï¿½]o inconsistente/i.test(s)) return s + ' / <span class="en">Production year inconsistent</span>';
     if(/fora de 1998\+/i.test(s)) return s + ' / <span class="en">outside 1998+</span>';
-    if(/Ano do modelo n[a�]o pode ser anterior/i.test(s)) return s + ' / <span class="en">Model year cannot be earlier</span>';
-    if(/M[e�]s inv[a�]lido/i.test(s)) return s + ' / <span class="en">Invalid month</span>';
-    if(/Tamanho inv[a�]lido/i.test(s)) return s + ' / <span class="en">Invalid length</span>';
-    if(/Formato EUA n[a�]o admite 15/i.test(s)) return s + ' / <span class="en">US format does not allow 15</span>';
-    if(/Caracteres inv[a�]lidos/i.test(s)) return s + ' / <span class="en">Invalid characters</span>';
-    if(/Pa[i�]s inv[a�]lido/i.test(s)) return s + ' / <span class="en">Invalid country</span>';
-    if(/Fabricante inv[a�]lido/i.test(s)) return s + ' / <span class="en">Invalid manufacturer</span>';
+    if(/Ano do modelo n[aï¿½]o pode ser anterior/i.test(s)) return s + ' / <span class="en">Model year cannot be earlier</span>';
+    if(/M[eï¿½]s inv[aï¿½]lido/i.test(s)) return s + ' / <span class="en">Invalid month</span>';
+    if(/Tamanho inv[aï¿½]lido/i.test(s)) return s + ' / <span class="en">Invalid length</span>';
+    if(/Formato EUA n[aï¿½]o admite 15/i.test(s)) return s + ' / <span class="en">US format does not allow 15</span>';
+    if(/Caracteres inv[aï¿½]lidos/i.test(s)) return s + ' / <span class="en">Invalid characters</span>';
+    if(/Pa[iï¿½]s inv[aï¿½]lido/i.test(s)) return s + ' / <span class="en">Invalid country</span>';
+    if(/Fabricante inv[aï¿½]lido/i.test(s)) return s + ' / <span class="en">Invalid manufacturer</span>';
     if(/Ano do modelo fora do intervalo/i.test(s)) return s + ' / <span class="en">Model year out of range</span>';
-    if(/Pr[e�]-?1998.*DoC\/CE/i.test(s)) return s + ' / <span class="en">Pre-1998 with DoC/CE</span>';
-    if(/Pr[e�]-?1998.*falta DoC\/CE/i.test(s)) return s + ' / <span class="en">Pre-1998: missing DoC/CE</span>';
+    if(/Pr[eï¿½]-?1998.*DoC\/CE/i.test(s)) return s + ' / <span class="en">Pre-1998 with DoC/CE</span>';
+    if(/Pr[eï¿½]-?1998.*falta DoC\/CE/i.test(s)) return s + ' / <span class="en">Pre-1998: missing DoC/CE</span>';
     return s + ' / <span class="en">' + s + '</span>';
   }
   function trStatePTEN(valid, pre98){
-    if(pre98) return 'Pr�-1998 / <span class="en">Pre-1998</span>';
-    return valid ? 'V�lido / <span class="en">Valid</span>' : 'Inv�lido / <span class="en">Invalid</span>';
+    if(pre98) return 'Prï¿½-1998 / <span class="en">Pre-1998</span>';
+    return valid ? 'Vï¿½lido / <span class="en">Valid</span>' : 'Invï¿½lido / <span class="en">Invalid</span>';
   }
 
   function findCSV(){ return $id('hist_win_csv') || Array.from(d.querySelectorAll('button,input[type="button"]')).find(b=>/exportar/i.test(b.textContent||b.value||'')); }
@@ -72,8 +72,8 @@
     const to = findTo();
     const q = input && input.value || '';
     let state = stateSel && stateSel.value || 'all';
-    if(/v�lido/i.test(state) || /valid/i.test(state)) state = 'ok';
-    if(/inv�lido/i.test(state) || /invalid/i.test(state)) state = 'bad';
+    if(/vï¿½lido/i.test(state) || /valid/i.test(state)) state = 'ok';
+    if(/invï¿½lido/i.test(state) || /invalid/i.test(state)) state = 'bad';
 
     const sorted = [...raw].sort((a,b)=> ts(b.date||b.dt||b.time||b.timestamp)-ts(a.date||a.dt||a.time||a.timestamp));
     const data = applyFilters(sorted, q, state, from && from.value, to && to.value);
@@ -81,7 +81,7 @@
     tbody.innerHTML='';
     data.forEach(r=>{
       const dtxt = new Date(ts(r.date||r.dt||r.time||r.timestamp)).toLocaleString();
-      const state = r.valid ? '<span class="badge good">V�lido</span>' : '<span class="badge bad">Inv�lido</span>';
+      const state = r.valid ? '<span class="badge good">Vï¿½lido</span>' : '<span class="badge bad">Invï¿½lido</span>';
       const reason = r.reason || '';
       const photo = r.photoName || '';
       const thumb = r.photoData ? '<img src="'+r.photoData+'" alt="" style="height:44px;border-radius:6px;border:1px solid var(--border)">' : '';
@@ -137,7 +137,7 @@
     const clrBtn = findClear();
     if(clrBtn) clrBtn.addEventListener('click', function(e){
       e.preventDefault();
-      if(confirm('Limpar hist�rico WIN? Esta a��o � irrevers�vel.')){ save(NAV.STORAGE.WIN_HISTORY, []); render(); }
+      if(confirm('Limpar histï¿½rico WIN? Esta aï¿½ï¿½o ï¿½ irreversï¿½vel.')){ save(NAV.STORAGE.WIN_HISTORY, []); render(); }
     });
   }
 

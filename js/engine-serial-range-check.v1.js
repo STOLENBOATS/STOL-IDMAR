@@ -1,7 +1,7 @@
-﻿// js/engine-serial-range-check.v1.js (r8)
-// - L� data/engine_serial_ranges.json (cache)
-// - Entrega janelas (intervalos) coerentes com a sele��o do cart�o "Motor"
-// - Valida n� de motor (dentro/fora) e devolve notas claras (inclui mismatch de pot�ncia/c�digo)
+ï»¿// js/engine-serial-range-check.v1.js (r8)
+// - Lï¿½ data/engine_serial_ranges.json (cache)
+// - Entrega janelas (intervalos) coerentes com a seleï¿½ï¿½o do cartï¿½o "Motor"
+// - Valida nï¿½ de motor (dentro/fora) e devolve notas claras (inclui mismatch de potï¿½ncia/cï¿½digo)
 (function(w){
   "use strict";
 
@@ -38,7 +38,7 @@
     if (out.code)   out.code   = String(out.code).trim().toUpperCase();      // p.ex. BAAL / BALJ
     if (out.hp)     out.hp     = parseInt(out.hp, 10);
     if (out.year)   out.year   = parseInt(out.year, 10);
-    // fam�lia: normalizar BF40A -> BF40 para lookup por fam�lia base
+    // famï¿½lia: normalizar BF40A -> BF40 para lookup por famï¿½lia base
     if (out.family && /^BF\d+[A-Z]$/i.test(out.family)) {
       out.familyBase = out.family.replace(/([A-Z])$/,''); // BF40A -> BF40
     } else {
@@ -56,7 +56,7 @@
     return _cache;
   }
 
-  // Seleciona janelas compat�veis com a sele��o do cart�o "Motor"
+  // Seleciona janelas compatï¿½veis com a seleï¿½ï¿½o do cartï¿½o "Motor"
   function getWindowsForSelection(sel, all){
     const S = normalizeSel(sel);
     const brand = all?.[S.brand];
@@ -78,7 +78,7 @@
         return out;
       }
 
-      // Se n�o veio fam�lia, mas veio HP ? procurar em todas as fam�lias/c�digos que aceitem este HP
+      // Se nï¿½o veio famï¿½lia, mas veio HP ? procurar em todas as famï¿½lias/cï¿½digos que aceitem este HP
       if (!famKey && S.hp){
         Object.entries(brand.families).forEach(([fam,def])=>{
           if (!def.codes) return;
@@ -117,70 +117,70 @@
     return [];
   }
 
-  // Valida��o do n� contra as janelas + notas (mismatch de pot�ncia/c�digo)
+  // Validaï¿½ï¿½o do nï¿½ contra as janelas + notas (mismatch de potï¿½ncia/cï¿½digo)
   function checkAgainstSelection(parsed, sel, all){
     const notes = [];
     const S = normalizeSel(sel);
 
     if (!parsed || !parsed.serial){
-      notes.push("N�mero inv�lido ou sem d�gitos suficientes.");
+      notes.push("Nï¿½mero invï¿½lido ou sem dï¿½gitos suficientes.");
       return { ok:false, notes };
     }
 
     // preparar janelas
     const wins = getWindowsForSelection(S, all);
     if (!wins.length){
-      notes.push("Sem janelas oficiais para esta sele��o (usar coer�ncia geral).");
-      // Sem janelas ? n�o bloqueamos, mas sinalizamos neutro
+      notes.push("Sem janelas oficiais para esta seleï¿½ï¿½o (usar coerï¿½ncia geral).");
+      // Sem janelas ? nï¿½o bloqueamos, mas sinalizamos neutro
       return { ok:true, notes };
     }
 
-    // tentar encontrar janela(s) coerentes tamb�m por c�digo/prefixo quando poss�vel
+    // tentar encontrar janela(s) coerentes tambï¿½m por cï¿½digo/prefixo quando possï¿½vel
     const codeLike = (parsed.code || parsed.prefix || "").toUpperCase();
 
-    // Honda: se c�digo expl�cito no SN, prioriza janelas desse c�digo
+    // Honda: se cï¿½digo explï¿½cito no SN, prioriza janelas desse cï¿½digo
     let candidates = wins;
     if (codeLike){
       const filtered = wins.filter(w => (w.code ? w.code.toUpperCase()===codeLike : false));
       if (filtered.length) candidates = filtered;
     }
 
-    // Verificar perten�a a pelo menos uma janela
+    // Verificar pertenï¿½a a pelo menos uma janela
     const inSome = candidates.some(w => within(parsed.serial, w.range));
     let ok = inSome;
 
-    // Notas de mismatch de pot�ncia quando aplic�vel (ex.: BAAL=15/20 vs BF40 selecionado)
+    // Notas de mismatch de potï¿½ncia quando aplicï¿½vel (ex.: BAAL=15/20 vs BF40 selecionado)
     if (S.brand && S.brand.toLowerCase()==="honda" && codeLike){
-      // procurar defini��o do c�digo no cat�logo, pela fam�lia selecionada (ou por todas)
+      // procurar definiï¿½ï¿½o do cï¿½digo no catï¿½logo, pela famï¿½lia selecionada (ou por todas)
       const brand = all?.[S.brand]; 
       const famKey = S.familyBase || S.family;
       let defs = [];
       if (famKey && brand?.families?.[famKey]?.codes?.[codeLike]){
         defs = [ brand.families[famKey].codes[codeLike] ];
       } else {
-        // procurar em todas as fam�lias Honda por esse c�digo
+        // procurar em todas as famï¿½lias Honda por esse cï¿½digo
         Object.values(brand?.families || {}).forEach(def=>{
           if (def.codes?.[codeLike]) defs.push(def.codes[codeLike]);
         });
       }
       defs.forEach(def=>{
         if (def.hp && S.hp && !def.hp.includes(S.hp)){
-          notes.push(`?? C�digo ${codeLike} est� associado a hp ${def.hp.join("/")} � sele��o atual: ${S.hp} hp.`);
+          notes.push(`?? Cï¿½digo ${codeLike} estï¿½ associado a hp ${def.hp.join("/")} ï¿½ seleï¿½ï¿½o atual: ${S.hp} hp.`);
           ok = false;
         }
       });
     }
 
     if (!ok){
-      notes.push("N�mero fora do(s) intervalo(s) esperado(s) para a sele��o atual.");
+      notes.push("Nï¿½mero fora do(s) intervalo(s) esperado(s) para a seleï¿½ï¿½o atual.");
     } else {
-      notes.push("N�mero dentro do(s) intervalo(s) esperado(s).");
+      notes.push("Nï¿½mero dentro do(s) intervalo(s) esperado(s).");
     }
 
     return { ok, notes };
   }
 
-  // API p�blica
+  // API pï¿½blica
   w.IDMAR_SerialRangeCheck = {
     loadRanges,
     getWindowsForSelection,

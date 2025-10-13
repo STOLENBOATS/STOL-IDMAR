@@ -1,4 +1,4 @@
-﻿// engine_picker.v2.2.js � compat�vel com schema v1 e v2, sem Python-isms
+ï»¿// engine_picker.v2.2.js ï¿½ compatï¿½vel com schema v1 e v2, sem Python-isms
 (function(){
   const $ = s => document.querySelector(s);
   const el = id => document.getElementById(id);
@@ -18,7 +18,7 @@
     wrap.append(lab, sel);
     return {wrap, sel};
   }
-  function fill(sel, arr, ph='� selecione �'){
+  function fill(sel, arr, ph='ï¿½ selecione ï¿½'){
     sel.innerHTML='';
     const opt0 = document.createElement('option'); opt0.value=''; opt0.textContent=ph; sel.appendChild(opt0);
     (arr||[]).forEach(v=>{ const o=document.createElement('option'); o.value=String(v); o.textContent=String(v); sel.appendChild(o); });
@@ -31,11 +31,11 @@
 
     container.innerHTML='';
     const boxes = {
-      fam: mount('Fam�lia / Family','eng_family'),
-      hp:  mount('Pot�ncia (hp)','eng_hp'),
+      fam: mount('Famï¿½lia / Family','eng_family'),
+      hp:  mount('Potï¿½ncia (hp)','eng_hp'),
       rig: mount('Comando / Rigging','eng_rig'),
       sh:  mount('Altura de coluna / Shaft','eng_shaft'),
-      rot: mount('Rota��o','eng_rot'),
+      rot: mount('Rotaï¿½ï¿½o','eng_rot'),
       col: mount('Cor / Color','eng_color'),
       gc:  mount('Gearcase','eng_gear'),
       yr:  mount('Ano / Year','eng_year'),
@@ -92,7 +92,7 @@
     boxes.fam.sel.addEventListener('change', refresh);
     refresh();
 
-    // Se mudar a marca, refaz fam�lias
+    // Se mudar a marca, refaz famï¿½lias
     el('brand')?.addEventListener('change', ()=>{
       const fams2 = Object.keys(catalog.brands?.[el('brand').value]?.families || {});
       fill(boxes.fam.sel, fams2);
@@ -107,14 +107,14 @@
     C('schema v1 fallback; brand=', brand, 'keys=', Object.keys(b||{}));
     container.innerHTML='';
     const boxes = {
-      hp:  mount('Pot�ncia (hp)','eng_hp'),
+      hp:  mount('Potï¿½ncia (hp)','eng_hp'),
       rig: mount('Comando / Rigging','eng_rig'),
       sh:  mount('Altura de coluna / Shaft','eng_shaft'),
-      rot: mount('Rota��o','eng_rot'),
+      rot: mount('Rotaï¿½ï¿½o','eng_rot'),
     };
     Object.values(boxes).forEach(bx=>container.appendChild(bx.wrap));
 
-    const hp = Array.isArray(b?.power_hp_range) ? [`${b.power_hp_range[0]}�${b.power_hp_range[1]}`] : [];
+    const hp = Array.isArray(b?.power_hp_range) ? [`${b.power_hp_range[0]}ï¿½${b.power_hp_range[1]}`] : [];
     const rig = b?.rigging || [];
     const sh  = b?.shaft_options || [];
     const rot = ['STD','CCW'];
@@ -130,10 +130,10 @@
     const url = script?.dataset?.catalog || 'data/engines_catalog.json';
     let cat;
     try { cat = await loadCatalog(url); }
-    catch(e){ console.error('[engine_picker] erro a carregar cat�logo:', e); return; }
+    catch(e){ console.error('[engine_picker] erro a carregar catï¿½logo:', e); return; }
 
     const target = document.getElementById('brandDynamic');
-    if(!target){ console.warn('[engine_picker] #brandDynamic n�o encontrado'); return; }
+    if(!target){ console.warn('[engine_picker] #brandDynamic nï¿½o encontrado'); return; }
 
     const v = Number(cat.schema_version||1);
     C('catalog schema_version =', v, 'url=', url);

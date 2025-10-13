@@ -1,5 +1,5 @@
-﻿
-/* IDMAR hotfix r3b � restablece tipografia e layout base, sem interferir no JS */
+ï»¿
+/* IDMAR hotfix r3b ï¿½ restablece tipografia e layout base, sem interferir no JS */
 :root{
   --bg:#f8fafc;
   --fg:#0f172a;
@@ -62,7 +62,7 @@ th{font-weight:800}
 /* footer */
 .footer{opacity:.9;color:#334155}
 
-/* === IDMAR: normaliza��o de margens/containers === */
+/* === IDMAR: normalizaï¿½ï¿½o de margens/containers === */
 :root{
   --idmar-container-max: 1100px;
   --idmar-container-pad: 16px;

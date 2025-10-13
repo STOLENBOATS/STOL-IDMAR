@@ -1,4 +1,4 @@
-﻿// js/validator-i18n-overlay.js (v3 - resilient)
+ï»¿// js/validator-i18n-overlay.js (v3 - resilient)
 (function(){
   const LS_KEY = "IDMAR_LANG";
   const isEN = () => {
@@ -14,12 +14,12 @@
     ["Validador Motor", "Engine Validator"],
     ["WIN / HIN", "WIN / HIN"],
     ["Marca", "Brand"],
-    ["C�digo do modelo / Model code", "Model code"],
+    ["Cï¿½digo do modelo / Model code", "Model code"],
     ["Shaft", "Shaft"],
     ["Par de letras (ano)", "Year letter pair"],
-    ["S�rie (6�7 d�gitos)", "Serial (6�7 digits)"],
+    ["Sï¿½rie (6ï¿½7 dï¿½gitos)", "Serial (6ï¿½7 digits)"],
     ["Modelo (pesquisa)", "Model (search)"],
-    ["Pot�ncia (hp)", "Power (hp)"],
+    ["Potï¿½ncia (hp)", "Power (hp)"],
     ["Cilindrada (cc)", "Displacement (cc)"],
     ["Ano", "Year"],
     ["Origem", "Origin"],
@@ -27,7 +27,7 @@
     ["Forense (opcional)", "Forensics (optional)"],
     ["Campo / Field", "Field"],
     ["Valor / Value", "Value"],
-    ["Interpreta��o / Meaning", "Meaning"],
+    ["Interpretaï¿½ï¿½o / Meaning", "Meaning"],
     ["Validar WIN", "Validate WIN"],
     ["Validar Motor", "Validate Engine"]
   ]);
@@ -35,16 +35,16 @@
   const LABELS_N = new Map(Array.from(LABELS.entries()).map(([pt,en]) => [norm(pt).toLowerCase(), en]));
 
   const MSG = [
-    { pt: "N�mero v�lido.", en: "Valid number." },
-    { pt: "Registo guardado no hist�rico.", en: "Record saved to history." },
-    { pt_prefix: "N�mero inv�lido:", en_prefix: "Invalid number:" },
-    { pt_prefix: "S/N inv�lido:", en_prefix: "Invalid S/N:" },
+    { pt: "Nï¿½mero vï¿½lido.", en: "Valid number." },
+    { pt: "Registo guardado no histï¿½rico.", en: "Record saved to history." },
+    { pt_prefix: "Nï¿½mero invï¿½lido:", en_prefix: "Invalid number:" },
+    { pt_prefix: "S/N invï¿½lido:", en_prefix: "Invalid S/N:" },
   ];
 
   function translatePlaceholder(pt){
     if (!pt) return pt;
     let out = pt.replace(/^\s*Ex\.\s*:/i, "E.g.:");
-    out = out.replace(/\bJap�o\b/g, "Japan");
+    out = out.replace(/\bJapï¿½o\b/g, "Japan");
     return out;
   }
 

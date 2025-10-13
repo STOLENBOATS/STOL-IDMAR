@@ -1,4 +1,4 @@
-﻿/* IDMAR â€” Forense r2.1 (export PNG + hash + thumbnail + anexo ao histÃ³rico) */
+ï»¿/* IDMAR Ã¢â¬â Forense r2.1 (export PNG + hash + thumbnail + anexo ao histÃÂ³rico) */
 (() => {
   function $(sel){ return document.querySelector(sel); }
   function findCanvas(){
@@ -52,7 +52,7 @@
   async function doExportAndAttach(){
     try{
       const c = findCanvas();
-      if (!c) { alert('Sem canvas visÃ­vel para exportar.'); return; }
+      if (!c) { alert('Sem canvas visÃÂ­vel para exportar.'); return; }
       const blob = await new Promise(function(res){ c.toBlob(res, 'image/png', 1); });
       if (!blob){ alert('Falha ao gerar PNG.'); return; }
       const name = 'forense_' + new Date().toISOString().replace(/[:.]/g,'-') + '.png';
@@ -67,10 +67,10 @@
       const payload = { ts:new Date().toISOString(), file:name, hash_sha256:hash, notes:notes, thumb_dataurl: thumb };
       const r = attachToLatest(kind, payload);
       if (r.ok){
-        console.log('[Forense] Anexado ao histÃ³rico:', r.id, payload);
-        alert('Exportado e anexado. SHA-256: ' + hash.slice(0,16) + 'â€¦');
+        console.log('[Forense] Anexado ao histÃÂ³rico:', r.id, payload);
+        alert('Exportado e anexado. SHA-256: ' + hash.slice(0,16) + 'Ã¢â¬Â¦');
       } else {
-        alert('Sem histÃ³rico para anexar. Guardado em fila local.');
+        alert('Sem histÃÂ³rico para anexar. Guardado em fila local.');
       }
     }catch(err){
       console.error('Forense export error:', err);

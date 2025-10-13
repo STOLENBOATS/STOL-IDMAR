@@ -1,4 +1,4 @@
-﻿/* IDMAR � Forense r1a (fix coords + A/B UX) � 2025-09-18 */
+ï»¿/* IDMAR ï¿½ Forense r1a (fix coords + A/B UX) ï¿½ 2025-09-18 */
 (() => {
   const $ = (s) => document.querySelector(s);
   const els = {
@@ -31,7 +31,7 @@
     drawMode: false,
     rects: [],               // em coordenadas **da imagem A**
     drawing: null,           // {x,y,w,h} em coords da imagem A
-    render: {dx:0,dy:0,scale:1,viewW:0,viewH:0}, // cache do �ltimo draw
+    render: {dx:0,dy:0,scale:1,viewW:0,viewH:0}, // cache do ï¿½ltimo draw
   };
 
   // ---------- utils ----------
@@ -81,7 +81,7 @@
     badge.textContent='';
     wrap.append(btn,badge);
 
-    // clique normal ? A ; Shift-clique ou bot�o direito ? B
+    // clique normal ? A ; Shift-clique ou botï¿½o direito ? B
     btn.addEventListener('click',(e)=>{
       if (e.shiftKey){ state.compareIdx = idx; }
       else { state.activeIdx = idx; }
@@ -125,7 +125,7 @@
     const card = document.createElement('div');
     Object.assign(card.style,{border:'1px solid #e5e7eb',borderRadius:'10px',padding:'.5rem'});
     const t = document.createElement('div'); t.style.fontWeight='700'; t.textContent = name;
-    const s = document.createElement('div'); s.className='small'; s.textContent = `${type||'image'} � ${w}�${h}px � ${fmtSize(size)}`;
+    const s = document.createElement('div'); s.className='small'; s.textContent = `${type||'image'} ï¿½ ${w}ï¿½${h}px ï¿½ ${fmtSize(size)}`;
     card.append(t,s); els.meta.appendChild(card);
   }
 
@@ -149,7 +149,7 @@
     state.ctx = ctx; state.dpr = window.devicePixelRatio || 1;
     resizeCanvas(); window.addEventListener('resize', resizeCanvas);
 
-    // Pan com bot�o do meio ou Shift+arrastar
+    // Pan com botï¿½o do meio ou Shift+arrastar
     c.addEventListener('mousedown',(e)=>{
       if (!state.drawMode && (e.button===1 || e.shiftKey)){
         state._panStart = {x:e.clientX, y:e.clientY}; state._panning=true; e.preventDefault();
@@ -210,17 +210,17 @@
     drawCompare();
   }
 
-  // converter posi��o do rato ? coordenadas na imagem A
+  // converter posiï¿½ï¿½o do rato ? coordenadas na imagem A
   function mouseToImage(e){
     if (!state.images[state.activeIdx]) return null;
     const c = els.canvas; const r = c.getBoundingClientRect();
     const px = (e.clientX - r.left) * state.dpr;
     const py = (e.clientY - r.top)  * state.dpr;
     const {dx,dy,scale} = state.render;
-    // coords no canvas ap�s pan/zoom e antes de dx/dy/scale
+    // coords no canvas apï¿½s pan/zoom e antes de dx/dy/scale
     const cx = (px - state.pan.x) / state.zoom;
     const cy = (py - state.pan.y) / state.zoom;
-    // remover as margens dx/dy e voltar ao espa�o da imagem (antes do fit)
+    // remover as margens dx/dy e voltar ao espaï¿½o da imagem (antes do fit)
     const x = (cx - dx) / (scale || 1);
     const y = (cy - dy) / (scale || 1);
     return { x, y, cx: px, cy: py };
@@ -266,7 +266,7 @@
       ctx.restore();
     }
 
-    // anota��es (em coords da imagem A ? para canvas com dx/dy/scale)
+    // anotaï¿½ï¿½es (em coords da imagem A ? para canvas com dx/dy/scale)
     ctx.lineWidth = 2/state.zoom;
     ctx.strokeStyle = '#ef4444';
     ctx.fillStyle = 'rgba(239,68,68,.14)';
@@ -296,7 +296,7 @@
   }
   function loadBundle(file){
     if(!file) return;
-    file.text().then(txt=>{ try{ const d=JSON.parse(txt); state.rects=Array.isArray(d.rects)?d.rects:[]; if(els.notes) els.notes.value=d.notes||''; if(els.cmpRange&&d.compare&&typeof d.compare.pct==='number') els.cmpRange.value=String(d.compare.pct); drawCompare(); }catch(e){ console.warn('Bundle inv�lido',e); } });
+    file.text().then(txt=>{ try{ const d=JSON.parse(txt); state.rects=Array.isArray(d.rects)?d.rects:[]; if(els.notes) els.notes.value=d.notes||''; if(els.cmpRange&&d.compare&&typeof d.compare.pct==='number') els.cmpRange.value=String(d.compare.pct); drawCompare(); }catch(e){ console.warn('Bundle invï¿½lido',e); } });
   }
 
   // ---------- hash + anexar ----------
@@ -307,14 +307,14 @@
     const ctx = (els.selContext?.value || 'win').toLowerCase();
     const keys = ctx==='motor' ? ['history_motor','historyMotor'] : ['history_win','historyWin'];
     const { key, arr } = readHistory(keys);
-    if (!arr.length) { alert('Hist�rico vazio � fa�a uma valida��o primeiro.'); return; }
+    if (!arr.length) { alert('Histï¿½rico vazio ï¿½ faï¿½a uma validaï¿½ï¿½o primeiro.'); return; }
     const files = state.images.map(i=>i.blob).filter(Boolean);
     const hashes = [];
     for (const f of files){ hashes.push({ name:f.name, sha256:await hashBlobSHA256(f), size:f.size, type:f.type }); }
     const evidence = { ts:new Date().toISOString(), context:ctx, hashes, notes:els.notes?.value||'', rects:state.rects };
     arr[0].evidence = arr[0].evidence || []; arr[0].evidence.push(evidence);
     writeHistory(key, arr);
-    alert('Evid�ncias anexadas ao �ltimo registo.');
+    alert('Evidï¿½ncias anexadas ao ï¿½ltimo registo.');
   }
 
   // ---------- bindings ----------

@@ -1,4 +1,4 @@
-﻿<!doctype html>
+ï»¿<!doctype html>
 <html lang="pt">
 <head>
   <meta charset="utf-8">
@@ -33,13 +33,13 @@
   <!-- CSS base -->
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/theme-soft-light.v1.css"><!-- tema claro -->
-  <link rel="stylesheet" href="css/nav-ribbon.v5.css"><!-- bot�es "ribbon" v5 -->
+  <link rel="stylesheet" href="css/nav-ribbon.v5.css"><!-- botï¿½es "ribbon" v5 -->
   <link rel="apple-touch-icon" href="img/logo-pm.png">
 
 
   <style>
 
-/* Overlay de orienta��o (aparece em portrait at� ~1024px) */
+/* Overlay de orientaï¿½ï¿½o (aparece em portrait atï¿½ ~1024px) */
 #rotate-overlay{display:none;position:fixed;inset:0;background:#0008;color:#fff;z-index:9999;
   backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
   align-items:center;justify-content:center;text-align:center;padding:2rem}
@@ -63,7 +63,7 @@
     .container{max-width:1200px;margin:1.25rem auto;padding:0 1rem}
     .panel{background:var(--bg-elev);border:1px solid var(--border);border-radius:12px;padding:1rem;margin:.75rem 0}
 
-    /* >>> tr�s cart�es lado a lado */
+    /* >>> trï¿½s cartï¿½es lado a lado */
     .three{display:grid;grid-template-columns:1fr;gap:1rem}
     @media(min-width:1100px){ .three{grid-template-columns:1fr 1fr 1fr} }
 
@@ -90,7 +90,7 @@
     #engine-sn-result ul{margin:.25rem 0 0 .9rem}
   </style>
 
-  <!-- Gate de sess�o simples -->
+  <!-- Gate de sessï¿½o simples -->
   <script>
     (function(){
       try{
@@ -100,7 +100,7 @@
     })();
   </script>
 
-  <!-- Vers�o + branding -->
+  <!-- Versï¿½o + branding -->
   <script>window.IDMAR_VERSION="Vs 1.3";</script>
   <script defer src="js/idmar-config.v4.js"></script>
 
@@ -108,7 +108,7 @@
   <script defer src="js/idmar-i18n.js"></script>
   <script defer src="js/idmar-header-only.all.v4.js"></script>
 
-  <!-- Overrides (aplicam labels, ribbons e rodap�) -->
+  <!-- Overrides (aplicam labels, ribbons e rodapï¿½) -->
   <script defer src="js/header-override.v4.js"></script>
   <script defer src="js/i18n-boot.js"></script>
   <script defer src="js/idmar-version.v4.js"></script>
@@ -119,13 +119,13 @@
   <div class="box">
     <h3 style="margin:0 0 .5rem">Melhor em modo horizontal / Best viewed in landscape</h3>
     <p style="margin:0">
-      Rode o dispositivo para <strong>landscape</strong> para ver os tr�s cart�es lado a lado.<br>
+      Rode o dispositivo para <strong>landscape</strong> para ver os trï¿½s cartï¿½es lado a lado.<br>
       Please rotate your device to <strong>landscape</strong> to view the three cards side by side.
     </p>
   </div>
 </div>
 
-  <!-- header � injetado por JS -->
+  <!-- header ï¿½ injetado por JS -->
 
   <main class="container">
     <h1>Validador</h1>
@@ -150,14 +150,14 @@
 
           <table>
             <thead>
-              <tr><th>Campo / Field</th><th>Valor / Value</th><th>Interpreta��o / Meaning</th></tr>
+              <tr><th>Campo / Field</th><th>Valor / Value</th><th>Interpretaï¿½ï¿½o / Meaning</th></tr>
             </thead>
             <tbody id="interpWinBody"></tbody>
           </table>
         </form>
       </div>
 
-      <!-- MOTOR (como est�) -->
+      <!-- MOTOR (como estï¿½) -->
       <div class="panel" id="card-motor">
         <h2>Validador Motor</h2>
         <form id="formMotor">
@@ -169,7 +169,7 @@
             <option>Yanmar</option><option>Evinrude/Johnson</option>
           </select>
 
-          <!-- aqui o JS pode injetar campos din�micos (shaft / par de letras / s�rie, etc.) -->
+          <!-- aqui o JS pode injetar campos dinï¿½micos (shaft / par de letras / sï¿½rie, etc.) -->
           <div id="brandDynamic"></div>
 
           <div style="margin-top:.5rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.5rem">
@@ -179,7 +179,7 @@
                      data-engine-field="model_code"/>
             </div>
             <div>
-              <label>Pot�ncia (hp)</label>
+              <label>Potï¿½ncia (hp)</label>
               <input id="srch_power" type="text" placeholder="Ex.: 150"
                      data-engine-field="power"/>
             </div>
@@ -195,7 +195,7 @@
             </div>
             <div>
               <label>Origem</label>
-              <input id="srch_origin" type="text" placeholder="Ex.: Jap�o"
+              <input id="srch_origin" type="text" placeholder="Ex.: Japï¿½o"
                      data-engine-field="origin"/>
             </div>
           </div>
@@ -213,23 +213,23 @@
         </form>
       </div>
 
-      <!-- N� de motor � interligado ao cart�o do Motor -->
+      <!-- Nï¿½ de motor ï¿½ interligado ao cartï¿½o do Motor -->
       <div class="panel" id="card-serial">
-        <h2>N� do motor / Engine serial</h2>
+        <h2>Nï¿½ do motor / Engine serial</h2>
 
-        <!-- Entrada �nica (auto-parse) -->
+        <!-- Entrada ï¿½nica (auto-parse) -->
         <input id="engine-sn-raw" type="text"
                placeholder="Ex.: BF40A-BAAL-1234567, BAAL-1234567, 1B123456"
                autocomplete="off" />
 
-        <!-- Honda: exterior/interior (dois n�meros) -->
+        <!-- Honda: exterior/interior (dois nï¿½meros) -->
         <div class="sn-kind" style="margin-top:.5rem">
           <label><input type="radio" name="engine-sn-kind" value="auto" checked> Auto</label>
           <label><input type="radio" name="engine-sn-kind" value="exterior"> Exterior</label>
           <label><input type="radio" name="engine-sn-kind" value="interior"> Interior</label>
         </div>
 
-        <!-- Janela(s) de intervalo calculadas a partir do cart�o do Motor -->
+        <!-- Janela(s) de intervalo calculadas a partir do cartï¿½o do Motor -->
         <div id="engine-sn-window" class="mt-2"></div>
 
         <!-- Resultado/Notas -->
@@ -239,9 +239,9 @@
     </section>
   </main>
 
-  <footer class="footer" id="fallback-footer">IDMAR � Identifica��o Mar�tima</footer>
+  <footer class="footer" id="fallback-footer">IDMAR ï¿½ Identificaï¿½ï¿½o Marï¿½tima</footer>
 
-  <!-- Removido idmar-layout.r3b.js para n�o duplicar header -->
+  <!-- Removido idmar-layout.r3b.js para nï¿½o duplicar header -->
   <script src="js/validador-win.r3b.js?v=r3b"></script>
   <script src="js/validador-motor.r3d.js?v=r3d"></script>
   <script defer src="js/validator-enhancements.v4.js"></script>
@@ -251,13 +251,13 @@
     src="js/engine_picker.v2.4.js"
     data-catalog="data/engines_catalog.v2.json"></script>
 
-  <!-- Validador de combina��es (usa o mesmo cat�logo v2) -->
+  <!-- Validador de combinaï¿½ï¿½es (usa o mesmo catï¿½logo v2) -->
   <script defer src="js/engine_validation.v1.js"></script>
 
-  <!-- Admin r�pido embutido (motores + WIN) � se N�O quiseres este bloco na p�gina, deixa comentado -->
+  <!-- Admin rï¿½pido embutido (motores + WIN) ï¿½ se Nï¿½O quiseres este bloco na pï¿½gina, deixa comentado -->
   <!-- <script defer src="js/engine_admin_embed.v1.js"></script> -->
 
-  <!-- Bot�o "Admin" no ribbon -->
+  <!-- Botï¿½o "Admin" no ribbon -->
   <script>window.IDMAR_ADMIN_URL = 'admin-engines.html';</script>
   <script defer src="js/ribbon-admin.v1.js"></script>
 
@@ -287,9 +287,9 @@
       if (screen.orientation && screen.orientation.lock) {
         await screen.orientation.lock('landscape');
       }
-    } catch(e){ /* alguns browsers n�o permitem � tudo bem */ }
+    } catch(e){ /* alguns browsers nï¿½o permitem ï¿½ tudo bem */ }
   }
-  // S� tentamos ap�s um gesto do utilizador (maior compatibilidade)
+  // Sï¿½ tentamos apï¿½s um gesto do utilizador (maior compatibilidade)
   document.addEventListener('click', tryLockLandscape, { once:true });
 
   // Ajuste de viewport em iOS para zoom correto (opcional, seguro)

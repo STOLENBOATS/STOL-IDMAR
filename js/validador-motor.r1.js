@@ -1,4 +1,4 @@
-﻿/* IDMAR � validador-motor.r1 (campos din�micos + hist�rico compat) */
+ï»¿/* IDMAR ï¿½ validador-motor.r1 (campos dinï¿½micos + histï¿½rico compat) */
 (()=> {
   const selBrand=['select[name="marca"]','#marcaMotor','.js-motor-marca','#motorMarca','#brand'];
   const selSN=['#snMotor','input[name="sn"]','.js-motor-sn','#serialNumber'];
@@ -13,17 +13,17 @@
 
   const BRANDS={ YAMAHA:{enabled:true,label:'Yamaha', fields:[
       {id:'model', label:'Modelo',         placeholder:'p.ex. F350NSA',   required:true},
-      {id:'code',  label:'C�digo/Prefixo', placeholder:'p.ex. 6ML',       required:false},
-      {id:'ym',    label:'Letra/M�s-Ano',  placeholder:'p.ex. N (m�s/ano)',required:false},
-      {id:'serial',label:'N.� S�rie',      placeholder:'p.ex. 1005843',   required:true},
+      {id:'code',  label:'Cï¿½digo/Prefixo', placeholder:'p.ex. 6ML',       required:false},
+      {id:'ym',    label:'Letra/Mï¿½s-Ano',  placeholder:'p.ex. N (mï¿½s/ano)',required:false},
+      {id:'serial',label:'N.ï¿½ Sï¿½rie',      placeholder:'p.ex. 1005843',   required:true},
     ]},
     HONDA:{enabled:true,label:'Honda',fields:[
       {id:'model', label:'Modelo',         placeholder:'p.ex. BF90D', required:true},
-      {id:'serial',label:'N.� S�rie',      placeholder:'p.ex. BAZS-1100001', required:true},
+      {id:'serial',label:'N.ï¿½ Sï¿½rie',      placeholder:'p.ex. BAZS-1100001', required:true},
     ]},
     SUZUKI:{enabled:false,label:'Suzuki',fields:[
       {id:'model',label:'Modelo',placeholder:'p.ex. DF115A',required:true},
-      {id:'serial',label:'N.� S�rie',placeholder:'p.ex. 11501F-123456',required:true},
+      {id:'serial',label:'N.ï¿½ Sï¿½rie',placeholder:'p.ex. 11501F-123456',required:true},
     ]},
   };
 
@@ -32,7 +32,7 @@
 
   function renderFields(key, sel){
     const b=BRANDS[key]; const m=ensureMount(sel); clear(m);
-    if(!b||!b.enabled){ const p=c('p'); p.textContent='Marca n�o dispon�vel [Brand not available]'; m.appendChild(p); return; }
+    if(!b||!b.enabled){ const p=c('p'); p.textContent='Marca nï¿½o disponï¿½vel [Brand not available]'; m.appendChild(p); return; }
     const fs=c('fieldset'), lg=c('legend'); lg.textContent=`Campos ${b.label} [${b.label} fields]`; fs.appendChild(lg);
     b.fields.forEach(f=>{ const row=c('div'); const lab=c('label'); lab.textContent=`${f.label} [${f.label}]`; lab.htmlFor=`motor-${f.id}`; const inp=c('input'); inp.type='text'; inp.id=`motor-${f.id}`; inp.setAttribute('data-field',f.id); if(f.placeholder) inp.placeholder=f.placeholder; if(f.required) inp.setAttribute('data-required','1'); row.append(lab,inp); fs.appendChild(row); });
     m.appendChild(fs);
@@ -46,22 +46,22 @@
   function validateY(vals){
     const model=upper(vals.model), code=upper(vals.code), ym=upper(vals.ym), serial=upper(vals.serial);
     if(!model)  return fail('Modelo em falta','Missing model');
-    if(!serial) return fail('N.� de s�rie em falta','Missing serial');
-    if(!isAlnum(model))  return fail('Modelo com caracteres inv�lidos','Model invalid');
-    if(!isAlnum(serial)) return fail('S�rie com caracteres inv�lidos','Serial invalid');
-    if(serial.length<5)  return fail('S�rie curta','Serial too short');
+    if(!serial) return fail('N.ï¿½ de sï¿½rie em falta','Missing serial');
+    if(!isAlnum(model))  return fail('Modelo com caracteres invï¿½lidos','Model invalid');
+    if(!isAlnum(serial)) return fail('Sï¿½rie com caracteres invï¿½lidos','Serial invalid');
+    if(serial.length<5)  return fail('Sï¿½rie curta','Serial too short');
     const okModel = /^[A-Z]{1,2}\d{2,3}[A-Z]{0,3}$/.test(model) && (!code || /^[A-Z0-9]{2,4}$/.test(code)) && (!ym || /^[A-HJ-NPR-Z0-9]{1,3}$/.test(ym));
-    if(!okModel) return fail('Padr�o Yamaha pouco consistente','Yamaha pattern inconsistent',{model,code,ym,serial});
-    return ok('Yamaha v�lido (plaus�vel)','Yamaha valid (plausible)',{brand:'YAMAHA',model,code,ym,serial});
+    if(!okModel) return fail('Padrï¿½o Yamaha pouco consistente','Yamaha pattern inconsistent',{model,code,ym,serial});
+    return ok('Yamaha vï¿½lido (plausï¿½vel)','Yamaha valid (plausible)',{brand:'YAMAHA',model,code,ym,serial});
   }
   function validateH(vals){
     const model=upper(vals.model), serial=upper(vals.serial);
     if(!model)  return fail('Modelo em falta','Missing model');
-    if(!serial) return fail('N.� de s�rie em falta','Missing serial');
-    if(!isAlnum(model))  return fail('Modelo com caracteres inv�lidos','Model invalid');
-    if(!/^[A-Z0-9-]+$/.test(serial)) return fail('S�rie com caracteres inv�lidos','Serial invalid');
-    if(!/^([A-Z]{1,3}\d{2,3}[A-Z]?)$/.test(model) || serial.length<6) return fail('Padr�o Honda pouco consistente','Honda pattern inconsistent',{model,serial});
-    return ok('Honda v�lido (plaus�vel)','Honda valid (plausible)',{brand:'HONDA',model,serial});
+    if(!serial) return fail('N.ï¿½ de sï¿½rie em falta','Missing serial');
+    if(!isAlnum(model))  return fail('Modelo com caracteres invï¿½lidos','Model invalid');
+    if(!/^[A-Z0-9-]+$/.test(serial)) return fail('Sï¿½rie com caracteres invï¿½lidos','Serial invalid');
+    if(!/^([A-Z]{1,3}\d{2,3}[A-Z]?)$/.test(model) || serial.length<6) return fail('Padrï¿½o Honda pouco consistente','Honda pattern inconsistent',{model,serial});
+    return ok('Honda vï¿½lido (plausï¿½vel)','Honda valid (plausible)',{brand:'HONDA',model,serial});
   }
 
   function record(key, vals, verdict){
@@ -74,7 +74,7 @@
       sn: vals.serial||vals.sn||'',
       valid: !!verdict.valid,
       estado: verdict.valid?'ok':'erro',
-      estadoLabel: verdict.valid?'V�lido':'Inv�lido',
+      estadoLabel: verdict.valid?'Vï¿½lido':'Invï¿½lido',
       justificacao: verdict.message||'',
       foto:'',
       meta:{...verdict.meta,module:'MOTOR'}
@@ -90,7 +90,7 @@
     renderFields(key,brandSel);
     brandSel&&brandSel.addEventListener('change',()=>{ const k=(x=>({'YAMAHA':'YAMAHA','HONDA':'HONDA','SUZUKI':'SUZUKI'}[x]||x))(upper(brandSel.value||'')); renderFields(k,brandSel); });
     function run(e){ e?.preventDefault?.(); const k=(x=>({'YAMAHA':'YAMAHA','HONDA':'HONDA','SUZUKI':'SUZUKI'}[x]||x))(upper(brandSel&&brandSel.value||'')); const vals=collect();
-      let v; if(k==='YAMAHA') v=validateY(vals); else if(k==='HONDA') v=validateH(vals); else v=fail('Marca n�o suportada','Brand not supported');
+      let v; if(k==='YAMAHA') v=validateY(vals); else if(k==='HONDA') v=validateH(vals); else v=fail('Marca nï¿½o suportada','Brand not supported');
       if(out){ out.textContent=v.message; out.dataset.valid=v.valid?'1':'0'; } record(k,vals,v); return v; }
     btn&&btn.addEventListener('click',run);
     const form=brandSel?brandSel.closest('form'):document.querySelector('form'); form&&form.addEventListener('submit',run);

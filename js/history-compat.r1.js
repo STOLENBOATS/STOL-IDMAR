@@ -1,9 +1,9 @@
-﻿
-/* IDMAR â€” history-compat.r1
+ï»¿
+/* IDMAR Ã¢â¬â history-compat.r1
    - Sincroniza (history_win <-> historyWin) e (history_motor <-> historyMotor)
    - Normaliza shape: id, ts, valid/estado/estadoLabel/resultado, foto, meta.forense
    - Copia 'foto' do primeiro anexo se estiver vazio
-   - Seguro para correr em qualquer pÃ¡gina
+   - Seguro para correr em qualquer pÃÂ¡gina
 */
 (function(){
   if (window.__IDMAR_HISTORY_COMPAT_R1__) return;
@@ -23,12 +23,12 @@
 
     if (typeof rec.valid === 'boolean'){
       rec.estado = rec.valid ? 'ok' : 'erro';
-      rec.estadoLabel = rec.valid ? 'VÃ¡lido' : 'InvÃ¡lido';
-      rec.resultado = rec.valid ? 'VÃLIDO' : 'INVÃLIDO';
+      rec.estadoLabel = rec.valid ? 'VÃÂ¡lido' : 'InvÃÂ¡lido';
+      rec.resultado = rec.valid ? 'VÃÂLIDO' : 'INVÃÂLIDO';
     } else {
       rec.estado      = rec.estado || 'ok';
-      rec.estadoLabel = rec.estadoLabel || 'VÃ¡lido';
-      rec.resultado   = rec.resultado || 'VÃLIDO';
+      rec.estadoLabel = rec.estadoLabel || 'VÃÂ¡lido';
+      rec.resultado   = rec.resultado || 'VÃÂLIDO';
       rec.valid = (rec.estado === 'ok');
     }
 

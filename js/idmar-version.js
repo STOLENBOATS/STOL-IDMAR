@@ -1,5 +1,5 @@
-﻿// Auto footer version injector (configurable)
-// Pattern: "IDMAR - POLÃCIA MARÃTIMA - Vs XXX - YYYY-MM-DD"
+ï»¿// Auto footer version injector (configurable)
+// Pattern: "IDMAR - POLÃÂCIA MARÃÂTIMA - Vs XXX - YYYY-MM-DD"
 (function(w,d){
   function today(){
     try{
@@ -20,7 +20,7 @@
     }catch(e){ return 'Vs xxx'; }
   }
   function label(){
-    return `IDMAR - POLÃCIA MARÃTIMA - ${getVersion()} - ${today()}`;
+    return `IDMAR - POLÃÂCIA MARÃÂTIMA - ${getVersion()} - ${today()}`;
   }
   function inject(){
     try {

@@ -1,8 +1,8 @@
-﻿/*! IDMAR UI renderers r3 � WIN & Motor */
+ï»¿/*! IDMAR UI renderers r3 ï¿½ WIN & Motor */
 (function () {
   function el(tag, cls){ const e=document.createElement(tag); if(cls) e.className=cls; return e; }
   function badge(status){
-    const b = el('span','badge '+(status==='v�lido'?'ok':'nok'));
+    const b = el('span','badge '+(status==='vï¿½lido'?'ok':'nok'));
     b.textContent = status || '';
     return b;
   }
@@ -12,7 +12,7 @@
       <tr>
         <th data-i18n="field">Campo</th>
         <th data-i18n="value">Valor</th>
-        <th data-i18n="meaning">Interpreta��o</th>
+        <th data-i18n="meaning">Interpretaï¿½ï¿½o</th>
       </tr>
     </thead><tbody></tbody>`;
     const tb = t.querySelector('tbody');

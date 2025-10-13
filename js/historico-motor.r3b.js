@@ -1,4 +1,4 @@
-﻿// IDMAR � Hist�rico MOTOR (r3b) � filtros, ordena��o, CSV, miniatura e forense
+ï»¿// IDMAR ï¿½ Histï¿½rico MOTOR (r3b) ï¿½ filtros, ordenaï¿½ï¿½o, CSV, miniatura e forense
 (function(w,d){
   w.IDMAR=w.IDMAR||{}; w.NAV=w.NAV||w.IDMAR;
   NAV.STORAGE = NAV.STORAGE || { SESSION:'IDMAR_SESSION', WIN_HISTORY:'hist_win', MOTOR_HISTORY:'hist_motor' };
@@ -20,12 +20,12 @@
     if(!pt) return '';
     const s=(''+pt).trim();
     if(/^ok$/i.test(s)) return 'OK';
-    if(/Estrutura v[a�]lida/i.test(s)) return s + ' / <span class="en">Structure valid</span>';
-    if(/S[e�]rie/i.test(s) && /inv[a�]lida/i.test(s)) return s + ' / <span class="en">Invalid serial</span>';
+    if(/Estrutura v[aï¿½]lida/i.test(s)) return s + ' / <span class="en">Structure valid</span>';
+    if(/S[eï¿½]rie/i.test(s) && /inv[aï¿½]lida/i.test(s)) return s + ' / <span class="en">Invalid serial</span>';
     return s + ' / <span class="en">' + s + '</span>';
   }
   function trStatePTEN(valid){
-    return valid ? 'V�lido / <span class="en">Valid</span>' : 'Inv�lido / <span class="en">Invalid</span>';
+    return valid ? 'Vï¿½lido / <span class="en">Valid</span>' : 'Invï¿½lido / <span class="en">Invalid</span>';
   }
 
   function findCSV(){ return $id('hist_motor_csv') || Array.from(d.querySelectorAll('button,input[type="button"]')).find(b=>/exportar/i.test(b.textContent||b.value||'')); }
@@ -62,8 +62,8 @@
     const q = input && input.value || '';
     const br = brandSel && brandSel.value || '';
     let st = stateSel && stateSel.value || 'all';
-    if(/v�lido/i.test(st) || /valid/i.test(st)) st = 'ok';
-    if(/inv�lido/i.test(st) || /invalid/i.test(st)) st = 'bad';
+    if(/vï¿½lido/i.test(st) || /valid/i.test(st)) st = 'ok';
+    if(/invï¿½lido/i.test(st) || /invalid/i.test(st)) st = 'bad';
 
     const sorted = [...raw].sort((a,b)=> ts(b.date||b.dt||b.time||b.timestamp)-ts(a.date||a.dt||a.time||a.timestamp));
     const data = applyFilters(sorted, q, br, st, from && from.value, to && to.value);
@@ -71,7 +71,7 @@
     tbody.innerHTML='';
     data.forEach(r=>{
       const dtxt = new Date(ts(r.date||r.dt||r.time||r.timestamp)).toLocaleString();
-      const state = r.valid ? '<span class="badge good">V�lido</span>' : '<span class="badge bad">Inv�lido</span>';
+      const state = r.valid ? '<span class="badge good">Vï¿½lido</span>' : '<span class="badge bad">Invï¿½lido</span>';
       const reason = r.reason || '';
       const photo = r.photoName || '';
       const thumb = r.photoData ? '<img src="'+r.photoData+'" alt="" style="height:44px;border-radius:6px;border:1px solid var(--border)">' : '';
@@ -133,7 +133,7 @@
     const clrBtn = findClear();
     if(clrBtn) clrBtn.addEventListener('click', function(e){
       e.preventDefault();
-      if(confirm('Limpar hist�rico Motor? Esta a��o � irrevers�vel.')){ save(NAV.STORAGE.MOTOR_HISTORY, []); render(); }
+      if(confirm('Limpar histï¿½rico Motor? Esta aï¿½ï¿½o ï¿½ irreversï¿½vel.')){ save(NAV.STORAGE.MOTOR_HISTORY, []); render(); }
     });
   }
 

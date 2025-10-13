@@ -1,16 +1,16 @@
-﻿/* IDMAR � Header Only (validador) � 2025-09-18
-   Injeta um header com logo + t�tulo + navega��o, sem depender de CSS extra.
-   P�ginas: login.html, validador.html, historico_win.html, historico_motor.html, forense.html
+ï»¿/* IDMAR ï¿½ Header Only (validador) ï¿½ 2025-09-18
+   Injeta um header com logo + tï¿½tulo + navegaï¿½ï¿½o, sem depender de CSS extra.
+   Pï¿½ginas: login.html, validador.html, historico_win.html, historico_motor.html, forense.html
    Notas:
-   - Evita duplicados se j� houver .app-header
+   - Evita duplicados se jï¿½ houver .app-header
    - Assinala link ativo com [data-active="1"]
 */
 (() => {
   const LINKS = [
     { href: 'login.html',          text: 'Login' },
     { href: 'validador.html',      text: 'Validador' },
-    { href: 'historico_win.html',  text: 'Hist�rico WIN' },
-    { href: 'historico_motor.html',text: 'Hist�rico Motor' },
+    { href: 'historico_win.html',  text: 'Histï¿½rico WIN' },
+    { href: 'historico_motor.html',text: 'Histï¿½rico Motor' },
     { href: 'forense.html',        text: 'Forense' },
   ];
 
@@ -23,8 +23,8 @@
     brand.className = 'brand';
 
     const logo = document.createElement('img');
-    logo.src = 'images/logo-pm.jpg'; // mant�m o caminho existente
-    logo.alt = 'Pol�cia Mar�tima';
+    logo.src = 'images/logo-pm.jpg'; // mantï¿½m o caminho existente
+    logo.alt = 'Polï¿½cia Marï¿½tima';
     logo.className = 'logo';
 
     const titles = document.createElement('div');

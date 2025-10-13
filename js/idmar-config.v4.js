@@ -1,6 +1,6 @@
-﻿(function(w){
+ï»¿(function(w){
   w.IDMAR_APP_NAME = "IDMAR";
-  w.IDMAR_APP_SUB  = "Identifica��o Mar�tima � Cascos & Motores";
+  w.IDMAR_APP_SUB  = "Identificaï¿½ï¿½o Marï¿½tima ï¿½ Cascos & Motores";
 })(window);
 
 

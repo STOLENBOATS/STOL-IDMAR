@@ -1,4 +1,4 @@
-﻿// IDMAR validator enhancements v4 (DOM-observer based)
+ï»¿// IDMAR validator enhancements v4 (DOM-observer based)
 (function(){
   function enstyle(){ 
     if(!document.querySelector('style#idmar-en-style')){
@@ -16,13 +16,13 @@
     });
     const labelMap = {
       "Rebites": 'Rebites<br><span class="en sub">Rivets</span>',
-      "Cord�es de solda": 'Cord�es de solda<br><span class="en sub">Weld beads</span>',
+      "Cordï¿½es de solda": 'Cordï¿½es de solda<br><span class="en sub">Weld beads</span>',
       "Placa remarcada": 'Placa remarcada<br><span class="en sub">Re-stamped plate</span>',
-      "Camadas de tinta/abras�es": 'Camadas de tinta/abras�es<br><span class="en sub">Paint layers/abrasions</span>',
+      "Camadas de tinta/abrasï¿½es": 'Camadas de tinta/abrasï¿½es<br><span class="en sub">Paint layers/abrasions</span>',
       "Etiqueta adulterada/ausente (motor)": 'Etiqueta adulterada/ausente (motor)<br><span class="en sub">Tampered/missing label (engine)</span>',
       "Core plug danificado/removido": 'Core plug danificado/removido<br><span class="en sub">Core plug damaged/removed</span>',
-      "Solda/corros�o an�mala": 'Solda/corros�o an�mala<br><span class="en sub">Abnormal weld/corrosion</span>',
-      "Remarca��o no bloco": 'Remarca��o no bloco<br><span class="en sub">Re-mark on engine block</span>',
+      "Solda/corrosï¿½o anï¿½mala": 'Solda/corrosï¿½o anï¿½mala<br><span class="en sub">Abnormal weld/corrosion</span>',
+      "Remarcaï¿½ï¿½o no bloco": 'Remarcaï¿½ï¿½o no bloco<br><span class="en sub">Re-mark on engine block</span>',
     };
     document.querySelectorAll("label").forEach(lab=>{
       const t = lab.textContent.trim().replace(/\s+\/\s*$/,'');
@@ -33,25 +33,25 @@
     document.querySelectorAll("textarea, input[placeholder]").forEach(el=>{
       const ph = el.getAttribute("placeholder")||"";
       if(/Notas forenses/.test(ph) && !/Forensic notes/.test(ph)){
-        el.setAttribute("placeholder", "Notas forenses� / Forensic notes�");
+        el.setAttribute("placeholder", "Notas forensesï¿½ / Forensic notesï¿½");
       }
     });
   }
 
   const mapReason = [
-    [/^Estrutura v�lida\.?$/i, "Structure valid"],
-    [/Ano de produ��o inconsistente/i, "Production year inconsistent"],
+    [/^Estrutura vï¿½lida\.?$/i, "Structure valid"],
+    [/Ano de produï¿½ï¿½o inconsistente/i, "Production year inconsistent"],
     [/fora de 1998\+/i, "outside 1998+"],
-    [/Ano do modelo n�o pode ser anterior/i, "Model year cannot be earlier than production year"],
-    [/M[e�]s inv�lido/i, "Invalid month code"],
-    [/Tamanho inv�lido/i, "Invalid length"],
-    [/Formato EUA n�o admite 15/i, "US format does not allow 15"],
-    [/Caracteres inv�lidos/i, "Invalid characters"],
-    [/Pa[i�]s inv�lido/i, "Invalid country code"],
-    [/Fabricante inv�lido/i, "Invalid manufacturer code"],
+    [/Ano do modelo nï¿½o pode ser anterior/i, "Model year cannot be earlier than production year"],
+    [/M[eï¿½]s invï¿½lido/i, "Invalid month code"],
+    [/Tamanho invï¿½lido/i, "Invalid length"],
+    [/Formato EUA nï¿½o admite 15/i, "US format does not allow 15"],
+    [/Caracteres invï¿½lidos/i, "Invalid characters"],
+    [/Pa[iï¿½]s invï¿½lido/i, "Invalid country code"],
+    [/Fabricante invï¿½lido/i, "Invalid manufacturer code"],
     [/Ano do modelo fora do intervalo/i, "Model year out of allowed range"],
-    [/Pr�-?1998.*DoC\/CE/i, "Pre-1998 with DoC/CE"],
-    [/Pr�-?1998.*falta DoC\/CE/i, "Pre-1998: missing DoC/CE"],
+    [/Prï¿½-?1998.*DoC\/CE/i, "Pre-1998 with DoC/CE"],
+    [/Prï¿½-?1998.*falta DoC\/CE/i, "Pre-1998: missing DoC/CE"],
   ];
   function trReasonPTEN(text){
     if(!text) return "";
@@ -68,16 +68,16 @@
   }
   function isPre98FromDOM(){
     const badges = Array.from(document.querySelectorAll(".badge, [class*=badge]")).map(b=>b.textContent.toLowerCase());
-    if (badges.some(t=>t.includes("pr�")||t.includes("pre-1998"))) return true;
+    if (badges.some(t=>t.includes("prï¿½")||t.includes("pre-1998"))) return true;
     const reasons = Array.from(document.querySelectorAll("#winResult, .result, .status, .msg")).map(e=>e.textContent.toLowerCase()).join(" ");
-    if (/pr[e�]-?1998/.test(reasons)) return true;
+    if (/pr[eï¿½]-?1998/.test(reasons)) return true;
     return false;
   }
   function extractReasonText(){
     const candidates = document.querySelectorAll("#winResult, .result, .status, .msg, main, body");
     for(const el of candidates){
       const txt = el.textContent || "";
-      const m = txt.match(/([^\n\.]{8,}(v�lid|inv�lid|1998|inconsis)[^\n\.]*\.)/i);
+      const m = txt.match(/([^\n\.]{8,}(vï¿½lid|invï¿½lid|1998|inconsis)[^\n\.]*\.)/i);
       if(m) return m[1].trim();
     }
     return "";
@@ -125,26 +125,26 @@
 
     const reasonPT = extractReasonText();
     const reasonPTEN = trReasonPTEN(reasonPT);
-    if (reasonPTEN) pushRow(tbody, "Justifica��o", reasonPT, reasonPTEN);
+    if (reasonPTEN) pushRow(tbody, "Justificaï¿½ï¿½o", reasonPT, reasonPTEN);
 
     const pre98 = isPre98FromDOM();
     const {hasCE, notifiedBody} = getDoCInfo();
     if (pre98){
       pushRow(tbody, "Base legal",
-        "Avalia��o p�s-constru��o (Diretiva 94/25/CE alterada por 2003/44/CE)",
-        "Post-construction assessment (EU RCD 94/25/EC amended by 2003/44/EC) � DoC/CE required");
-      pushRow(tbody, "Regime", "Pr�-1998", "Pr�-1998 / <span class='en'>Pre-1998</span>");
+        "Avaliaï¿½ï¿½o pï¿½s-construï¿½ï¿½o (Diretiva 94/25/CE alterada por 2003/44/CE)",
+        "Post-construction assessment (EU RCD 94/25/EC amended by 2003/44/EC) ï¿½ DoC/CE required");
+      pushRow(tbody, "Regime", "Prï¿½-1998", "Prï¿½-1998 / <span class='en'>Pre-1998</span>");
       const nb = (notifiedBody||"-");
-      pushRow(tbody, "Organismo notificado", nb, `DoC/CE${nb && nb!=="-" ? " � "+nb : ""} / <span class='en'>DoC/CE</span>`);
+      pushRow(tbody, "Organismo notificado", nb, `DoC/CE${nb && nb!=="-" ? " ï¿½ "+nb : ""} / <span class='en'>DoC/CE</span>`);
     }
     const ev = getEvidence();
     if (ev){
       const preview = ev.url ? `<div style="display:flex;gap:.5rem;align-items:center"><img class="mini-evidence" src="${ev.url}" alt="evidence"/><span>${ev.name}</span></div>` : ev.name;
-      pushRow(tbody, "Evid�ncias", preview, "Fotografia / <span class='en'>Photo evidence</span>");
+      pushRow(tbody, "Evidï¿½ncias", preview, "Fotografia / <span class='en'>Photo evidence</span>");
     }
     const flags = getForensicFlags();
     if (flags.length){
-      pushRow(tbody, "Checklist forense", flags.join(" � "), "Checklist forense / <span class='en'>Forensic checklist</span>");
+      pushRow(tbody, "Checklist forense", flags.join(" ï¿½ "), "Checklist forense / <span class='en'>Forensic checklist</span>");
     }
   }
 

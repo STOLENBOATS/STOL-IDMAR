@@ -1,49 +1,49 @@
-﻿/* IDMAR i18n mini � zero deps (fix) */
+ï»¿/* IDMAR i18n mini ï¿½ zero deps (fix) */
 (() => {
   const DICT = {
     pt: {
-      app: { name: "IDMAR", subtitle: "Identifica��o Mar�tima � Cascos & Motores" },
-      nav: { validator:"Validador", hist_win:"Hist�rico WIN", hist_motor:"Hist�rico Motor", forense:"Forense", logout:"Sair" },
+      app: { name: "IDMAR", subtitle: "Identificaï¿½ï¿½o Marï¿½tima ï¿½ Cascos & Motores" },
+      nav: { validator:"Validador", hist_win:"Histï¿½rico WIN", hist_motor:"Histï¿½rico Motor", forense:"Forense", logout:"Sair" },
       login: {
-        title:"Iniciar sess�o", lead:"Aceda com as suas credenciais.",
+        title:"Iniciar sessï¿½o", lead:"Aceda com as suas credenciais.",
         user_label:"Utilizador", user_ph:"nome.apelido",
-        pass_label:"Palavra-passe", pass_ph:"��������",
-        remember:"Lembrar sess�o", signin:"Entrar",
+        pass_label:"Palavra-passe", pass_ph:"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",
+        remember:"Lembrar sessï¿½o", signin:"Entrar",
         forgot:"Esqueci-me da palavra-passe", lang:"Idioma"
       },
       forense: {
-        title:"Forense � �ndice", load:"Carregar evid�ncias",
+        title:"Forense ï¿½ ï¿½ndice", load:"Carregar evidï¿½ncias",
         context_win:"Contexto: WIN/HIN", context_motor:"Contexto: Motor",
-        attach:"Anexar ao hist�rico mais recente", workspace:"Workspace",
+        attach:"Anexar ao histï¿½rico mais recente", workspace:"Workspace",
         lightbox:"Abrir lightbox", compare:"Comparar",
-        annotate:"Anotar (rect)", clear:"Limpar anota��es",
-        export_png:"Exportar PNG anotado", save_bundle:"Guardar �bundle� (JSON)",
-        notes:"Observa��es t�cnicas�", commit_attach:"Commit & Anexar"
+        annotate:"Anotar (rect)", clear:"Limpar anotaï¿½ï¿½es",
+        export_png:"Exportar PNG anotado", save_bundle:"Guardar ï¿½bundleï¿½ (JSON)",
+        notes:"Observaï¿½ï¿½es tï¿½cnicasï¿½", commit_attach:"Commit & Anexar"
       },
       validator: {
         win:{ label:"WIN / HIN", validate:"Validar WIN",
-              invalid:(p)=>`WIN inv�lido: ${p.win}`, valid:"WIN v�lido" },
+              invalid:(p)=>`WIN invï¿½lido: ${p.win}`, valid:"WIN vï¿½lido" },
         motor:{ validate:"Validar Motor" }
       }
     },
     en: {
-      app: { name: "IDMAR", subtitle: "Maritime Identification � Hulls & Engines" },
+      app: { name: "IDMAR", subtitle: "Maritime Identification ï¿½ Hulls & Engines" },
       nav: { validator:"Validator", hist_win:"WIN History", hist_motor:"Engine History", forense:"Forensics", logout:"Sign out" },
       login: {
         title:"Sign in", lead:"Access with your credentials.",
         user_label:"User", user_ph:"name.surname",
-        pass_label:"Password", pass_ph:"��������",
+        pass_label:"Password", pass_ph:"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",
         remember:"Remember me", signin:"Sign in",
         forgot:"Forgot your password?", lang:"Language"
       },
       forense: {
-        title:"Forensics � Index", load:"Load evidence",
+        title:"Forensics ï¿½ Index", load:"Load evidence",
         context_win:"Context: WIN/HIN", context_motor:"Context: Engine",
         attach:"Attach to latest record", workspace:"Workspace",
         lightbox:"Open lightbox", compare:"Compare",
         annotate:"Annotate (rect)", clear:"Clear annotations",
         export_png:"Export annotated PNG", save_bundle:"Save bundle (JSON)",
-        notes:"Technical notes�", commit_attach:"Commit & Attach"
+        notes:"Technical notesï¿½", commit_attach:"Commit & Attach"
       },
       validator: {
         win:{ label:"WIN / HIN", validate:"Validate WIN",

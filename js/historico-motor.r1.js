@@ -1,4 +1,4 @@
-﻿/* IDMAR � Hist�rico Motor r1 (filtros + CSV + compat keys) */
+ï»¿/* IDMAR ï¿½ Histï¿½rico Motor r1 (filtros + CSV + compat keys) */
 (() => {
   function readKey(k){ try{ const raw=localStorage.getItem(k); if(!raw) return []; const arr=JSON.parse(raw); return Array.isArray(arr)?arr:[]; }catch{return []} }
   function sanitize(x){
@@ -8,7 +8,7 @@
     o.marca = o.marca || x.brand || '';
     o.modelo = o.modelo || x.model || '';
     o.estado = o.estado || (o.valid===true?'ok':(o.valid===false?'erro':'')) || '';
-    o.estadoLabel = o.estadoLabel || (o.valid ? 'V�lido' : 'Inv�lido');
+    o.estadoLabel = o.estadoLabel || (o.valid ? 'Vï¿½lido' : 'Invï¿½lido');
     o.justificacao = o.justificacao || x.reason || '';
     o.foto = o.foto || '';
     return o;
@@ -72,7 +72,7 @@
     render(out);
   }
   function toCSV(rows){
-    const head = ['Data/Hora','S/N','Marca','Modelo','Estado','Justifica��o','Foto'];
+    const head = ['Data/Hora','S/N','Marca','Modelo','Estado','Justificaï¿½ï¿½o','Foto'];
     const lines = [head];
     for (const r of rows){
       lines.push([ fmtTs(r.ts), r.sn||'', r.marca||'', r.modelo||'', r.estadoLabel||'', r.justificacao||'', r.foto||'' ]);

@@ -1,5 +1,5 @@
-﻿
-// IDMAR layout r3c � header unificado (idioma + tema) e estilo consistente
+ï»¿
+// IDMAR layout r3c ï¿½ header unificado (idioma + tema) e estilo consistente
 (function(w,d){
   w.IDMAR = w.IDMAR || {};
   const CSS = `
@@ -36,15 +36,15 @@
     if(!bar) return;
     bar.classList.add('topbar');
     bar.innerHTML = `
-      <img src="img/logo-pm.png" alt="Pol�cia Mar�tima"/>
+      <img src="img/logo-pm.png" alt="Polï¿½cia Marï¿½tima"/>
       <div class="brand">
         <span class="app">IDMAR</span>
-        <small>Identifica��o Mar�tima � Cascos & Motores</small>
+        <small>Identificaï¿½ï¿½o Marï¿½tima ï¿½ Cascos & Motores</small>
       </div>
       <nav class="main" style="margin-left:auto">
         <a href="validador.html">Validador</a>
-        <a href="historico_win.html">Hist�rico WIN</a>
-        <a href="historico_motor.html">Hist�rico Motor</a>
+        <a href="historico_win.html">Histï¿½rico WIN</a>
+        <a href="historico_motor.html">Histï¿½rico Motor</a>
         <a href="forense.html">Forense</a>
         <a href="#" id="idmar-logout">Sair</a>
       </nav>
@@ -102,7 +102,7 @@
   if(d.readyState !== 'loading') init();
   else d.addEventListener('DOMContentLoaded', init);
 
-  // exp�e se precisares
+  // expï¿½e se precisares
   w.IDMAR_renderHeader = renderHeader;
 
 })(window, document);

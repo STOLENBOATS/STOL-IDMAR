@@ -1,5 +1,5 @@
-﻿
-// IDMAR Layout helper (r3) � header/footer + theme (default: light)
+ï»¿
+// IDMAR Layout helper (r3) ï¿½ header/footer + theme (default: light)
 (function(w,d){
   function ready(fn){ if(d.readyState==='loading'){ d.addEventListener('DOMContentLoaded', fn); } else { fn(); } }
   function injectCSS(css){
@@ -30,9 +30,9 @@
   function buildHeader(){
     if(d.getElementById('idmar-topbar')) return;
     var h=d.createElement('header'); h.id='idmar-topbar'; h.className='topbar';
-    h.innerHTML = '<img src="img/logo-pm.png" alt="Pol�cia Mar�tima">'
-      + '<div class="brand"><span class="app">IDMAR</span><small>Identifica��o Mar�tima � Cascos & Motores</small></div>'
-      + '<nav><a href="validador.html">Validador</a><a href="historico_win.html">Hist�rico WIN</a><a href="historico_motor.html">Hist�rico Motor</a><a href="forense.html">Forense</a><a href="#" id="idmar-logout">Sair</a></nav>'
+    h.innerHTML = '<img src="img/logo-pm.png" alt="Polï¿½cia Marï¿½tima">'
+      + '<div class="brand"><span class="app">IDMAR</span><small>Identificaï¿½ï¿½o Marï¿½tima ï¿½ Cascos & Motores</small></div>'
+      + '<nav><a href="validador.html">Validador</a><a href="historico_win.html">Histï¿½rico WIN</a><a href="historico_motor.html">Histï¿½rico Motor</a><a href="forense.html">Forense</a><a href="#" id="idmar-logout">Sair</a></nav>'
       + '<button id="idmar-theme" style="margin-left:auto" title="Dia/Noite">??</button>';
     return h;
   }
@@ -40,7 +40,7 @@
     if(d.getElementById('idmar-footer')) return;
     var f=d.createElement('footer'); f.id='idmar-footer'; f.className='footer';
     var v=(w.IDMAR_VERSION||'v2.2.7-baseline+merge-r2.3');
-    f.textContent='IDMAR � ' + v;
+    f.textContent='IDMAR ï¿½ ' + v;
     return f;
   }
   function setTheme(theme){

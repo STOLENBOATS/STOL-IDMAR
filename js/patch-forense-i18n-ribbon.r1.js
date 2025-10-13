@@ -1,4 +1,4 @@
-﻿(function(w,d){
+ï»¿(function(w,d){
   "use strict";
 
   // ========= utils i18n =========
@@ -16,13 +16,13 @@
     };
   }
 
-  // ========= 1) HIST�RICO WIN via hook ao localStorage.setItem =========
+  // ========= 1) HISTï¿½RICO WIN via hook ao localStorage.setItem =========
   (function(){
     const LS = w.localStorage;
     if (!LS || LS.__idmar_hooked__) return;
     const getKey = ()=> (w.NAV && w.NAV.STORAGE && w.NAV.STORAGE.WIN_HISTORY) || "hist_win";
 
-    // fun��o que garante lang/flags nos registos
+    // funï¿½ï¿½o que garante lang/flags nos registos
     function upgradeArray(arr){
       if (!Array.isArray(arr)) return arr;
       const L = getLang(), FLAGS = buildFlags();
@@ -35,7 +35,7 @@
       });
     }
 
-    // hook setItem apenas para a chave de hist�rico
+    // hook setItem apenas para a chave de histï¿½rico
     const _set = LS.setItem.bind(LS);
     LS.setItem = function(k,v){
       try{
@@ -47,7 +47,7 @@
       return _set(k,v);
     };
 
-    // migra��o imediata do que j� existe
+    // migraï¿½ï¿½o imediata do que jï¿½ existe
     try{
       const k = getKey();
       const raw = LS.getItem(k);
@@ -62,7 +62,7 @@
     }catch(e){}
 
     LS.__idmar_hooked__ = true;
-    console.info("[IDMAR shim] setItem hook ativo para hist�rico WIN (", getKey(), ").");
+    console.info("[IDMAR shim] setItem hook ativo para histï¿½rico WIN (", getKey(), ").");
   })();
 
   // ========= 2) MOTOR: notas extra via MutationObserver =========
@@ -105,7 +105,7 @@
       if (!box) return false;
       const mo = new MutationObserver(runExtra);
       mo.observe(box, { childList:true, subtree:true });
-      // tamb�m corre j�
+      // tambï¿½m corre jï¿½
       runExtra();
       console.info("[IDMAR shim] Motor: MutationObserver ativo para notas extra.");
       return true;
@@ -116,7 +116,7 @@
     }
   })();
 
-  // ========= 3) Tooltips/rota��o uniformes =========
+  // ========= 3) Tooltips/rotaï¿½ï¿½o uniformes =========
   (function(){
     function setRotateTooltip(el){
       try{
@@ -136,7 +136,7 @@
             setRotateTooltip(el);
           }
         });
-        console.info("[IDMAR shim] rota��o + tooltip ativo (SHIFT+R).");
+        console.info("[IDMAR shim] rotaï¿½ï¿½o + tooltip ativo (SHIFT+R).");
       }catch(e){}
     });
   })();
@@ -155,10 +155,10 @@
       return _qsa.call(this, selector);
     } catch (e) {
       try {
-        // 1) corrige padr�es inv�lidos do tipo [data-x]("Texto") -> :contains("Texto")
+        // 1) corrige padrï¿½es invï¿½lidos do tipo [data-x]("Texto") -> :contains("Texto")
         let sel = String(selector).replace(/\[data-x\]\("([^"]+)"\)/g, ':contains("$1")');
 
-        // 2) divide por v�rgulas e processa cada parte
+        // 2) divide por vï¿½rgulas e processa cada parte
         const parts = sel.split(',').map(s => s.trim()).filter(Boolean);
         let out = [];
         for (const part of parts){
@@ -176,7 +176,7 @@
         }
         return asList(out);
       } catch(_) {
-        // �ltimo recurso: lista vazia, n�o rebenta a execu��o
+        // ï¿½ltimo recurso: lista vazia, nï¿½o rebenta a execuï¿½ï¿½o
         return asList([]);
       }
     }

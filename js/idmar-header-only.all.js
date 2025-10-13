@@ -1,11 +1,11 @@
-﻿/* IDMAR header-only (compact v3) */
+ï»¿/* IDMAR header-only (compact v3) */
 (() => {
   if (document.querySelector('.app-header[data-idmar="header-only"]')) return;
 
   const HREFS = [
     ['validador.html','Validador'],
-    ['historico_win.html','Hist�rico WIN'],
-    ['historico_motor.html','Hist�rico Motor'],
+    ['historico_win.html','Histï¿½rico WIN'],
+    ['historico_motor.html','Histï¿½rico Motor'],
     ['forense.html','Forense'],
     ['#logout','Sair'],
   ];
@@ -18,10 +18,10 @@
 
   const left = document.createElement('div');
   Object.assign(left.style,{display:'flex',alignItems:'center',gap:'.75rem'});
-  const img = new Image(); img.src='img/logo-pm.png'; img.alt='Pol�cia Mar�tima'; img.style.height='32px';
+  const img = new Image(); img.src='img/logo-pm.png'; img.alt='Polï¿½cia Marï¿½tima'; img.style.height='32px';
   const t = document.createElement('div');
   const a = document.createElement('div'); a.textContent='IDMAR'; a.style.fontWeight='800'; a.style.fontSize='1.6rem'; a.style.lineHeight='1';
-  const b = document.createElement('div'); b.innerHTML='Identifica��o Mar�tima � Cascos &amp; Motores'; b.style.opacity='.8';
+  const b = document.createElement('div'); b.innerHTML='Identificaï¿½ï¿½o Marï¿½tima ï¿½ Cascos &amp; Motores'; b.style.opacity='.8';
   t.append(a,b); left.append(img,t);
 
   const right = document.createElement('div');
