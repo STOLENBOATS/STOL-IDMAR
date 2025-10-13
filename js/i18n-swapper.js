@@ -1,4 +1,3 @@
-ï»¿
 // js/i18n-swapper.js
 (function(){
   const LS_KEY = "IDMAR_LANG";
@@ -20,7 +19,7 @@
       const pt = el.dataset.ptPlaceholder;
       let en = el.dataset.enPlaceholder;
       if (lang === "en" && en){
-        en = en.replace(/^\s*Ex\.\s*:/i, "E.g.:").replace(/\bJapï¿½o\b/g,"Japan");
+        en = en.replace(/^\s*Ex\.\s*:/i, "E.g.:").replace(/\bJapão\b/g,"Japan");
         el.setAttribute("placeholder", en);
       } else if (pt){
         el.setAttribute("placeholder", pt);
@@ -54,6 +53,3 @@
 
   boot();
 })();
-
-
-
