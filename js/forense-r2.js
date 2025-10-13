@@ -1,5 +1,6 @@
-ï»¿/* IDMAR Ã¢â¬â Forense r2 (export PNG + hash + anexar ao histÃÂ³rico) */
+/* IDMAR — Forense r2 (export PNG + hash + anexar ao histórico) */
 (() => {
+
   function $(sel){ return document.querySelector(sel); }
   function findCanvas(){
     return $('#wsCanvas') || $('.ws-canvas') || $('#workspace canvas') || document.querySelector('canvas');
