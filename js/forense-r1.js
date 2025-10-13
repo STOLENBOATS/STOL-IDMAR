@@ -1,5 +1,6 @@
-ï»¿/* IDMAR ï¿½ Forense r1a (fix coords + A/B UX) ï¿½ 2025-09-18 */
+/* IDMAR • Forense r1a (fix coords + A/B UX) • 2025-09-18 */
 (() => {
+
   const $ = (s) => document.querySelector(s);
   const els = {
     inputFiles:  $('#evPhotos'),
