@@ -3,3 +3,4 @@ function label(){return `IDMAR - POLÃÂCIA MARÃÂTIMA - ${w.IDMAR_VERS
 function inject(){var f=d.getElementById('app-footer')||d.querySelector('footer');if(!f)return;var wrap=d.createElement('div');wrap.style.display='flex';wrap.style.justifyContent='space-between';wrap.style.alignItems='center';var left=d.createElement('div');left.innerHTML=f.innerHTML;var right=d.createElement('small');right.textContent=label();right.style.opacity='0.85';wrap.appendChild(left);wrap.appendChild(right);f.innerHTML='';f.appendChild(wrap);} if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',inject);else inject();})(window,document);
 
 
+
