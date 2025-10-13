@@ -1,6 +1,6 @@
-ï»¿/* IDMAR ï¿½ Histï¿½rico WIN r1.2 (foto a partir de meta.forense + ï¿½Ver anexosï¿½) */
+/* IDMAR — Histórico WIN r1.2 (foto a partir de meta.forense + “Ver anexos”) */
 (()=>{
-// modal (sï¿½ cria uma vez)
+// modal (só cria uma vez)
 if(!window.IDMAR_openAttachmentsModal){
   window.IDMAR_openAttachmentsModal = function(record, typeLabel){
     let modal=document.getElementById('idmar-att-modal');
@@ -41,7 +41,7 @@ const $btnCSV=document.getElementById('btnExport')||document.querySelector('[dat
 
 function readKey(k){ try{ const r=localStorage.getItem(k); if(!r) return []; const a=JSON.parse(r); return Array.isArray(a)?a:[] }catch{ return [] } }
 function deriveFoto(r){ if(r.foto) return r.foto; const fx=(r.meta&&Array.isArray(r.meta.forense))?r.meta.forense:[]; if(!fx.length) return ''; const f=fx[0]?.file||''; return f ? (f+' (+'+Math.max(0,fx.length-1)+')') : (fx.length+' anexo(s)'); }
-function sanitize(x){ const o={...x}; o.ts=o.ts||x.timestamp||''; o.win=o.win||x.hin||''; o.estado=o.estado||(o.valid===true?'ok':(o.valid===false?'erro':''))||''; o.estadoLabel=o.estadoLabel||(o.valid?'Vï¿½lido':'Invï¿½lido'); o.justificacao=o.justificacao||x.reason||''; o.meta=o.meta||x.meta||{}; o.foto=deriveFoto(o); return o; }
+function sanitize(x){ const o={...x}; o.ts=o.ts||x.timestamp||''; o.win=o.win||x.hin||''; o.estado=o.estado||(o.valid===true?'ok':(o.valid===false?'erro':''))||''; o.estadoLabel=o.estadoLabel||(o.valid?'Válido':'Inválido'); o.justificacao=o.justificacao||x.reason||''; o.meta=o.meta||x.meta||{}; o.foto=deriveFoto(o); return o; }
 function readAll(){ const A=readKey('history_win'), B=readKey('historyWin'); const all=[...A,...B].map(sanitize); const seen=new Set(); return all.filter(x=>{ const k=(x.id||'')+'|'+(x.ts||'')+'|'+(x.win||''); if(seen.has(k)) return false; seen.add(k); return true; }).sort((a,b)=>(b.ts||'').localeCompare(a.ts||'')); }
 function fmtTs(ts){ try{ const d=new Date(ts); return isNaN(d)?ts:d.toLocaleString(); }catch{ return ts; } }
 function csvCell(s){ const v=s==null?'':String(s); return /[;"\n]/.test(v)?('"'+v.replace(/"/g,'""')+'"'):v; }
