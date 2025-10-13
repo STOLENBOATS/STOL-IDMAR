@@ -1,4 +1,4 @@
-/* IDMAR — Forense r2 (export PNG + hash + anexar ao histórico) */
+﻿/* IDMAR â€” Forense r2 (export PNG + hash + anexar ao histÃ³rico) */
 (() => {
   function $(sel){ return document.querySelector(sel); }
   function findCanvas(){
@@ -40,7 +40,7 @@
   async function doExportAndAttach(){
     try{
       const c = findCanvas();
-      if (!c) { alert('Sem canvas visível para exportar.'); return; }
+      if (!c) { alert('Sem canvas visÃ­vel para exportar.'); return; }
       const blob = await new Promise(res=> c.toBlob(res, 'image/png', 1));
       if (!blob){ alert('Falha ao gerar PNG.'); return; }
       const name = `forense_${new Date().toISOString().replace(/[:.]/g,'-')}.png`;
@@ -54,10 +54,10 @@
       const payload = { ts:new Date().toISOString(), file:name, hash_sha256:hash, notes };
       const r = attachToLatest(kind, payload);
       if (r.ok){
-        console.log('[Forense] Anexado ao histórico:', r.id, payload);
-        alert('Exportado e anexado. SHA-256: ' + hash.slice(0,16) + '…');
+        console.log('[Forense] Anexado ao histÃ³rico:', r.id, payload);
+        alert('Exportado e anexado. SHA-256: ' + hash.slice(0,16) + 'â€¦');
       } else {
-        alert('Sem histórico para anexar. Guardado em fila local.');
+        alert('Sem histÃ³rico para anexar. Guardado em fila local.');
       }
     }catch(err){
       console.error('Forense export error:', err);
@@ -73,3 +73,4 @@
   }
   if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', bind); else bind();
 })();
+

@@ -1,10 +1,10 @@
-// idmar-version.v5.js — footer text/label injector
+﻿// idmar-version.v5.js â€” footer text/label injector
 (function(w,d){
   function today(){ const dt=new Date(); const y=dt.getFullYear(), m=String(dt.getMonth()+1).padStart(2,'0'), da=String(dt.getDate()).padStart(2,'0'); return `${y}-${m}-${da}`; }
   function label(){
     if (w.IDMAR_FOOTER_TEXT && String(w.IDMAR_FOOTER_TEXT).trim()) return String(w.IDMAR_FOOTER_TEXT);
     var ver = (w.IDMAR_VERSION && String(w.IDMAR_VERSION).trim()) || 'Vs xxx';
-    return `IDMAR - POLÍCIA MARÍTIMA - ${ver} - ${today()}`;
+    return `IDMAR - POLÃCIA MARÃTIMA - ${ver} - ${today()}`;
   }
   function inject(){
     try{
@@ -19,3 +19,5 @@
   }
   if(d.readyState==='loading') d.addEventListener('DOMContentLoaded', inject); else inject();
 })(window, document);
+
+

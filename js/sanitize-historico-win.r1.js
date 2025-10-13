@@ -1,6 +1,6 @@
-
-// IDMAR — sanitize-historico-win.r1
-// Normaliza histórico WIN: garante .foto e .thumb no nível raiz
+﻿
+// IDMAR â€” sanitize-historico-win.r1
+// Normaliza histÃ³rico WIN: garante .foto e .thumb no nÃ­vel raiz
 (() => {
   const K1 = 'history_win', K2 = 'historyWin';
   const raw = localStorage.getItem(K1) || localStorage.getItem(K2) || '[]';
@@ -26,3 +26,5 @@
   }
   console.log('[sanitize-win.r1] OK');
 })();
+
+

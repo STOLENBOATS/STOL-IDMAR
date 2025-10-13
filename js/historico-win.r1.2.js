@@ -87,3 +87,5 @@ function bind(){ ['input','change'].forEach(ev=>{ $q&&$q.addEventListener(ev,app
 (document.readyState==='loading')?document.addEventListener('DOMContentLoaded',bind):bind();
 })();
 
+
+

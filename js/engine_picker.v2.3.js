@@ -29,3 +29,5 @@
   async function boot(){ const s=document.currentScript; const url=s?.dataset?.catalog || 'data/engines_catalog.v1.enriched.json'; let cat; try{ cat=await loadJSON(url); }catch(e){ console.error('[engine_picker] erro cat�logo:', e); return; } const target=document.getElementById('brandDynamic'); if(!target){ console.warn('[engine_picker] #brandDynamic n�o encontrado'); return; } attachV1(target, cat); }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 })();
+
+

@@ -1,5 +1,5 @@
-// Auto footer version injector (configurable)
-// Pattern: "IDMAR - POLÍCIA MARÍTIMA - Vs XXX - YYYY-MM-DD"
+﻿// Auto footer version injector (configurable)
+// Pattern: "IDMAR - POLÃCIA MARÃTIMA - Vs XXX - YYYY-MM-DD"
 (function(w,d){
   function today(){
     try{
@@ -20,7 +20,7 @@
     }catch(e){ return 'Vs xxx'; }
   }
   function label(){
-    return `IDMAR - POLÍCIA MARÍTIMA - ${getVersion()} - ${today()}`;
+    return `IDMAR - POLÃCIA MARÃTIMA - ${getVersion()} - ${today()}`;
   }
   function inject(){
     try {
@@ -37,3 +37,5 @@
   }
   if(d.readyState==='loading') d.addEventListener('DOMContentLoaded', inject); else inject();
 })(window, document);
+
+

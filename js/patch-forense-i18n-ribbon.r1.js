@@ -186,3 +186,5 @@
   console.info("[IDMAR shim] querySelectorAll patch: :contains() + fallback ativo.");
 })();
 
+
+

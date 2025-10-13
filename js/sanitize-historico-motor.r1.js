@@ -1,6 +1,6 @@
-
-// IDMAR — sanitize-historico-motor.r1
-// Normaliza histórico Motor: garante .foto e .thumb no nível raiz
+﻿
+// IDMAR â€” sanitize-historico-motor.r1
+// Normaliza histÃ³rico Motor: garante .foto e .thumb no nÃ­vel raiz
 (() => {
   const K1 = 'history_motor', K2 = 'historyMotor';
   const raw = localStorage.getItem(K1) || localStorage.getItem(K2) || '[]';
@@ -26,3 +26,5 @@
   }
   console.log('[sanitize-motor.r1] OK');
 })();
+
+

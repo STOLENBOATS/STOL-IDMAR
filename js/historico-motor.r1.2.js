@@ -1,12 +1,12 @@
-/* IDMAR — Histórico Motor r1.2 (foto via meta.forense + “Ver anexos”) */
+﻿/* IDMAR â€” HistÃ³rico Motor r1.2 (foto via meta.forense + â€œVer anexosâ€) */
 (()=>{
-// modal partilhado (só cria uma vez)
+// modal partilhado (sÃ³ cria uma vez)
 if(!window.IDMAR_openAttachmentsModal){
   window.IDMAR_openAttachmentsModal = function(record, typeLabel){
     let modal=document.getElementById('idmar-att-modal');
     if(!modal){
       modal=document.createElement('div'); modal.id='idmar-att-modal';
-      modal.innerHTML='<div class="idmar-att-backdrop"></div><div class="idmar-att-dialog"><div class="idmar-att-head"><strong id="idmar-att-title">Anexos</strong><button id="idmar-att-close" title="Fechar">×</button></div><div class="idmar-att-body"></div></div>';
+      modal.innerHTML='<div class="idmar-att-backdrop"></div><div class="idmar-att-dialog"><div class="idmar-att-head"><strong id="idmar-att-title">Anexos</strong><button id="idmar-att-close" title="Fechar">Ã—</button></div><div class="idmar-att-body"></div></div>';
       const css=document.createElement('style'); css.textContent=
       '#idmar-att-modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:9999}' +
       '.idmar-att-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35)}' +
@@ -20,7 +20,7 @@ if(!window.IDMAR_openAttachmentsModal){
       modal.querySelector('#idmar-att-close').onclick=()=>modal.remove();
       modal.querySelector('.idmar-att-backdrop').onclick=()=>modal.remove();
     }else{ modal.querySelector('.idmar-att-body').innerHTML=''; }
-    modal.querySelector('#idmar-att-title').textContent='Anexos — '+(typeLabel||'');
+    modal.querySelector('#idmar-att-title').textContent='Anexos â€” '+(typeLabel||'');
     const body=modal.querySelector('.idmar-att-body');
     const list=(record&&record.meta&&Array.isArray(record.meta.forense))?record.meta.forense:[];
     if(!list.length){ const p=document.createElement('p'); p.style.padding='1rem'; p.textContent='Sem anexos.'; body.appendChild(p); }
@@ -43,3 +43,4 @@ function readKey(k){ try{ const r=localStorage.getItem(k); if(!r) return []; con
 function deriveFoto(r){ if(r.foto) return r.foto; const fx=(r.meta&&Array.isArray(r.meta.forense))?r.meta.forense:[]; if(!fx.length) return ''; const f=fx[0]?.file||''; return f ? (f+' (+'+Math.max(0,fx.length-1)+')') : (fx.length+' anexo(s)'); }
 function sanitize(x){ const o={...x}; o.ts=o.ts||x.timestamp||''; o.sn=o.sn||x.serial||'';
  
+
