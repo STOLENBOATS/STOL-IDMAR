@@ -1,253 +1,297 @@
-ï»¿// engine_picker.v2.4.js ï¿½ suporta schema v2 (famï¿½lias/variantes) + fallback v1; PT/EN
-(function(){
-  const el = id => document.getElementById(id);
-  const C = (...a)=>console.log('[engine_picker]', ...a);
-  async function loadJSON(url){ const r=await fetch(url,{cache:'no-store'}); if(!r.ok) throw new Error(url+': '+r.status); return r.json(); }
-  function uniq(a){ return Array.from(new Set(a)); }
-  function stableSort(arr){
-    if(!Array.isArray(arr)) return [];
-    const copy=[...arr];
-    const allNum=copy.every(v=>typeof v==='number'||(!isNaN(Number(v))&&v!==''));
-    if(allNum) return copy.map(Number).sort((a,b)=>a-b);
-    return copy.map(String).sort((a,b)=>a.localeCompare(b,'pt',{numeric:true,sensitivity:'base'}));
+/* MIEC / IDMAR — validador-win.js (Fase 1: mensagens PT + dica EN, histórico intacto)
+   Data: 2025-09-18  |  Escopo: apenas JS, sem tocar em HTML/CSS, sem deps externas.
+   Regras WIN (resumo aplicado):
+   - UE (14): 1–2 país [A-Z], 3–5 fabricante [A-Z], 6–10 livre [A-Z0-9], 11 mês [A-H,J,K,L,M,N,P,R,S,T,U,V,W,X,Y,Z], 12 ano [0-9], 13–14 modelo [0-9]
+   - EUA (14 ou 16; 15 é inválido): 1–2 país [A-Z], 3–5 fabricante [A-Z], 6–12 livre [A-Z0-9],
+     13 mês [A-H,J,K,L,M,N,P,R,S,T,U,V,W,X,Y,Z], 14 ano [0-9], (15–16 modelo [0-9] se len=16)
+   - Hífen opcional entre pos. 2–3 (ignorar na validação). Letras inválidas: I, O, Q nos campos de mês.
+   - País/Fabricante não podem ter números; sem espaços/símbolos inesperados.
+   Histórico:
+   - Mantém localStorage key existente (prioridade: 'history_win', fallback 'historyWin').
+   - Se já existirem registos, adapta o novo registo ao mesmo esquema (auto-map de chaves).
+*/
+
+(() => {
+  const STATE = {
+    // tentativa de autodetecção do campo e botão sem depender de HTML específico
+    selInput: ['#win', '#winInput', 'input[name="win"]', '.js-win', '#hin', '#hinInput', 'input[name="hin"]'],
+    selButton: ['#btnValidar', '#validateBtn', '.js-validate', 'button[type="submit"]'],
+    selOutput: ['#resultado', '.js-result', '[data-result]'],
+    historyKeys: ['history_win', 'historyWin'],
+  };
+
+  // Map de letras de mês válidas (sem I, O, Q)
+  const MONTH_LETTERS = new Set(['A','B','C','D','E','F','G','H','J','K','L','M','N','P','R','S','T','U','V','W','X','Y','Z']);
+
+  // Utilidades DOM seguras
+  function qSelAll(arr) {
+    for (const s of arr) {
+      const el = document.querySelector(s);
+      if (el) return el;
+    }
+    return null;
   }
-  function makeSelect(label,id){
-    const wrap=document.createElement('div');
-    const lab=document.createElement('label'); lab.htmlFor=id; lab.textContent=label;
-    const sel=document.createElement('select'); sel.id=id;
-    wrap.append(lab, sel); return {wrap, sel};
+
+  function normalizeInput(raw) {
+    if (!raw) return '';
+    // remover espaços e símbolos, manter apenas A-Z0-9 e hífen
+    const cleaned = raw.toUpperCase().trim().replace(/\s+/g, '');
+    return cleaned;
   }
-  function fill(sel, arr, ph='ï¿½ selecione / select ï¿½'){
-    sel.innerHTML='';
-    const o0=document.createElement('option'); o0.value=''; o0.textContent=ph; sel.appendChild(o0);
-    (arr||[]).forEach(v=>{
-      const o=document.createElement('option');
-      if(typeof v==='object'&&v&&'value'in v){ o.value=String(v.value); o.textContent=String(v.label??v.value); }
-      else{ o.value=String(v); o.textContent=String(v); }
-      sel.appendChild(o);
+
+  function stripOptionalHyphen(s) {
+    // Hífen permitido apenas entre posições 2 e 3; ignoramos na validação
+    return s.replace(/^(..)-(.*)$/, '$1$2');
+  }
+
+  function isLetters(str) { return /^[A-Z]+$/.test(str); }
+  function isAlnum(str) { return /^[A-Z0-9]+$/.test(str); }
+  function isDigits(str){ return /^[0-9]+$/.test(str); }
+
+  function detectFormat(win) {
+    const len = win.length;
+    if (len === 14) return 'EU_OR_US_14';
+    if (len === 16) return 'US_16';
+    if (len === 15) return 'INVALID_15';
+    return 'UNKNOWN';
+  }
+
+  function validateMonthLetter(ch) {
+    return MONTH_LETTERS.has(ch);
+  }
+
+  function validateEU14(win) {
+    // Posições 1-2 país; 3-5 fabricante; 6-10 livre; 11 mês letra válida; 12 ano dígito; 13-14 modelo dígitos
+    const country = win.slice(0,2);
+    const manuf   = win.slice(2,5);
+    const free    = win.slice(5,10);
+    const month   = win[10];
+    const year    = win[11];
+    const model   = win.slice(12,14);
+
+    if (!isLetters(country)) return fail(`País inválido [letters only]`, `Country must be letters`);
+    if (!isLetters(manuf))   return fail(`Fabricante inválido [letters only]`, `Manufacturer must be letters`);
+    if (!isAlnum(free))      return fail(`Série (6–10) inválida [A-Z/0-9]`, `Free block must be A-Z/0-9`);
+    if (!validateMonthLetter(month)) return fail(`Mês (11) inválido [sem I/O/Q]`, `Month letter excludes I/O/Q`);
+    if (!isDigits(year))     return fail(`Ano (12) inválido [0-9]`, `Year must be a digit`);
+    if (!isDigits(model))    return fail(`Modelo (13–14) inválido [0-9]`, `Model must be digits`);
+    return ok(`Formato UE (14) válido`, `EU 14 format valid`, {
+      country, manufacturer: manuf, month, year, model
     });
   }
 
-  // ===== Rotaï¿½ï¿½o: rï¿½tulos bilingues + tooltip curto =====
-  function relabelRotationSelect(selectEl){
-    if(!selectEl) return;
-    Array.from(selectEl.options).forEach(opt=>{
-      const v = String(opt.value || '').toUpperCase().trim();
-      if(!v) return; // placeholder
+  function validateUS14(win) {
+    // EUA 14: 1-2 país; 3-5 fabricante; 6-12 livre; 13 mês; 14 ano
+    const country = win.slice(0,2);
+    const manuf   = win.slice(2,5);
+    const free    = win.slice(5,12);
+    const month   = win[12];
+    const year    = win[13];
 
-      // Normalizar rï¿½tulos conhecidos
-      if (v === 'STD' || v === 'RH' || v === 'CW') {
-        opt.textContent = 'STD ï¿½ Standard (RH)'; // PT/EN no mesmo rï¿½tulo
-        opt.title       = 'Rotaï¿½ï¿½o padrï¿½o / Standard (hï¿½lice direita / right-hand)';
-        opt.value       = 'STD';
-      } else if (v === 'CCW' || v === 'LH' || v === 'ANTI' || v === 'COUNTER') {
-        opt.textContent = 'CCW ï¿½ Counter-clockwise (LH)';
-        opt.title       = 'Rotaï¿½ï¿½o inversa / Counter-clockwise (hï¿½lice esquerda / left-hand)';
-        opt.value       = 'CCW';
-      } else {
-        // fallback: deixa como estï¿½, mas acrescenta tï¿½tulo bilingue genï¿½rico
-        if(!opt.title) opt.title = 'Rotaï¿½ï¿½o / Rotation';
-      }
+    if (!isLetters(country)) return fail(`País inválido [letters only]`, `Country must be letters`);
+    if (!isLetters(manuf))   return fail(`Fabricante inválido [letters only]`, `Manufacturer must be letters`);
+    if (!isAlnum(free))      return fail(`Série (6–12) inválida [A-Z/0-9]`, `Free block must be A-Z/0-9`);
+    if (!validateMonthLetter(month)) return fail(`Mês (13) inválido [sem I/O/Q]`, `Month letter excludes I/O/Q`);
+    if (!isDigits(year))     return fail(`Ano (14) inválido [0-9]`, `Year must be a digit`);
+    return ok(`Formato EUA (14) válido`, `US 14 format valid`, {
+      country, manufacturer: manuf, month, year
     });
   }
 
-// === Overrides locais (IDMAR_ENGINE_OVERRIDES) ===
-function loadOverrides(){
-  try{ return JSON.parse(localStorage.getItem('IDMAR_ENGINE_OVERRIDES')||'{}'); }
-  catch(_){ return {}; }
-}
+  function validateUS16(win) {
+    // EUA 16: 1-2 país; 3-5 fabricante; 6-12 livre; 13 mês; 14 ano; 15-16 modelo
+    const country = win.slice(0,2);
+    const manuf   = win.slice(2,5);
+    const free    = win.slice(5,12);
+    const month   = win[12];
+    const year    = win[13];
+    const model   = win.slice(14,16);
 
-function mergeArraysUniq(base, add){
-  const A = Array.isArray(base) ? base : [];
-  const B = Array.isArray(add)  ? add  : [];
-  return Array.from(new Set([...A, ...B])).filter(v => v!=='' && v!=null);
-}
-
-/**
- * Suporta:
- * - v1 (brand level): hp_list, rigging, shaft_options, rotation, model_code_list, displacement_list, year_list
- * - v2 (brand.families[fam]): mesmas listas mas com nomes ï¿½*_listï¿½; mapeadas para campos do renderer v2
- */
-function mergeOverrides(cat, ov){
-  if(!ov || typeof ov!=='object') return cat;
-  cat.brands = cat.brands || {};
-
-  for(const brand of Object.keys(ov)){
-    cat.brands[brand] = cat.brands[brand] || {};
-    const dstB = cat.brands[brand];
-    const srcB = ov[brand] || {};
-
-    // v1 brand-level
-    const v1Keys = ['hp_list','rigging','shaft_options','rotation','model_code_list','displacement_list','year_list'];
-    v1Keys.forEach(k=>{
-      if(srcB[k]) dstB[k] = mergeArraysUniq(dstB[k], srcB[k]);
+    if (!isLetters(country)) return fail(`País inválido [letters only]`, `Country must be letters`);
+    if (!isLetters(manuf))   return fail(`Fabricante inválido [letters only]`, `Manufacturer must be letters`);
+    if (!isAlnum(free))      return fail(`Série (6–12) inválida [A-Z/0-9]`, `Free block must be A-Z/0-9`);
+    if (!validateMonthLetter(month)) return fail(`Mês (13) inválido [sem I/O/Q]`, `Month letter excludes I/O/Q`);
+    if (!isDigits(year))     return fail(`Ano (14) inválido [0-9]`, `Year must be a digit`);
+    if (!isDigits(model))    return fail(`Modelo (15–16) inválido [0-9]`, `Model must be digits`);
+    return ok(`Formato EUA (16) válido`, `US 16 format valid`, {
+      country, manufacturer: manuf, month, year, model
     });
-
-    // v2 families
-    dstB.families = dstB.families || {};
-    const fams = srcB.families || {};
-    for(const famName of Object.keys(fams)){
-      const srcF = fams[famName] || {};
-      const dstF = (dstB.families[famName] = dstB.families[famName] || {});
-
-      // mapear nomes ï¿½*_listï¿½ do admin para campos que o renderer v2 usa
-      // renderer usa: hp, rigging, shaft, rotation, color, gearcase, codes, years
-      if(srcF.hp_list)            dstF.hp          = mergeArraysUniq(dstF.hp,          srcF.hp_list);
-      if(srcF.rigging)            dstF.rigging     = mergeArraysUniq(dstF.rigging,     srcF.rigging);
-      if(srcF.shaft_options)      dstF.shaft       = mergeArraysUniq(dstF.shaft,       srcF.shaft_options);
-      if(srcF.rotation)           dstF.rotation    = mergeArraysUniq(dstF.rotation,    srcF.rotation);
-      if(srcF.model_code_list)    dstF.codes       = mergeArraysUniq(dstF.codes,       srcF.model_code_list);
-      if(srcF.displacement_list)  dstF.displacement= mergeArraysUniq(dstF.displacement,srcF.displacement_list);
-      if(srcF.year_list)          dstF.years       = mergeArraysUniq(dstF.years,       srcF.year_list);
-
-      // (opcionais caso um dia guardes tambï¿½m no admin)
-      if(srcF.color)              dstF.color       = mergeArraysUniq(dstF.color,       srcF.color);
-      if(srcF.gearcase)           dstF.gearcase    = mergeArraysUniq(dstF.gearcase,    srcF.gearcase);
-    }
-  }
-  return cat;
-}
-  
-  // v1 enriched fallback (simplified): brand-level lists
-  function attachV1(container, cat){
-    const brand = el('brand')?.value; const b = (cat.brands||{})[brand]||{};
-    container.innerHTML='';
-    const boxes={
-      hp:  makeSelect('Potï¿½ncia (hp) / Power','eng_hp'),
-      rig: makeSelect('Comando / Rigging','eng_rig'),
-      sh:  makeSelect('Altura de coluna / Shaft','eng_shaft'),
-      rot: makeSelect('Rotaï¿½ï¿½o / Rotation (hï¿½lice / propeller)','eng_rot'),
-      mdl: makeSelect('Modelo / Model code','eng_model'),
-      disp:makeSelect('Cilindrada (cc) / Displacement','eng_disp'),
-      yr:  makeSelect('Ano / Year','eng_year')
-    };
-    Object.values(boxes).forEach(x=>container.appendChild(x.wrap));
-    fill(boxes.hp.sel,  stableSort(b.hp_list||[]));
-    fill(boxes.rig.sel, stableSort(b.rigging||[]));
-    fill(boxes.sh.sel,  stableSort(b.shaft_options||[]));
-    // rotaï¿½ï¿½o (v1): garantimos STD/CCW e aplicamos rï¿½tulo bilingue
-    fill(boxes.rot.sel, [
-      {value:'STD', label:'STD'},
-      {value:'CCW', label:'CCW'}
-    ]);
-    relabelRotationSelect(boxes.rot.sel);
-
-    fill(boxes.mdl.sel, stableSort(b.model_code_list||[]));
-    fill(boxes.disp.sel,stableSort(b.displacement_list||[]));
-    fill(boxes.yr.sel,  stableSort(b.year_list||[]));
-    wireSync(boxes);
   }
 
-  function wireSync(boxes){
-    const inpModel=document.querySelector('[data-engine-field=model_code], #srch_model');
-    const inpPower=document.querySelector('[data-engine-field=power], #srch_power');
-    const inpDisp =document.querySelector('[data-engine-field=displacement], #srch_disp');
-    const inpYear =document.querySelector('[data-engine-field=year], #srch_year');
-    function sync(){
-      if(inpModel && boxes.mdl && boxes.mdl.sel.value) inpModel.value=boxes.mdl.sel.value;
-      if(inpPower && boxes.hp.sel.value)               inpPower.value=boxes.hp.sel.value;
-      if(inpDisp  && boxes.disp && boxes.disp.sel.value) inpDisp.value=boxes.disp.sel.value;
-      if(inpYear  && boxes.yr   && boxes.yr.sel.value)   inpYear.value=boxes.yr.sel.value;
-    }
-    ['hp','mdl','disp','yr'].forEach(k=>{ if(boxes[k]) boxes[k].sel.addEventListener('change', sync); });
-    sync();
+  function ok(msgPT, msgEN, meta={}) {
+    return { valid: true, code: 'OK', message: `${msgPT} [${msgEN}]`, meta };
+  }
+  function fail(msgPT, msgEN, meta={}) {
+    return { valid: false, code: 'ERR', message: `${msgPT} [${msgEN}]`, meta };
   }
 
-  // v2 renderer
-  function attachV2(container, cat){
-    const brand=el('brand')?.value; const b=(cat.brands||{})[brand]||{}; const fams=b.families||{};
-    container.innerHTML='';
-    const boxes={
-      fam: makeSelect('Famï¿½lia / Family','eng_family'),
-      hp:  makeSelect('Potï¿½ncia (hp) / Power','eng_hp'),
-      rig: makeSelect('Comando / Rigging','eng_rig'),
-      sh:  makeSelect('Altura de coluna / Shaft','eng_shaft'),
-      rot: makeSelect('Rotaï¿½ï¿½o / Rotation (hï¿½lice / propeller)','eng_rot'),
-      col: makeSelect('Cor / Color','eng_color'),
-      gc:  makeSelect('Caixa de engrenagens / Gearcase','eng_gear'),
-      yr:  makeSelect('Ano / Year','eng_year'),
-      mdl: makeSelect('Modelo / Model code','eng_model')
-    };
-    Object.values(boxes).forEach(x=>container.appendChild(x.wrap));
+  function validateWIN(rawInput) {
+    let win = normalizeInput(rawInput);
+    if (!win) return fail(`Campo vazio`, `Empty field`);
+    if (/[^A-Z0-9-]/.test(win)) return fail(`Caracteres inválidos`, `Invalid characters`);
+    // permitir hífen opcional 2–3
+    if (/^..-./.test(win)) win = stripOptionalHyphen(win);
 
-    const famNames=Object.keys(fams);
-    fill(boxes.fam.sel, famNames);
+    const len = win.length;
+    if (len < 14 || len > 16) return fail(`Tamanho inválido (${len})`, `Length must be 14 or 16`);
 
-    function listYears(a,b){ const out=[]; for(let y=a;y<=b;y++) out.push(y); return out; }
-    function compute(fName){
-      const f=fams[fName]||{};
-      const v = Array.isArray(f.variants)&&f.variants.length ? f.variants : [];
-      const allHP   = uniq([...(f.hp||[]), ...v.map(x=>x.hp).filter(Boolean)]);
-      const allRig  = uniq([...(f.rigging||[]), ...v.flatMap(x=>x.rigging||[])]);
-      const allS    = uniq([...(f.shaft||[]), ...v.flatMap(x=>x.shaft||[])]);
-      const allRot  = uniq([...(f.rotation||[]), ...v.flatMap(x=>x.rotation||[])]);
-      const allCol  = uniq([...(f.color||[]), ...v.flatMap(x=>x.color||[])]);
-      const allGC   = uniq([...(f.gearcase||[]), ...v.flatMap(x=>x.gearcase||[])]);
-      const codes   = uniq(v.map(x=>x.code).filter(Boolean));
-      const yrs = Array.isArray(f.years)&&f.years.length===2 ? listYears(f.years[0], f.years[1]) : [];
-      return {
-        hp: stableSort(allHP), rig: stableSort(allRig), sh: stableSort(allS), rot: allRot,
-        color: stableSort(allCol), gear: stableSort(allGC), codes: stableSort(codes), years: stableSort(yrs)
-      };
+    const fmt = detectFormat(win);
+    if (fmt === 'INVALID_15') return fail(`Formato EUA (15) é inválido`, `US 15 is invalid`);
+    if (fmt === 'EU_OR_US_14') {
+      // tentar UE; se falhar, tentar EUA 14; devolver o que passar
+      const eu = validateEU14(win);
+      if (eu.valid) return { ...eu, meta: { ...eu.meta, format: 'EU-14', normalized: win } };
+      const us14 = validateUS14(win);
+      if (us14.valid) return { ...us14, meta: { ...us14.meta, format: 'US-14', normalized: win } };
+      // se ambos falharem, devolver o mais informativo (ficamos com o UE por norma)
+      return { ...eu, meta: { ...eu.meta, tried: ['EU-14','US-14'], normalized: win } };
     }
-
-    function refresh(){
-      const fName=boxes.fam.sel.value;
-      const d=compute(fName);
-      fill(boxes.hp.sel,  d.hp);
-      fill(boxes.rig.sel, d.rig);
-      fill(boxes.sh.sel,  d.sh);
-      // rotaï¿½ï¿½o (v2): usamos o que vier do catï¿½logo, mas normalizamos os rï¿½tulos
-      fill(boxes.rot.sel, (d.rot && d.rot.length) ? d.rot : [{value:'STD',label:'STD'},{value:'CCW',label:'CCW'}]);
-      relabelRotationSelect(boxes.rot.sel);
-
-      fill(boxes.col.sel, d.color);
-      fill(boxes.gc.sel,  d.gear);
-      fill(boxes.yr.sel,  d.years);
-      fill(boxes.mdl.sel, d.codes);
-      wireSync(boxes);
+    if (fmt === 'US_16') {
+      const us16 = validateUS16(win);
+      return { ...us16, meta: { ...us16.meta, format: 'US-16', normalized: win } };
     }
-
-    boxes.fam.sel.addEventListener('change', refresh);
-    refresh();
+    return fail(`Formato desconhecido`, `Unknown format`, { normalized: win, length: len });
   }
 
- async function boot(){
-  const s = document.currentScript;
-  const url = s?.dataset?.catalog || 'data/engines_catalog.v2.json';
+  // ===== Histórico (preservando formato/keys) =====
+  function readHistoryStoreKey() {
+    for (const k of STATE.historyKeys) {
+      try {
+        const raw = localStorage.getItem(k);
+        if (raw) return k;
+      } catch (_) {}
+    }
+    // default preferido
+    return STATE.historyKeys[0];
+  }
 
-  // 1) carrega catï¿½logo base
-  let cat;
+  function readHistory(key) {
+    try {
+      const raw = localStorage.getItem(key);
+      if (!raw) return [];
+      const arr = JSON.parse(raw);
+      return Array.isArray(arr) ? arr : [];
+    } catch (_) {
+      return [];
+    }
+  }
+
+  function mapToExistingShape(example, newItem) {
+    // tenta perceber chaves existentes e alinhar
+    if (!example || typeof example !== 'object') return newItem;
+    const lower = Object.keys(example).reduce((acc, k) => (acc[k.toLowerCase()] = k, acc), {});
+    const out = {};
+    // mapeamentos comuns
+    out[lower['id'] || 'id']                 = newItem.id;
+    out[lower['ts'] || lower['timestamp'] || 'ts'] = newItem.ts;
+    out[lower['win'] || lower['hin'] || 'win']     = newItem.win;
+    out[lower['valid'] || 'valid']           = newItem.valid;
+    out[lower['resultado'] || lower['result'] || 'resultado'] = newItem.resultado;
+    out[lower['justificacao'] || lower['reason'] || 'justificacao'] = newItem.justificacao;
+    out[lower['meta'] || 'meta']             = newItem.meta;
+    // manter quaisquer campos extra do exemplo (evitar perder estrutura)
+    for (const k of Object.keys(example)) {
+      if (!(k in out)) out[k] = example[k];
+    }
+    return out;
+  }
+
+ // escreve nas duas keys para compatibilidade total
+function writeHistory(list) {
   try {
-    cat = await loadJSON(url);
-  } catch (e) {
-    console.error('[engine_picker] catï¿½logo:', e);
-    return;
-  }
-
-  // 2) FUNDIR overrides locais (guardados pelo admin)
-  const overrides = loadOverrides();      // <- precisa das helpers loadOverrides/mergeOverrides
-  cat = mergeOverrides(cat, overrides);   //    que te passei antes
-
-  // 3) render
-  const target = document.getElementById('brandDynamic');
-  if (!target) { console.warn('[engine_picker] #brandDynamic nï¿½o encontrado'); return; }
-  const v = Number(cat.schema_version || 1);
-  C('schema_version', v, 'url', url);
-
-  const render = () => v >= 2 ? attachV2(target, cat) : attachV1(target, cat);
-  render();
-
-  const brandSel = el('brand');
-  if (brandSel && !brandSel.dataset.bound) {
-    brandSel.addEventListener('change', render);
-    brandSel.dataset.bound = '1';
-  }
+    localStorage.setItem('history_win', JSON.stringify(list));
+    localStorage.setItem('historyWin', JSON.stringify(list));
+  } catch (_) {}
 }
 
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', boot);
-  else boot();
+function recordHistoryWIN(winStr, verdict) {
+  // ler de qualquer uma das duas keys (a primeira que existir)
+  const rawA = localStorage.getItem('history_win');
+  const rawB = localStorage.getItem('historyWin');
+  const list = (() => {
+    try { if (rawA) return JSON.parse(rawA) || []; } catch(_) {}
+    try { if (rawB) return JSON.parse(rawB) || []; } catch(_) {}
+    return [];
+  })();
+
+  // novo item – inclui campos esperados pelos históricos
+  const entry = {
+    id: cryptoRandomId(),
+    ts: new Date().toISOString(),
+    win: verdict?.meta?.normalized || (winStr || '').toUpperCase(),
+    valid: !!verdict.valid,
+    resultado: verdict.valid ? 'VÁLIDO' : 'INVÁLIDO',      // compat legado
+    estado: verdict.valid ? 'ok' : 'erro',                 // usado por filtros
+    estadoLabel: verdict.valid ? 'Válido' : 'Inválido',    // coluna “Estado”
+    justificacao: verdict.message || '',                   // coluna “Justificação”
+    foto: '',                                              // mantém campo se alguma vez anexares nome de foto
+    meta: { ...verdict.meta, engine: false, module: 'WIN' }
+  };
+
+  // inserir no topo
+  const newList = [entry, ...list];
+  writeHistory(newList);
+
+  return entry;
+}
+
+  // ===== UI helper (mensagem PT + EN na mesma linha) =====
+  function renderResult(targetEl, verdict) {
+    if (!targetEl) return;
+    targetEl.textContent = verdict.message; // uma linha, PT + [EN]
+    targetEl.setAttribute('data-valid', verdict.valid ? '1' : '0');
+  }
+
+  // ===== Ligação à página (sem exigir HTML específico) =====
+  function bootstrap() {
+    const input = qSelAll(STATE.selInput);
+    const btn   = qSelAll(STATE.selButton);
+    const out   = qSelAll(STATE.selOutput);
+
+    // Se a página já tinha listeners, evitamos duplicar (marcador)
+    if (document.body.dataset.winBound) return;
+    document.body.dataset.winBound = '1';
+
+    // Fallback: capturar submits de forms
+    const form = input ? input.closest('form') : document.querySelector('form');
+
+    function runValidation(ev) {
+      if (ev) ev.preventDefault?.();
+      const raw = (input && input.value) ? input.value : '';
+      const verdict = validateWIN(raw);
+      renderResult(out, verdict);
+      recordHistoryWIN(raw, verdict);
+      // Se existir uma função global de UI já tua, chamamos com os dados
+      if (typeof window.onWINValidated === 'function') {
+        try { window.onWINValidated({ raw, verdict }); } catch {}
+      }
+      return verdict;
+    }
+
+    if (btn) {
+      btn.addEventListener('click', runValidation);
+    }
+    if (form) {
+      form.addEventListener('submit', runValidation);
+    }
+    // Enter no input
+    if (input) {
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') { e.preventDefault(); runValidation(); }
+      });
+    }
+
+    // Expor API mínima caso precises noutros scripts
+    window.MIEC_WIN = Object.freeze({
+      validateWIN,
+      recordHistoryWIN,
+      run: () => runValidation()
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bootstrap);
+  } else {
+    bootstrap();
+  }
 })();
-
-
-
