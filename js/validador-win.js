@@ -1,26 +1,26 @@
-/* MIEC / IDMAR — validador-win.js (Fase 1: mensagens PT + dica EN, histórico intacto)
+﻿/* MIEC / IDMAR � validador-win.js (Fase 1: mensagens PT + dica EN, hist�rico intacto)
    Data: 2025-09-18  |  Escopo: apenas JS, sem tocar em HTML/CSS, sem deps externas.
    Regras WIN (resumo aplicado):
-   - UE (14): 1–2 país [A-Z], 3–5 fabricante [A-Z], 6–10 livre [A-Z0-9], 11 mês [A-H,J,K,L,M,N,P,R,S,T,U,V,W,X,Y,Z], 12 ano [0-9], 13–14 modelo [0-9]
-   - EUA (14 ou 16; 15 é inválido): 1–2 país [A-Z], 3–5 fabricante [A-Z], 6–12 livre [A-Z0-9],
-     13 mês [A-H,J,K,L,M,N,P,R,S,T,U,V,W,X,Y,Z], 14 ano [0-9], (15–16 modelo [0-9] se len=16)
-   - Hífen opcional entre pos. 2–3 (ignorar na validação). Letras inválidas: I, O, Q nos campos de mês.
-   - País/Fabricante não podem ter números; sem espaços/símbolos inesperados.
-   Histórico:
-   - Mantém localStorage key existente (prioridade: 'history_win', fallback 'historyWin').
-   - Se já existirem registos, adapta o novo registo ao mesmo esquema (auto-map de chaves).
+   - UE (14): 1�2 pa�s [A-Z], 3�5 fabricante [A-Z], 6�10 livre [A-Z0-9], 11 m�s [A-H,J,K,L,M,N,P,R,S,T,U,V,W,X,Y,Z], 12 ano [0-9], 13�14 modelo [0-9]
+   - EUA (14 ou 16; 15 � inv�lido): 1�2 pa�s [A-Z], 3�5 fabricante [A-Z], 6�12 livre [A-Z0-9],
+     13 m�s [A-H,J,K,L,M,N,P,R,S,T,U,V,W,X,Y,Z], 14 ano [0-9], (15�16 modelo [0-9] se len=16)
+   - H�fen opcional entre pos. 2�3 (ignorar na valida��o). Letras inv�lidas: I, O, Q nos campos de m�s.
+   - Pa�s/Fabricante n�o podem ter n�meros; sem espa�os/s�mbolos inesperados.
+   Hist�rico:
+   - Mant�m localStorage key existente (prioridade: 'history_win', fallback 'historyWin').
+   - Se j� existirem registos, adapta o novo registo ao mesmo esquema (auto-map de chaves).
 */
 
 (() => {
   const STATE = {
-    // tentativa de autodetecção do campo e botão sem depender de HTML específico
+    // tentativa de autodetec��o do campo e bot�o sem depender de HTML espec�fico
     selInput: ['#win', '#winInput', 'input[name="win"]', '.js-win', '#hin', '#hinInput', 'input[name="hin"]'],
     selButton: ['#btnValidar', '#validateBtn', '.js-validate', 'button[type="submit"]'],
     selOutput: ['#resultado', '.js-result', '[data-result]'],
     historyKeys: ['history_win', 'historyWin'],
   };
 
-  // Map de letras de mês válidas (sem I, O, Q)
+  // Map de letras de m�s v�lidas (sem I, O, Q)
   const MONTH_LETTERS = new Set(['A','B','C','D','E','F','G','H','J','K','L','M','N','P','R','S','T','U','V','W','X','Y','Z']);
 
   // Utilidades DOM seguras
@@ -34,13 +34,13 @@
 
   function normalizeInput(raw) {
     if (!raw) return '';
-    // remover espaços e símbolos, manter apenas A-Z0-9 e hífen
+    // remover espa�os e s�mbolos, manter apenas A-Z0-9 e h�fen
     const cleaned = raw.toUpperCase().trim().replace(/\s+/g, '');
     return cleaned;
   }
 
   function stripOptionalHyphen(s) {
-    // Hífen permitido apenas entre posições 2 e 3; ignoramos na validação
+    // H�fen permitido apenas entre posi��es 2 e 3; ignoramos na valida��o
     return s.replace(/^(..)-(.*)$/, '$1$2');
   }
 
@@ -61,7 +61,7 @@
   }
 
   function validateEU14(win) {
-    // Posições 1-2 país; 3-5 fabricante; 6-10 livre; 11 mês letra válida; 12 ano dígito; 13-14 modelo dígitos
+    // Posi��es 1-2 pa�s; 3-5 fabricante; 6-10 livre; 11 m�s letra v�lida; 12 ano d�gito; 13-14 modelo d�gitos
     const country = win.slice(0,2);
     const manuf   = win.slice(2,5);
     const free    = win.slice(5,10);
@@ -69,37 +69,37 @@
     const year    = win[11];
     const model   = win.slice(12,14);
 
-    if (!isLetters(country)) return fail(`País inválido [letters only]`, `Country must be letters`);
-    if (!isLetters(manuf))   return fail(`Fabricante inválido [letters only]`, `Manufacturer must be letters`);
-    if (!isAlnum(free))      return fail(`Série (6–10) inválida [A-Z/0-9]`, `Free block must be A-Z/0-9`);
-    if (!validateMonthLetter(month)) return fail(`Mês (11) inválido [sem I/O/Q]`, `Month letter excludes I/O/Q`);
-    if (!isDigits(year))     return fail(`Ano (12) inválido [0-9]`, `Year must be a digit`);
-    if (!isDigits(model))    return fail(`Modelo (13–14) inválido [0-9]`, `Model must be digits`);
-    return ok(`Formato UE (14) válido`, `EU 14 format valid`, {
+    if (!isLetters(country)) return fail(`Pa�s inv�lido [letters only]`, `Country must be letters`);
+    if (!isLetters(manuf))   return fail(`Fabricante inv�lido [letters only]`, `Manufacturer must be letters`);
+    if (!isAlnum(free))      return fail(`S�rie (6�10) inv�lida [A-Z/0-9]`, `Free block must be A-Z/0-9`);
+    if (!validateMonthLetter(month)) return fail(`M�s (11) inv�lido [sem I/O/Q]`, `Month letter excludes I/O/Q`);
+    if (!isDigits(year))     return fail(`Ano (12) inv�lido [0-9]`, `Year must be a digit`);
+    if (!isDigits(model))    return fail(`Modelo (13�14) inv�lido [0-9]`, `Model must be digits`);
+    return ok(`Formato UE (14) v�lido`, `EU 14 format valid`, {
       country, manufacturer: manuf, month, year, model
     });
   }
 
   function validateUS14(win) {
-    // EUA 14: 1-2 país; 3-5 fabricante; 6-12 livre; 13 mês; 14 ano
+    // EUA 14: 1-2 pa�s; 3-5 fabricante; 6-12 livre; 13 m�s; 14 ano
     const country = win.slice(0,2);
     const manuf   = win.slice(2,5);
     const free    = win.slice(5,12);
     const month   = win[12];
     const year    = win[13];
 
-    if (!isLetters(country)) return fail(`País inválido [letters only]`, `Country must be letters`);
-    if (!isLetters(manuf))   return fail(`Fabricante inválido [letters only]`, `Manufacturer must be letters`);
-    if (!isAlnum(free))      return fail(`Série (6–12) inválida [A-Z/0-9]`, `Free block must be A-Z/0-9`);
-    if (!validateMonthLetter(month)) return fail(`Mês (13) inválido [sem I/O/Q]`, `Month letter excludes I/O/Q`);
-    if (!isDigits(year))     return fail(`Ano (14) inválido [0-9]`, `Year must be a digit`);
-    return ok(`Formato EUA (14) válido`, `US 14 format valid`, {
+    if (!isLetters(country)) return fail(`Pa�s inv�lido [letters only]`, `Country must be letters`);
+    if (!isLetters(manuf))   return fail(`Fabricante inv�lido [letters only]`, `Manufacturer must be letters`);
+    if (!isAlnum(free))      return fail(`S�rie (6�12) inv�lida [A-Z/0-9]`, `Free block must be A-Z/0-9`);
+    if (!validateMonthLetter(month)) return fail(`M�s (13) inv�lido [sem I/O/Q]`, `Month letter excludes I/O/Q`);
+    if (!isDigits(year))     return fail(`Ano (14) inv�lido [0-9]`, `Year must be a digit`);
+    return ok(`Formato EUA (14) v�lido`, `US 14 format valid`, {
       country, manufacturer: manuf, month, year
     });
   }
 
   function validateUS16(win) {
-    // EUA 16: 1-2 país; 3-5 fabricante; 6-12 livre; 13 mês; 14 ano; 15-16 modelo
+    // EUA 16: 1-2 pa�s; 3-5 fabricante; 6-12 livre; 13 m�s; 14 ano; 15-16 modelo
     const country = win.slice(0,2);
     const manuf   = win.slice(2,5);
     const free    = win.slice(5,12);
@@ -107,13 +107,13 @@
     const year    = win[13];
     const model   = win.slice(14,16);
 
-    if (!isLetters(country)) return fail(`País inválido [letters only]`, `Country must be letters`);
-    if (!isLetters(manuf))   return fail(`Fabricante inválido [letters only]`, `Manufacturer must be letters`);
-    if (!isAlnum(free))      return fail(`Série (6–12) inválida [A-Z/0-9]`, `Free block must be A-Z/0-9`);
-    if (!validateMonthLetter(month)) return fail(`Mês (13) inválido [sem I/O/Q]`, `Month letter excludes I/O/Q`);
-    if (!isDigits(year))     return fail(`Ano (14) inválido [0-9]`, `Year must be a digit`);
-    if (!isDigits(model))    return fail(`Modelo (15–16) inválido [0-9]`, `Model must be digits`);
-    return ok(`Formato EUA (16) válido`, `US 16 format valid`, {
+    if (!isLetters(country)) return fail(`Pa�s inv�lido [letters only]`, `Country must be letters`);
+    if (!isLetters(manuf))   return fail(`Fabricante inv�lido [letters only]`, `Manufacturer must be letters`);
+    if (!isAlnum(free))      return fail(`S�rie (6�12) inv�lida [A-Z/0-9]`, `Free block must be A-Z/0-9`);
+    if (!validateMonthLetter(month)) return fail(`M�s (13) inv�lido [sem I/O/Q]`, `Month letter excludes I/O/Q`);
+    if (!isDigits(year))     return fail(`Ano (14) inv�lido [0-9]`, `Year must be a digit`);
+    if (!isDigits(model))    return fail(`Modelo (15�16) inv�lido [0-9]`, `Model must be digits`);
+    return ok(`Formato EUA (16) v�lido`, `US 16 format valid`, {
       country, manufacturer: manuf, month, year, model
     });
   }
@@ -128,15 +128,15 @@
   function validateWIN(rawInput) {
     let win = normalizeInput(rawInput);
     if (!win) return fail(`Campo vazio`, `Empty field`);
-    if (/[^A-Z0-9-]/.test(win)) return fail(`Caracteres inválidos`, `Invalid characters`);
-    // permitir hífen opcional 2–3
+    if (/[^A-Z0-9-]/.test(win)) return fail(`Caracteres inv�lidos`, `Invalid characters`);
+    // permitir h�fen opcional 2�3
     if (/^..-./.test(win)) win = stripOptionalHyphen(win);
 
     const len = win.length;
-    if (len < 14 || len > 16) return fail(`Tamanho inválido (${len})`, `Length must be 14 or 16`);
+    if (len < 14 || len > 16) return fail(`Tamanho inv�lido (${len})`, `Length must be 14 or 16`);
 
     const fmt = detectFormat(win);
-    if (fmt === 'INVALID_15') return fail(`Formato EUA (15) é inválido`, `US 15 is invalid`);
+    if (fmt === 'INVALID_15') return fail(`Formato EUA (15) � inv�lido`, `US 15 is invalid`);
     if (fmt === 'EU_OR_US_14') {
       // tentar UE; se falhar, tentar EUA 14; devolver o que passar
       const eu = validateEU14(win);
@@ -153,7 +153,7 @@
     return fail(`Formato desconhecido`, `Unknown format`, { normalized: win, length: len });
   }
 
-  // ===== Histórico (preservando formato/keys) =====
+  // ===== Hist�rico (preservando formato/keys) =====
   function readHistoryStoreKey() {
     for (const k of STATE.historyKeys) {
       try {
@@ -214,17 +214,17 @@ function recordHistoryWIN(winStr, verdict) {
     return [];
   })();
 
-  // novo item – inclui campos esperados pelos históricos
+  // novo item � inclui campos esperados pelos hist�ricos
   const entry = {
     id: cryptoRandomId(),
     ts: new Date().toISOString(),
     win: verdict?.meta?.normalized || (winStr || '').toUpperCase(),
     valid: !!verdict.valid,
-    resultado: verdict.valid ? 'VÁLIDO' : 'INVÁLIDO',      // compat legado
+    resultado: verdict.valid ? 'V�LIDO' : 'INV�LIDO',      // compat legado
     estado: verdict.valid ? 'ok' : 'erro',                 // usado por filtros
-    estadoLabel: verdict.valid ? 'Válido' : 'Inválido',    // coluna “Estado”
-    justificacao: verdict.message || '',                   // coluna “Justificação”
-    foto: '',                                              // mantém campo se alguma vez anexares nome de foto
+    estadoLabel: verdict.valid ? 'V�lido' : 'Inv�lido',    // coluna �Estado�
+    justificacao: verdict.message || '',                   // coluna �Justifica��o�
+    foto: '',                                              // mant�m campo se alguma vez anexares nome de foto
     meta: { ...verdict.meta, engine: false, module: 'WIN' }
   };
 
@@ -242,13 +242,13 @@ function recordHistoryWIN(winStr, verdict) {
     targetEl.setAttribute('data-valid', verdict.valid ? '1' : '0');
   }
 
-  // ===== Ligação à página (sem exigir HTML específico) =====
+  // ===== Liga��o � p�gina (sem exigir HTML espec�fico) =====
   function bootstrap() {
     const input = qSelAll(STATE.selInput);
     const btn   = qSelAll(STATE.selButton);
     const out   = qSelAll(STATE.selOutput);
 
-    // Se a página já tinha listeners, evitamos duplicar (marcador)
+    // Se a p�gina j� tinha listeners, evitamos duplicar (marcador)
     if (document.body.dataset.winBound) return;
     document.body.dataset.winBound = '1';
 
@@ -261,7 +261,7 @@ function recordHistoryWIN(winStr, verdict) {
       const verdict = validateWIN(raw);
       renderResult(out, verdict);
       recordHistoryWIN(raw, verdict);
-      // Se existir uma função global de UI já tua, chamamos com os dados
+      // Se existir uma fun��o global de UI j� tua, chamamos com os dados
       if (typeof window.onWINValidated === 'function') {
         try { window.onWINValidated({ raw, verdict }); } catch {}
       }
@@ -281,7 +281,7 @@ function recordHistoryWIN(winStr, verdict) {
       });
     }
 
-    // Expor API mínima caso precises noutros scripts
+    // Expor API m�nima caso precises noutros scripts
     window.MIEC_WIN = Object.freeze({
       validateWIN,
       recordHistoryWIN,
@@ -295,3 +295,4 @@ function recordHistoryWIN(winStr, verdict) {
     bootstrap();
   }
 })();
+

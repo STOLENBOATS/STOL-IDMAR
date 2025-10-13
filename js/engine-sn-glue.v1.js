@@ -8,7 +8,7 @@
   }
 
   const FIELD_HTML = '<div id="engine-serial-field-hook" class="form-row">'
-    + '<label for="engine-sn-raw">Nº do motor / Engine serial</label>'
+    + '<label for="engine-sn-raw">N� do motor / Engine serial</label>'
     + '<div class="row">'
     + '  <input id="engine-sn-raw" type="text" placeholder="Ex.: BAAL-999123, 1B123456" autocomplete="off" />'
     + '  <div class="sn-kind">'
@@ -78,7 +78,7 @@
     const ranges = await w.IDMAR_SerialRangeCheck.loadRanges();
     let res;
     if (parsed && parsed.brand==="Honda" && parsed.source==="interior"){
-      res = { ok:true, notes:["ℹ️ Honda (interior): número de bloco interno. Validação por coerência (sem faixa de prefixo)."] };
+      res = { ok:true, notes:["?? Honda (interior): n�mero de bloco interno. Valida��o por coer�ncia (sem faixa de prefixo)."] };
     } else {
       res = w.IDMAR_SerialRangeCheck.checkAgainstSelection(parsed, sel, ranges);
     }
@@ -89,7 +89,7 @@
       if (parsed?.prefix) bits.push(`prefix: ${parsed.prefix}`);
       if (parsed?.serial) bits.push(`serial: ${parsed.serial}`);
       if ((sel.brand||"").toLowerCase()==="honda") bits.push(`tipo: ${kind}`);
-      hints.textContent = bits.join(" · ");
+      hints.textContent = bits.join(" � ");
     }
     appendNotes(res.notes||[]);
   }
@@ -114,3 +114,4 @@
   }
   console.info("[IDMAR] Engine SN glue v1 (robusto) carregado.");
 })(window, document);
+

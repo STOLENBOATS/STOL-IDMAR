@@ -1,4 +1,4 @@
-// engine_picker.v2.4.js — suporta schema v2 (famílias/variantes) + fallback v1; PT/EN
+﻿// engine_picker.v2.4.js � suporta schema v2 (fam�lias/variantes) + fallback v1; PT/EN
 (function(){
   const el = id => document.getElementById(id);
   const C = (...a)=>console.log('[engine_picker]', ...a);
@@ -17,7 +17,7 @@
     const sel=document.createElement('select'); sel.id=id;
     wrap.append(lab, sel); return {wrap, sel};
   }
-  function fill(sel, arr, ph='— selecione / select —'){
+  function fill(sel, arr, ph='� selecione / select �'){
     sel.innerHTML='';
     const o0=document.createElement('option'); o0.value=''; o0.textContent=ph; sel.appendChild(o0);
     (arr||[]).forEach(v=>{
@@ -28,25 +28,25 @@
     });
   }
 
-  // ===== Rotação: rótulos bilingues + tooltip curto =====
+  // ===== Rota��o: r�tulos bilingues + tooltip curto =====
   function relabelRotationSelect(selectEl){
     if(!selectEl) return;
     Array.from(selectEl.options).forEach(opt=>{
       const v = String(opt.value || '').toUpperCase().trim();
       if(!v) return; // placeholder
 
-      // Normalizar rótulos conhecidos
+      // Normalizar r�tulos conhecidos
       if (v === 'STD' || v === 'RH' || v === 'CW') {
-        opt.textContent = 'STD — Standard (RH)'; // PT/EN no mesmo rótulo
-        opt.title       = 'Rotação padrão / Standard (hélice direita / right-hand)';
+        opt.textContent = 'STD � Standard (RH)'; // PT/EN no mesmo r�tulo
+        opt.title       = 'Rota��o padr�o / Standard (h�lice direita / right-hand)';
         opt.value       = 'STD';
       } else if (v === 'CCW' || v === 'LH' || v === 'ANTI' || v === 'COUNTER') {
-        opt.textContent = 'CCW — Counter-clockwise (LH)';
-        opt.title       = 'Rotação inversa / Counter-clockwise (hélice esquerda / left-hand)';
+        opt.textContent = 'CCW � Counter-clockwise (LH)';
+        opt.title       = 'Rota��o inversa / Counter-clockwise (h�lice esquerda / left-hand)';
         opt.value       = 'CCW';
       } else {
-        // fallback: deixa como está, mas acrescenta título bilingue genérico
-        if(!opt.title) opt.title = 'Rotação / Rotation';
+        // fallback: deixa como est�, mas acrescenta t�tulo bilingue gen�rico
+        if(!opt.title) opt.title = 'Rota��o / Rotation';
       }
     });
   }
@@ -66,7 +66,7 @@ function mergeArraysUniq(base, add){
 /**
  * Suporta:
  * - v1 (brand level): hp_list, rigging, shaft_options, rotation, model_code_list, displacement_list, year_list
- * - v2 (brand.families[fam]): mesmas listas mas com nomes “*_list”; mapeadas para campos do renderer v2
+ * - v2 (brand.families[fam]): mesmas listas mas com nomes �*_list�; mapeadas para campos do renderer v2
  */
 function mergeOverrides(cat, ov){
   if(!ov || typeof ov!=='object') return cat;
@@ -90,7 +90,7 @@ function mergeOverrides(cat, ov){
       const srcF = fams[famName] || {};
       const dstF = (dstB.families[famName] = dstB.families[famName] || {});
 
-      // mapear nomes “*_list” do admin para campos que o renderer v2 usa
+      // mapear nomes �*_list� do admin para campos que o renderer v2 usa
       // renderer usa: hp, rigging, shaft, rotation, color, gearcase, codes, years
       if(srcF.hp_list)            dstF.hp          = mergeArraysUniq(dstF.hp,          srcF.hp_list);
       if(srcF.rigging)            dstF.rigging     = mergeArraysUniq(dstF.rigging,     srcF.rigging);
@@ -100,7 +100,7 @@ function mergeOverrides(cat, ov){
       if(srcF.displacement_list)  dstF.displacement= mergeArraysUniq(dstF.displacement,srcF.displacement_list);
       if(srcF.year_list)          dstF.years       = mergeArraysUniq(dstF.years,       srcF.year_list);
 
-      // (opcionais caso um dia guardes também no admin)
+      // (opcionais caso um dia guardes tamb�m no admin)
       if(srcF.color)              dstF.color       = mergeArraysUniq(dstF.color,       srcF.color);
       if(srcF.gearcase)           dstF.gearcase    = mergeArraysUniq(dstF.gearcase,    srcF.gearcase);
     }
@@ -113,10 +113,10 @@ function mergeOverrides(cat, ov){
     const brand = el('brand')?.value; const b = (cat.brands||{})[brand]||{};
     container.innerHTML='';
     const boxes={
-      hp:  makeSelect('Potência (hp) / Power','eng_hp'),
+      hp:  makeSelect('Pot�ncia (hp) / Power','eng_hp'),
       rig: makeSelect('Comando / Rigging','eng_rig'),
       sh:  makeSelect('Altura de coluna / Shaft','eng_shaft'),
-      rot: makeSelect('Rotação / Rotation (hélice / propeller)','eng_rot'),
+      rot: makeSelect('Rota��o / Rotation (h�lice / propeller)','eng_rot'),
       mdl: makeSelect('Modelo / Model code','eng_model'),
       disp:makeSelect('Cilindrada (cc) / Displacement','eng_disp'),
       yr:  makeSelect('Ano / Year','eng_year')
@@ -125,7 +125,7 @@ function mergeOverrides(cat, ov){
     fill(boxes.hp.sel,  stableSort(b.hp_list||[]));
     fill(boxes.rig.sel, stableSort(b.rigging||[]));
     fill(boxes.sh.sel,  stableSort(b.shaft_options||[]));
-    // rotação (v1): garantimos STD/CCW e aplicamos rótulo bilingue
+    // rota��o (v1): garantimos STD/CCW e aplicamos r�tulo bilingue
     fill(boxes.rot.sel, [
       {value:'STD', label:'STD'},
       {value:'CCW', label:'CCW'}
@@ -158,11 +158,11 @@ function mergeOverrides(cat, ov){
     const brand=el('brand')?.value; const b=(cat.brands||{})[brand]||{}; const fams=b.families||{};
     container.innerHTML='';
     const boxes={
-      fam: makeSelect('Família / Family','eng_family'),
-      hp:  makeSelect('Potência (hp) / Power','eng_hp'),
+      fam: makeSelect('Fam�lia / Family','eng_family'),
+      hp:  makeSelect('Pot�ncia (hp) / Power','eng_hp'),
       rig: makeSelect('Comando / Rigging','eng_rig'),
       sh:  makeSelect('Altura de coluna / Shaft','eng_shaft'),
-      rot: makeSelect('Rotação / Rotation (hélice / propeller)','eng_rot'),
+      rot: makeSelect('Rota��o / Rotation (h�lice / propeller)','eng_rot'),
       col: makeSelect('Cor / Color','eng_color'),
       gc:  makeSelect('Caixa de engrenagens / Gearcase','eng_gear'),
       yr:  makeSelect('Ano / Year','eng_year'),
@@ -197,7 +197,7 @@ function mergeOverrides(cat, ov){
       fill(boxes.hp.sel,  d.hp);
       fill(boxes.rig.sel, d.rig);
       fill(boxes.sh.sel,  d.sh);
-      // rotação (v2): usamos o que vier do catálogo, mas normalizamos os rótulos
+      // rota��o (v2): usamos o que vier do cat�logo, mas normalizamos os r�tulos
       fill(boxes.rot.sel, (d.rot && d.rot.length) ? d.rot : [{value:'STD',label:'STD'},{value:'CCW',label:'CCW'}]);
       relabelRotationSelect(boxes.rot.sel);
 
@@ -216,12 +216,12 @@ function mergeOverrides(cat, ov){
   const s = document.currentScript;
   const url = s?.dataset?.catalog || 'data/engines_catalog.v2.json';
 
-  // 1) carrega catálogo base
+  // 1) carrega cat�logo base
   let cat;
   try {
     cat = await loadJSON(url);
   } catch (e) {
-    console.error('[engine_picker] catálogo:', e);
+    console.error('[engine_picker] cat�logo:', e);
     return;
   }
 
@@ -231,7 +231,7 @@ function mergeOverrides(cat, ov){
 
   // 3) render
   const target = document.getElementById('brandDynamic');
-  if (!target) { console.warn('[engine_picker] #brandDynamic não encontrado'); return; }
+  if (!target) { console.warn('[engine_picker] #brandDynamic n�o encontrado'); return; }
   const v = Number(cat.schema_version || 1);
   C('schema_version', v, 'url', url);
 
@@ -248,3 +248,4 @@ function mergeOverrides(cat, ov){
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
 })();
+

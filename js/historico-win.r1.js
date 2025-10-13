@@ -1,4 +1,4 @@
-/* IDMAR — Histórico WIN r1 (filtros + CSV + compat keys) */
+﻿/* IDMAR � Hist�rico WIN r1 (filtros + CSV + compat keys) */
 (() => {
   function readKey(k){ try{ const raw=localStorage.getItem(k); if(!raw) return []; const arr=JSON.parse(raw); return Array.isArray(arr)?arr:[]; }catch{return []} }
   function sanitize(x){
@@ -6,7 +6,7 @@
     o.ts = o.ts || x.timestamp || '';
     o.win = o.win || x.hin || '';
     o.estado = o.estado || (o.valid===true?'ok':(o.valid===false?'erro':'')) || '';
-    o.estadoLabel = o.estadoLabel || (o.valid ? 'Válido' : 'Inválido');
+    o.estadoLabel = o.estadoLabel || (o.valid ? 'V�lido' : 'Inv�lido');
     o.justificacao = o.justificacao || x.reason || '';
     o.foto = o.foto || '';
     return o;
@@ -67,7 +67,7 @@
     render(out);
   }
   function toCSV(rows){
-    const head = ['Data/Hora','WIN / HIN','Estado','Justificação','Foto'];
+    const head = ['Data/Hora','WIN / HIN','Estado','Justifica��o','Foto'];
     const lines = [head];
     for (const r of rows){
       lines.push([ fmtTs(r.ts), r.win||'', r.estadoLabel||'', r.justificacao||'', r.foto||'' ]);

@@ -1,12 +1,12 @@
-/* IDMAR — Histórico WIN r1.2 (foto a partir de meta.forense + “Ver anexos”) */
+﻿/* IDMAR � Hist�rico WIN r1.2 (foto a partir de meta.forense + �Ver anexos�) */
 (()=>{
-// modal (só cria uma vez)
+// modal (s� cria uma vez)
 if(!window.IDMAR_openAttachmentsModal){
   window.IDMAR_openAttachmentsModal = function(record, typeLabel){
     let modal=document.getElementById('idmar-att-modal');
     if(!modal){
       modal=document.createElement('div'); modal.id='idmar-att-modal';
-      modal.innerHTML='<div class="idmar-att-backdrop"></div><div class="idmar-att-dialog"><div class="idmar-att-head"><strong id="idmar-att-title">Anexos</strong><button id="idmar-att-close" title="Fechar">×</button></div><div class="idmar-att-body"></div></div>';
+      modal.innerHTML='<div class="idmar-att-backdrop"></div><div class="idmar-att-dialog"><div class="idmar-att-head"><strong id="idmar-att-title">Anexos</strong><button id="idmar-att-close" title="Fechar">�</button></div><div class="idmar-att-body"></div></div>';
       const css=document.createElement('style'); css.textContent=
       '#idmar-att-modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:9999}' +
       '.idmar-att-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35)}' +
@@ -20,7 +20,7 @@ if(!window.IDMAR_openAttachmentsModal){
       modal.querySelector('#idmar-att-close').onclick=()=>modal.remove();
       modal.querySelector('.idmar-att-backdrop').onclick=()=>modal.remove();
     }else{ modal.querySelector('.idmar-att-body').innerHTML=''; }
-    modal.querySelector('#idmar-att-title').textContent='Anexos — '+(typeLabel||'');
+    modal.querySelector('#idmar-att-title').textContent='Anexos � '+(typeLabel||'');
     const body=modal.querySelector('.idmar-att-body');
     const list=(record&&record.meta&&Array.isArray(record.meta.forense))?record.meta.forense:[];
     if(!list.length){ const p=document.createElement('p'); p.style.padding='1rem'; p.textContent='Sem anexos.'; body.appendChild(p); }
@@ -41,7 +41,7 @@ const $btnCSV=document.getElementById('btnExport')||document.querySelector('[dat
 
 function readKey(k){ try{ const r=localStorage.getItem(k); if(!r) return []; const a=JSON.parse(r); return Array.isArray(a)?a:[] }catch{ return [] } }
 function deriveFoto(r){ if(r.foto) return r.foto; const fx=(r.meta&&Array.isArray(r.meta.forense))?r.meta.forense:[]; if(!fx.length) return ''; const f=fx[0]?.file||''; return f ? (f+' (+'+Math.max(0,fx.length-1)+')') : (fx.length+' anexo(s)'); }
-function sanitize(x){ const o={...x}; o.ts=o.ts||x.timestamp||''; o.win=o.win||x.hin||''; o.estado=o.estado||(o.valid===true?'ok':(o.valid===false?'erro':''))||''; o.estadoLabel=o.estadoLabel||(o.valid?'Válido':'Inválido'); o.justificacao=o.justificacao||x.reason||''; o.meta=o.meta||x.meta||{}; o.foto=deriveFoto(o); return o; }
+function sanitize(x){ const o={...x}; o.ts=o.ts||x.timestamp||''; o.win=o.win||x.hin||''; o.estado=o.estado||(o.valid===true?'ok':(o.valid===false?'erro':''))||''; o.estadoLabel=o.estadoLabel||(o.valid?'V�lido':'Inv�lido'); o.justificacao=o.justificacao||x.reason||''; o.meta=o.meta||x.meta||{}; o.foto=deriveFoto(o); return o; }
 function readAll(){ const A=readKey('history_win'), B=readKey('historyWin'); const all=[...A,...B].map(sanitize); const seen=new Set(); return all.filter(x=>{ const k=(x.id||'')+'|'+(x.ts||'')+'|'+(x.win||''); if(seen.has(k)) return false; seen.add(k); return true; }).sort((a,b)=>(b.ts||'').localeCompare(a.ts||'')); }
 function fmtTs(ts){ try{ const d=new Date(ts); return isNaN(d)?ts:d.toLocaleString(); }catch{ return ts; } }
 function csvCell(s){ const v=s==null?'':String(s); return /[;"\n]/.test(v)?('"'+v.replace(/"/g,'""')+'"'):v; }
@@ -80,9 +80,10 @@ function applyFilters(){
   render(out);
 }
 
-function toCSV(rows){ const head=['Data/Hora','WIN / HIN','Estado','Justificação','Foto']; const lines=[head]; for(const r of rows){ lines.push([fmtTs(r.ts),r.win||'',r.estadoLabel||'',r.justificacao||'',r.foto||'']); } return lines.map(cols=>cols.map(csvCell).join(';')).join('\r\n'); }
+function toCSV(rows){ const head=['Data/Hora','WIN / HIN','Estado','Justifica��o','Foto']; const lines=[head]; for(const r of rows){ lines.push([fmtTs(r.ts),r.win||'',r.estadoLabel||'',r.justificacao||'',r.foto||'']); } return lines.map(cols=>cols.map(csvCell).join(';')).join('\r\n'); }
 function downloadCSV(){ const rows=readAll(); const blob=new Blob([toCSV(rows)],{type:'text/csv;charset=utf-8;'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='historico-win_'+new Date().toISOString().slice(0,10)+'.csv'; document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},0); }
 
 function bind(){ ['input','change'].forEach(ev=>{ $q&&$q.addEventListener(ev,applyFilters); $fEst&&$fEst.addEventListener(ev,applyFilters); $from&&$from.addEventListener(ev,applyFilters); $to&&$to.addEventListener(ev,applyFilters); }); $btnCSV&&$btnCSV.addEventListener('click',e=>{e.preventDefault();downloadCSV();}); applyFilters(); }
 (document.readyState==='loading')?document.addEventListener('DOMContentLoaded',bind):bind();
 })();
+

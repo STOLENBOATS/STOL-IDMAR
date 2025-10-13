@@ -1,5 +1,5 @@
-
-// IDMAR Layout helper (r3) — header/footer + theme (default: light)
+﻿
+// IDMAR Layout helper (r3) � header/footer + theme (default: light)
 (function(w,d){
   function ready(fn){ if(d.readyState==='loading'){ d.addEventListener('DOMContentLoaded', fn); } else { fn(); } }
   function injectCSS(css){
@@ -30,17 +30,17 @@
   function buildHeader(){
     if(d.getElementById('idmar-topbar')) return;
     var h=d.createElement('header'); h.id='idmar-topbar'; h.className='topbar';
-    h.innerHTML = '<img src="img/logo-pm.png" alt="Polícia Marítima">'
-      + '<div class="brand"><span class="app">IDMAR</span><small>Identificação Marítima — Cascos & Motores</small></div>'
-      + '<nav><a href="validador.html">Validador</a><a href="historico_win.html">Histórico WIN</a><a href="historico_motor.html">Histórico Motor</a><a href="forense.html">Forense</a><a href="#" id="idmar-logout">Sair</a></nav>'
-      + '<button id="idmar-theme" style="margin-left:auto" title="Dia/Noite">🌗</button>';
+    h.innerHTML = '<img src="img/logo-pm.png" alt="Pol�cia Mar�tima">'
+      + '<div class="brand"><span class="app">IDMAR</span><small>Identifica��o Mar�tima � Cascos & Motores</small></div>'
+      + '<nav><a href="validador.html">Validador</a><a href="historico_win.html">Hist�rico WIN</a><a href="historico_motor.html">Hist�rico Motor</a><a href="forense.html">Forense</a><a href="#" id="idmar-logout">Sair</a></nav>'
+      + '<button id="idmar-theme" style="margin-left:auto" title="Dia/Noite">??</button>';
     return h;
   }
   function buildFooter(){
     if(d.getElementById('idmar-footer')) return;
     var f=d.createElement('footer'); f.id='idmar-footer'; f.className='footer';
     var v=(w.IDMAR_VERSION||'v2.2.7-baseline+merge-r2.3');
-    f.textContent='IDMAR — ' + v;
+    f.textContent='IDMAR � ' + v;
     return f;
   }
   function setTheme(theme){
@@ -65,3 +65,4 @@
     if(lo){ lo.addEventListener('click', function(ev){ ev.preventDefault(); try{ sessionStorage.clear(); }catch(e){} location.href='login.html'; }); }
   });
 })(window, document);
+

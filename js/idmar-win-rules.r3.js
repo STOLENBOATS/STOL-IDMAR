@@ -1,26 +1,26 @@
-/*! IDMAR — WIN Rules Add‑on (r3)
- * Drop‑in. Não altera validadores existentes.
+﻿/*! IDMAR � WIN Rules Add-on (r3)
+ * Drop-in. N�o altera validadores existentes.
  * Incluir DEPOIS de js/validador-win.js
- * Funções: interpretação mínima + lista de regras + (opcional) renderWinResult().
+ * Fun��es: interpreta��o m�nima + lista de regras + (opcional) renderWinResult().
  */
 (function(w,d){
   if (w.__IDMAR_WIN_RULES_R3__) return; w.__IDMAR_WIN_RULES_R3__ = true;
   function qs(sel, root){ return (root||d).querySelector(sel); }
   function interpretWIN(win){
     const c = String(win||'').replace(/-/g,'').toUpperCase().trim();
-    if (c.length!==14 && c.length!==16) return {valid:false, reason:'Tamanho inválido (14/16).'};
-    if (c.length===15) return {valid:false, reason:'Formato EUA não admite 15.'};
-    if (!/^[A-Z0-9]+$/.test(c)) return {valid:false, reason:'Caracteres inválidos.'};
+    if (c.length!==14 && c.length!==16) return {valid:false, reason:'Tamanho inv�lido (14/16).'};
+    if (c.length===15) return {valid:false, reason:'Formato EUA n�o admite 15.'};
+    if (!/^[A-Z0-9]+$/.test(c)) return {valid:false, reason:'Caracteres inv�lidos.'};
     const eu = (c.length===14);
     const country=c.slice(0,2), maker=c.slice(2,5);
     let series, month, year, model;
     if (eu){ series=c.slice(5,10); month=c.slice(10,11); year=c.slice(11,12); model=c.slice(12,14); }
     else { series=c.slice(5,12); month=c.slice(12,13); year=c.slice(13,14); model=c.slice(14,16); }
-    if(!/^[A-Z]{2}$/.test(country)) return {valid:false,reason:'País inválido.'};
-    if(!/^[A-Z]{3}$/.test(maker)) return {valid:false,reason:'Fabricante inválido.'};
-    if(!/^[A-HJ-NPR-Z]$/.test(month)) return {valid:false,reason:'Mês inválido (I,O,Q proibidas).'};
-    if(!/^[0-9]$/.test(year)) return {valid:false,reason:'Ano (1 dígito) inválido.'};
-    if(!/^[0-9]{2}$/.test(model)) return {valid:false,reason:'Modelo (2 dígitos) inválido.'};
+    if(!/^[A-Z]{2}$/.test(country)) return {valid:false,reason:'Pa�s inv�lido.'};
+    if(!/^[A-Z]{3}$/.test(maker)) return {valid:false,reason:'Fabricante inv�lido.'};
+    if(!/^[A-HJ-NPR-Z]$/.test(month)) return {valid:false,reason:'M�s inv�lido (I,O,Q proibidas).'};
+    if(!/^[0-9]$/.test(year)) return {valid:false,reason:'Ano (1 d�gito) inv�lido.'};
+    if(!/^[0-9]{2}$/.test(model)) return {valid:false,reason:'Modelo (2 d�gitos) inv�lido.'};
     const map="ABCDEFGHJKLMNPRSTUVWXYZ".split(''); const idx=map.indexOf(month);
     const monthName=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'][Math.max(0, idx%12)];
     const yy=parseInt(year,10), myy=parseInt(model,10);
@@ -33,13 +33,13 @@
     for (let d=0; d<=1; d++){ const y = modelResolved - d; if ((y % 10)===yy && y>=1998 && y<=current) candidates.push(y); }
     for (let d=2; d<=9; d++){ const y = modelResolved - d; if ((y % 10)===yy && y>=1998 && y<=current) candidates.push(y); }
     let prodResolved = candidates.length? candidates[0] : null;
-    if(prodResolved===null) return {valid:false, reason:'Ano de produção inconsistente ou fora de 1998+.'};
-    if(modelResolved < prodResolved) return {valid:false, reason:'Ano do modelo não pode ser anterior ao de produção.'};
-    const countryMap = {'PT':'Portugal','FR':'França','ES':'Espanha','IT':'Itália','DE':'Alemanha','NL':'Países Baixos','GB':'Reino Unido','UK':'Reino Unido','US':'Estados Unidos','CA':'Canadá'};
-    const makerMap = {'CNB':'CNB Yacht Builders (França)','BEN':'Bénéteau (França)','JEA':'Jeanneau (França)','SEA':'Sea Ray (EUA)','BRP':'Bombardier Recreational Products (Evinrude)','YAM':'Yamaha (Japão)','HON':'Honda (Japão)'};
+    if(prodResolved===null) return {valid:false, reason:'Ano de produ��o inconsistente ou fora de 1998+.'};
+    if(modelResolved < prodResolved) return {valid:false, reason:'Ano do modelo n�o pode ser anterior ao de produ��o.'};
+    const countryMap = {'PT':'Portugal','FR':'Fran�a','ES':'Espanha','IT':'It�lia','DE':'Alemanha','NL':'Pa�ses Baixos','GB':'Reino Unido','UK':'Reino Unido','US':'Estados Unidos','CA':'Canad�'};
+    const makerMap = {'CNB':'CNB Yacht Builders (Fran�a)','BEN':'B�n�teau (Fran�a)','JEA':'Jeanneau (Fran�a)','SEA':'Sea Ray (EUA)','BRP':'Bombardier Recreational Products (Evinrude)','YAM':'Yamaha (Jap�o)','HON':'Honda (Jap�o)'};
     const countryName = countryMap[country] || 'Desconhecido';
-    const makerName = makerMap[maker] || 'Código de fabricante (não identificado)';
-    return {valid:true, reason:'Estrutura válida.', eu, cleaned:c, country, countryName, maker, makerName, series, month, monthName, year, prodResolved, model, modelResolved};
+    const makerName = makerMap[maker] || 'C�digo de fabricante (n�o identificado)';
+    return {valid:true, reason:'Estrutura v�lida.', eu, cleaned:c, country, countryName, maker, makerName, series, month, monthName, year, prodResolved, model, modelResolved};
   }
   function ensureRulesBox(){
     const host = qs('#winResult') || qs('#win-output .resultado') || qs('#winOut');
@@ -61,39 +61,39 @@
   function buildRules(info, certChecked){
     const current = new Date().getFullYear();
     const rules = [];
-    if(info.eu === true){ rules.push('Formato: UE / HIN (14) — OK / Format: EU HIN (14) — OK'); }
-    else if(info.eu === false){ rules.push('Formato: EUA (16) — OK / Format: US (16) — OK'); }
-    else { rules.push('Formato desconhecido — verificar comprimento / Unknown format — check length'); }
+    if(info.eu === true){ rules.push('Formato: UE / HIN (14) � OK / Format: EU HIN (14) � OK'); }
+    else if(info.eu === false){ rules.push('Formato: EUA (16) � OK / Format: US (16) � OK'); }
+    else { rules.push('Formato desconhecido � verificar comprimento / Unknown format � check length'); }
     if(/^[A-Z]{2}$/.test(info.country||'')){
-      rules.push('País (2): '+info.country+' → '+(info.countryName||'desconhecido')+' / Country code');
-    } else { rules.push('País inválido (2 letras) / Invalid country code'); }
+      rules.push('Pa�s (2): '+info.country+' ? '+(info.countryName||'desconhecido')+' / Country code');
+    } else { rules.push('Pa�s inv�lido (2 letras) / Invalid country code'); }
     if(/^[A-Z]{3}$/.test(info.maker||'')){
-      rules.push('Fabricante (3): '+info.maker+' → '+(info.makerName||'não identificado')+' / Manufacturer code');
-    } else { rules.push('Fabricante inválido (3 letras) / Invalid manufacturer code'); }
+      rules.push('Fabricante (3): '+info.maker+' ? '+(info.makerName||'n�o identificado')+' / Manufacturer code');
+    } else { rules.push('Fabricante inv�lido (3 letras) / Invalid manufacturer code'); }
     if(/^[A-HJ-NPR-Z]$/.test(info.month||'')){
-      rules.push('Mês: '+info.month+' ('+(info.monthName||'-')+') — OK / Month letter');
-    } else { rules.push('Mês inválido (I,O,Q proibidas) / Invalid month'); }
-    if(info.prodResolved){ rules.push('Ano de produção (1 díg.): '+info.year+' → '+info.prodResolved+' — OK / Production year'); }
-    else { rules.push('Ano de produção inconsistente / Production year inconsistent'); }
+      rules.push('M�s: '+info.month+' ('+(info.monthName||'-')+') � OK / Month letter');
+    } else { rules.push('M�s inv�lido (I,O,Q proibidas) / Invalid month'); }
+    if(info.prodResolved){ rules.push('Ano de produ��o (1 d�g.): '+info.year+' ? '+info.prodResolved+' � OK / Production year'); }
+    else { rules.push('Ano de produ��o inconsistente / Production year inconsistent'); }
     if(info.modelResolved){
       const windowMax = current + 1;
       if(info.modelResolved >= 1998 && info.modelResolved <= windowMax){
-        rules.push('Ano do modelo (2 díg.): '+info.model+' → '+info.modelResolved+' — OK / Model year');
+        rules.push('Ano do modelo (2 d�g.): '+info.model+' ? '+info.modelResolved+' � OK / Model year');
       } else {
         rules.push('Ano do modelo fora da janela (>=1998) / Model year out of window');
       }
-    } else { rules.push('Ano do modelo inválido / Invalid model year'); }
+    } else { rules.push('Ano do modelo inv�lido / Invalid model year'); }
     if(info.prodResolved && info.modelResolved){
       rules.push(info.modelResolved >= info.prodResolved
-        ? 'Coerência: produção ≤ modelo — OK / Consistency: prod ≤ model — OK'
-        : 'Inconsistência: modelo < produção / Inconsistency: model < production');
+        ? 'Coer�ncia: produ��o = modelo � OK / Consistency: prod = model � OK'
+        : 'Inconsist�ncia: modelo < produ��o / Inconsistency: model < production');
     }
     if(info.modelResolved && info.modelResolved < 1998){
       rules.push(certChecked
-        ? 'Pré-1998: Certificado BV/Notified Body indicado — OK'
-        : 'Pré-1998: requer Certificado BV/Notified Body — não indicado');
+        ? 'Pr�-1998: Certificado BV/Notified Body indicado � OK'
+        : 'Pr�-1998: requer Certificado BV/Notified Body � n�o indicado');
     } else {
-      rules.push('Pré-1998: não aplicável / Not applicable');
+      rules.push('Pr�-1998: n�o aplic�vel / Not applicable');
     }
     return rules;
   }
@@ -116,16 +116,16 @@
           showRules(info);
           if (typeof w.renderWinResult === 'function'){
             const fields = [
-              { label:'País / Country', value: info.country, meaning: (info.country||'')+' → '+(info.countryName||'Desconhecido') },
-              { label:'Fabricante / Maker', value: info.maker, meaning: (info.maker||'')+' → '+(info.makerName||'—') },
-              { label:'Série / Series', value: info.series, meaning: 'Sequência livre / Free sequence' },
-              { label:'Mês / Month', value: info.month, meaning: info.monthName||'-' },
-              { label:'Ano produção / Prod. year', value: String(info.year||''), meaning: String(info.prodResolved||'—') },
-              { label:'Ano modelo / Model year', value: String(info.model||''), meaning: String(info.modelResolved||'—') },
+              { label:'Pa�s / Country', value: info.country, meaning: (info.country||'')+' ? '+(info.countryName||'Desconhecido') },
+              { label:'Fabricante / Maker', value: info.maker, meaning: (info.maker||'')+' ? '+(info.makerName||'�') },
+              { label:'S�rie / Series', value: info.series, meaning: 'Sequ�ncia livre / Free sequence' },
+              { label:'M�s / Month', value: info.month, meaning: info.monthName||'-' },
+              { label:'Ano produ��o / Prod. year', value: String(info.year||''), meaning: String(info.prodResolved||'�') },
+              { label:'Ano modelo / Model year', value: String(info.model||''), meaning: String(info.modelResolved||'�') },
               { label:'Formato / Format', value: info.eu ? 'UE (14)' : 'EUA (16)', meaning: 'Derivado do comprimento / Based on length' }
             ];
             const rules = buildRules(info, d.getElementById('winCert')?.checked);
-            w.renderWinResult({ status: info.valid ? 'válido' : 'inválido', fields, rules });
+            w.renderWinResult({ status: info.valid ? 'v�lido' : 'inv�lido', fields, rules });
           }
         }catch(e){}
       }, 60);
@@ -133,3 +133,4 @@
   }
   if(d.readyState!=='loading') hook(); else d.addEventListener('DOMContentLoaded', hook);
 })(window, document);
+

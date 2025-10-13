@@ -1,24 +1,24 @@
-/* IDMAR i18n (plus) — History/Validator/Login/Forense */
+﻿/* IDMAR i18n (plus) � History/Validator/Login/Forense */
 (() => {
   const DICT = {
     pt: {
-      app: { name: "IDMAR", subtitle: "Identificação Marítima — Cascos & Motores" },
-      nav: { validator:"Validador", hist_win:"Histórico WIN", hist_motor:"Histórico Motor", forense:"Forense", logout:"Sair" },
+      app: { name: "IDMAR", subtitle: "Identifica��o Mar�tima � Cascos & Motores" },
+      nav: { validator:"Validador", hist_win:"Hist�rico WIN", hist_motor:"Hist�rico Motor", forense:"Forense", logout:"Sair" },
       login: {
-        title:"Iniciar sessão", lead:"Aceda com as suas credenciais.",
+        title:"Iniciar sess�o", lead:"Aceda com as suas credenciais.",
         user_label:"Utilizador", user_ph:"nome.apelido",
-        pass_label:"Palavra-passe", pass_ph:"••••••••",
-        remember:"Lembrar sessão", signin:"Entrar",
+        pass_label:"Palavra-passe", pass_ph:"��������",
+        remember:"Lembrar sess�o", signin:"Entrar",
         forgot:"Esqueci-me da palavra-passe", lang:"Idioma"
       },
       validator: {
         title:"Validador",
-        win: { label:"WIN / HIN", validate:"Validar WIN", invalid:(p)=>`WIN inválido: ${p.win}`, valid:"WIN válido" },
+        win: { label:"WIN / HIN", validate:"Validar WIN", invalid:(p)=>`WIN inv�lido: ${p.win}`, valid:"WIN v�lido" },
         motor:{ title:"Validador de Motor", validate:"Validar Motor" }
       },
       history: {
-        title_win:"Histórico WIN",
-        title_motor:"Histórico Motor",
+        title_win:"Hist�rico WIN",
+        title_motor:"Hist�rico Motor",
         filters:"Filtros",
         state:"Estado",
         date_range:"Intervalo de datas",
@@ -33,36 +33,36 @@
           brand:"Marca",
           model:"Modelo",
           state:"Estado",
-          reason:"Justificação",
+          reason:"Justifica��o",
           photo:"Foto"
         },
-        state_ok:"Válido",
-        state_err:"Inválido"
+        state_ok:"V�lido",
+        state_err:"Inv�lido"
       },
       forense: {
-        title:"Forense — Índice",
-        load:"Carregar evidências",
+        title:"Forense � �ndice",
+        load:"Carregar evid�ncias",
         context_win:"Contexto: WIN/HIN",
         context_motor:"Contexto: Motor",
-        attach:"Anexar ao histórico mais recente",
+        attach:"Anexar ao hist�rico mais recente",
         workspace:"Workspace",
         lightbox:"Abrir lightbox",
         compare:"Comparar",
         annotate:"Anotar (rect)",
-        clear:"Limpar anotações",
+        clear:"Limpar anota��es",
         export_png:"Exportar PNG anotado",
-        save_bundle:"Guardar “bundle” (JSON)",
-        notes:"Observações técnicas…",
+        save_bundle:"Guardar �bundle� (JSON)",
+        notes:"Observa��es t�cnicas�",
         commit_attach:"Commit & Anexar"
       }
     },
     en: {
-      app: { name: "IDMAR", subtitle: "Maritime Identification — Hulls & Engines" },
+      app: { name: "IDMAR", subtitle: "Maritime Identification � Hulls & Engines" },
       nav: { validator:"Validator", hist_win:"WIN History", hist_motor:"Engine History", forense:"Forensics", logout:"Sign out" },
       login: {
         title:"Sign in", lead:"Access with your credentials.",
         user_label:"User", user_ph:"name.surname",
-        pass_label:"Password", pass_ph:"••••••••",
+        pass_label:"Password", pass_ph:"��������",
         remember:"Remember me", signin:"Sign in",
         forgot:"Forgot your password?", lang:"Language"
       },
@@ -95,7 +95,7 @@
         state_err:"Invalid"
       },
       forense: {
-        title:"Forensics — Index",
+        title:"Forensics � Index",
         load:"Load evidence",
         context_win:"Context: WIN/HIN",
         context_motor:"Context: Engine",
@@ -107,7 +107,7 @@
         clear:"Clear annotations",
         export_png:"Export annotated PNG",
         save_bundle:"Save bundle (JSON)",
-        notes:"Technical notes…",
+        notes:"Technical notes�",
         commit_attach:"Commit & Attach"
       }
     }

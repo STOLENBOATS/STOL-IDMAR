@@ -1,18 +1,18 @@
-{
+﻿{
   "AT": {
-    "pt": "Áustria",
+    "pt": "�ustria",
     "en": "Austria"
   },
   "BE": {
-    "pt": "Bélgica",
+    "pt": "B�lgica",
     "en": "Belgium"
   },
   "BG": {
-    "pt": "Bulgária",
+    "pt": "Bulg�ria",
     "en": "Bulgaria"
   },
   "HR": {
-    "pt": "Croácia",
+    "pt": "Cro�cia",
     "en": "Croatia"
   },
   "CY": {
@@ -20,7 +20,7 @@
     "en": "Cyprus"
   },
   "CZ": {
-    "pt": "Chéquia",
+    "pt": "Ch�quia",
     "en": "Czechia"
   },
   "DK": {
@@ -28,15 +28,15 @@
     "en": "Denmark"
   },
   "EE": {
-    "pt": "Estónia",
+    "pt": "Est�nia",
     "en": "Estonia"
   },
   "FI": {
-    "pt": "Finlândia",
+    "pt": "Finl�ndia",
     "en": "Finland"
   },
   "FR": {
-    "pt": "França",
+    "pt": "Fran�a",
     "en": "France"
   },
   "DE": {
@@ -44,7 +44,7 @@
     "en": "Germany"
   },
   "GR": {
-    "pt": "Grécia",
+    "pt": "Gr�cia",
     "en": "Greece"
   },
   "HU": {
@@ -56,15 +56,15 @@
     "en": "Ireland"
   },
   "IT": {
-    "pt": "Itália",
+    "pt": "It�lia",
     "en": "Italy"
   },
   "LV": {
-    "pt": "Letónia",
+    "pt": "Let�nia",
     "en": "Latvia"
   },
   "LT": {
-    "pt": "Lituânia",
+    "pt": "Litu�nia",
     "en": "Lithuania"
   },
   "LU": {
@@ -76,11 +76,11 @@
     "en": "Malta"
   },
   "NL": {
-    "pt": "Países Baixos",
+    "pt": "Pa�ses Baixos",
     "en": "Netherlands"
   },
   "PL": {
-    "pt": "Polónia",
+    "pt": "Pol�nia",
     "en": "Poland"
   },
   "PT": {
@@ -88,15 +88,15 @@
     "en": "Portugal"
   },
   "RO": {
-    "pt": "Roménia",
+    "pt": "Rom�nia",
     "en": "Romania"
   },
   "SK": {
-    "pt": "Eslováquia",
+    "pt": "Eslov�quia",
     "en": "Slovakia"
   },
   "SI": {
-    "pt": "Eslovénia",
+    "pt": "Eslov�nia",
     "en": "Slovenia"
   },
   "ES": {
@@ -104,11 +104,11 @@
     "en": "Spain"
   },
   "SE": {
-    "pt": "Suécia",
+    "pt": "Su�cia",
     "en": "Sweden"
   },
   "IS": {
-    "pt": "Islândia",
+    "pt": "Isl�ndia",
     "en": "Iceland"
   },
   "LI": {
@@ -120,7 +120,7 @@
     "en": "Norway"
   },
   "CH": {
-    "pt": "Suíça",
+    "pt": "Su��a",
     "en": "Switzerland"
   },
   "GB": {

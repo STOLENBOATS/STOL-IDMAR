@@ -1,4 +1,4 @@
-// engine_picker.v2.3.2.js — enriched v1 + overrides + brand change + stable sorting
+﻿// engine_picker.v2.3.2.js � enriched v1 + overrides + brand change + stable sorting
 (function(){
   const el = id => document.getElementById(id);
   const C = (...a)=>console.log('[engine_picker]', ...a);
@@ -19,7 +19,7 @@
     if(allNum) return copy.map(Number).sort((a,b)=>a-b);
     return copy.map(String).sort((a,b)=>a.localeCompare(b,'pt',{numeric:true,sensitivity:'base'}));
   }
-  function fill(sel, arr, ph='— selecione / select —'){
+  function fill(sel, arr, ph='� selecione / select �'){
     sel.innerHTML='';
     const o0=document.createElement('option'); o0.value=''; o0.textContent=ph; sel.appendChild(o0);
     (arr||[]).forEach(v=>{ 
@@ -50,10 +50,10 @@
     container.innerHTML='';
     const mk=(lbl,id)=>mount(lbl,id);
     const boxes={ 
-      hp:mk('Potência (hp)','eng_hp'),
+      hp:mk('Pot�ncia (hp)','eng_hp'),
       rig:mk('Comando / Rigging','eng_rig'),
       sh:mk('Altura de coluna / Shaft','eng_shaft'),
-      rot:mk('Rotação / Rotation (hélice / propeller)','eng_rot')
+      rot:mk('Rota��o / Rotation (h�lice / propeller)','eng_rot')
     };
     const hasM=Array.isArray(b.model_code_list)&&b.model_code_list.length;
     const hasD=Array.isArray(b.displacement_list)&&b.displacement_list.length;
@@ -64,12 +64,12 @@
     Object.values(boxes).forEach(x=>container.appendChild(x.wrap));
     let hpOptions=[]; 
     if(Array.isArray(b.hp_list)&&b.hp_list.length){ hpOptions = stableSort(b.hp_list); } 
-    else if(Array.isArray(b.power_hp_range)){ hpOptions=[`${b.power_hp_range[0]}–${b.power_hp_range[1]}`]; }
+    else if(Array.isArray(b.power_hp_range)){ hpOptions=[`${b.power_hp_range[0]}�${b.power_hp_range[1]}`]; }
     const rigOptions = stableSort(Array.isArray(b.rigging)?b.rigging:[]);
     const shOptions  = stableSort(Array.isArray(b.shaft_options)?b.shaft_options:[]);
     const rotOptions=[
-      {value:'STD', label:'STD — rotação normal (clockwise)'},
-      {value:'CCW', label:'CCW — contra-rotação (counter-rotating)'}
+      {value:'STD', label:'STD � rota��o normal (clockwise)'},
+      {value:'CCW', label:'CCW � contra-rota��o (counter-rotating)'}
     ];
     fill(boxes.hp.sel,hpOptions);
     fill(boxes.rig.sel,rigOptions);
@@ -93,8 +93,8 @@
   }
   async function boot(){ 
     const s=document.currentScript; const url=s?.dataset?.catalog || 'data/engines_catalog.v1.enriched.json'; 
-    let cat; try{ cat=await loadJSON(url); }catch(e){ console.error('[engine_picker] erro catálogo:', e); return; }
-    const target=document.getElementById('brandDynamic'); if(!target){ console.warn('[engine_picker] #brandDynamic não encontrado'); return; }
+    let cat; try{ cat=await loadJSON(url); }catch(e){ console.error('[engine_picker] erro cat�logo:', e); return; }
+    const target=document.getElementById('brandDynamic'); if(!target){ console.warn('[engine_picker] #brandDynamic n�o encontrado'); return; }
     attachV1(target, cat);
     // re-render ao trocar de marca (garantir 1 listener)
     const brandSel = el('brand');

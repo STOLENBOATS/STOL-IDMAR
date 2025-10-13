@@ -1,8 +1,8 @@
-/* IDMAR — histórico Motor (Fase 3)
-   - Ordena mais recente → mais antigo
-   - Filtros: estado + data (de/até) + pesquisa (S/N, marca, justificação)
+﻿/* IDMAR � hist�rico Motor (Fase 3)
+   - Ordena mais recente ? mais antigo
+   - Filtros: estado + data (de/at�) + pesquisa (S/N, marca, justifica��o)
    - Export CSV (UTF-8 + BOM)
-   - Só JS; injeta toolbar + listagem própria
+   - S� JS; injeta toolbar + listagem pr�pria
 */
 (() => {
   const LS_KEYS = ['history_motor','historyMotor'];
@@ -12,7 +12,7 @@
   const parseTS = s => { const d = new Date(s); return isNaN(d) ? null : d; };
   const pad = n => String(n).padStart(2,'0');
   const fmt = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
-  const isTrue = v => v===true || v===1 || v==='1' || v==='true' || v==='VÁLIDO';
+  const isTrue = v => v===true || v===1 || v==='1' || v==='true' || v==='V�LIDO';
 
   function readStoreKey(){ for (const k of LS_KEYS){ try{ if(localStorage.getItem(k)) return k; }catch{} } return LS_KEYS[0]; }
   function readAll(){
@@ -36,12 +36,12 @@
     bar.style.display='flex'; bar.style.flexWrap='wrap'; bar.style.gap='0.5rem'; bar.style.alignItems='center';
 
     const status = el('select'); status.setAttribute('data-filter-status','');
-    ['Todos','Válido','Inválido'].forEach(v=>{ const o=el('option',null,v); o.value=v.toLowerCase(); status.appendChild(o); });
+    ['Todos','V�lido','Inv�lido'].forEach(v=>{ const o=el('option',null,v); o.value=v.toLowerCase(); status.appendChild(o); });
 
     const from = el('input'); from.type='date'; from.setAttribute('data-filter-from','');
     const to   = el('input'); to.type='date';   to.setAttribute('data-filter-to','');
 
-    const q = el('input'); q.type='search'; q.placeholder='Pesquisar SN/marca/justificação…'; q.setAttribute('data-filter-q','');
+    const q = el('input'); q.type='search'; q.placeholder='Pesquisar SN/marca/justifica��o�'; q.setAttribute('data-filter-q','');
 
     const btnA = el('button',null,'Aplicar'); btnA.addEventListener('click', onApply);
     const btnC = el('button',null,'Limpar');  btnC.addEventListener('click', ()=>{ status.value='todos'; from.value=''; to.value=''; q.value=''; onClear(); });
@@ -56,7 +56,7 @@
   function applyFilters(rows,f){
     let out = rows.slice();
     if (f.status && f.status!=='todos'){
-      const wantValid = f.status==='válido';
+      const wantValid = f.status==='v�lido';
       out = out.filter(r => isTrue(r.valid) === wantValid);
     }
     if (f.from){
@@ -97,11 +97,11 @@
       const top = el('div'); top.style.display='flex'; top.style.justifyContent='space-between'; top.style.gap='1rem';
 
       const left = el('div');
-      const l1 = el('div',null, `${(r.marca || r.brand || '—')} • ${(r.sn || r.serial || '(sem SN)')}`);
+      const l1 = el('div',null, `${(r.marca || r.brand || '�')} � ${(r.sn || r.serial || '(sem SN)')}`);
       const l2 = el('small',null, fmt(dt));
       left.append(l1,l2);
 
-      const badge = el('strong',null, isTrue(r.valid) ? 'VÁLIDO' : 'INVÁLIDO');
+      const badge = el('strong',null, isTrue(r.valid) ? 'V�LIDO' : 'INV�LIDO');
       badge.setAttribute('data-valid', isTrue(r.valid)?'1':'0');
 
       const just = el('div'); just.style.marginTop='0.25rem';
@@ -121,7 +121,7 @@
       const row = [
         r.id, r.ts, (r.marca || r.brand || ''), (r.sn || r.serial || ''),
         isTrue(r.valid)?1:0,
-        (r.resultado || (isTrue(r.valid)?'VÁLIDO':'INVÁLIDO')),
+        (r.resultado || (isTrue(r.valid)?'V�LIDO':'INV�LIDO')),
         (r.justificacao || r.reason || '')
       ];
       lines.push(row.map(esc).join(','));

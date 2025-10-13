@@ -1,12 +1,12 @@
-// IDMAR — Forense Add-on (r3)
+﻿// IDMAR � Forense Add-on (r3)
 // Uso: incluir DEPOIS dos validadores (win & motor).
-// - Injeta UI "Forense (opcional)" nos formulários de WIN e Motor.
+// - Injeta UI "Forense (opcional)" nos formul�rios de WIN e Motor.
 // - Captura flags + notas e, se existir foto, calcula SHA-256 do ficheiro.
-// - Anexa {forense:{hash,flags,notes}} ao registo MAIS RECENTE do histórico correspondente.
-// - À prova de ordem de includes e de ausências de elementos.
+// - Anexa {forense:{hash,flags,notes}} ao registo MAIS RECENTE do hist�rico correspondente.
+// - � prova de ordem de includes e de aus�ncias de elementos.
 
 (function(w,d){
-  // Bootstrap mínimo
+  // Bootstrap m�nimo
   w.IDMAR = w.IDMAR || {}; w.NAV = w.NAV || w.IDMAR;
   NAV.STORAGE = NAV.STORAGE || { SESSION:'IDMAR_SESSION', WIN_HISTORY:'hist_win', MOTOR_HISTORY:'hist_motor' };
 
@@ -32,7 +32,7 @@
     }catch(e){ return null; }
   }
 
-  // Encontra a melhor chave de histórico
+  // Encontra a melhor chave de hist�rico
   function bestHistoryKey(kind){
     try{
       if(kind==='win') return (NAV && NAV.STORAGE && NAV.STORAGE.WIN_HISTORY) || 'hist_win';
@@ -40,12 +40,12 @@
     }catch(e){ return kind==='win' ? 'hist_win' : 'hist_motor'; }
   }
 
-  // Escolhe o registo mais recente (por data ou por posição 0)
+  // Escolhe o registo mais recente (por data ou por posi��o 0)
   function pickMostRecent(arr){
     if(!Array.isArray(arr) || !arr.length) return null;
     // Tentativa 1: assume ordem por unshift (mais recente = arr[0])
     const a0 = arr[0];
-    // Verifica se há datas válidas; se sim, escolhe a de maior timestamp
+    // Verifica se h� datas v�lidas; se sim, escolhe a de maior timestamp
     let bestIdx = 0, bestTs = -1, foundTs=false;
     for(let i=0;i<arr.length;i++){
       const r = arr[i]||{};
@@ -64,13 +64,13 @@
 
     var flagsHtml = (kind==='win')
       ? '<label><input type="checkbox" id="flag_rebites_'+(formEl.id||kind)+'"> Rebites (heads/spacing)</label>'
-        + '<label><input type="checkbox" id="flag_solda_'+(formEl.id||kind)+'"> Cordões de solda</label>'
+        + '<label><input type="checkbox" id="flag_solda_'+(formEl.id||kind)+'"> Cord�es de solda</label>'
         + '<label><input type="checkbox" id="flag_placa_'+(formEl.id||kind)+'"> Placa remarcada</label>'
-        + '<label><input type="checkbox" id="flag_tinta_'+(formEl.id||kind)+'"> Camadas de tinta/abrasões</label>'
+        + '<label><input type="checkbox" id="flag_tinta_'+(formEl.id||kind)+'"> Camadas de tinta/abras�es</label>'
       : '<label><input type="checkbox" id="flag_etiqueta_'+(formEl.id||kind)+'"> Etiqueta adulterada/ausente</label>'
         + '<label><input type="checkbox" id="flag_core_'+(formEl.id||kind)+'"> Core plug danificado/removido</label>'
-        + '<label><input type="checkbox" id="flag_boss_'+(formEl.id||kind)+'"> Boss/cola/solda anómala</label>'
-        + '<label><input type="checkbox" id="flag_bloco_'+(formEl.id||kind)+'"> Remarcação no bloco</label>';
+        + '<label><input type="checkbox" id="flag_boss_'+(formEl.id||kind)+'"> Boss/cola/solda an�mala</label>'
+        + '<label><input type="checkbox" id="flag_bloco_'+(formEl.id||kind)+'"> Remarca��o no bloco</label>';
 
     var box = d.createElement('details');
     box.id = boxId;
@@ -85,9 +85,9 @@
                   + '<div class="forense-grid" style="display:grid;gap:.5rem;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))">'
                   + flagsHtml
                   + '</div>'
-                  + '<div style="margin-top:.5rem"><textarea id="forense_notes_'+(formEl.id||kind)+'" rows="3" placeholder="Notas forenses…"></textarea></div>';
+                  + '<div style="margin-top:.5rem"><textarea id="forense_notes_'+(formEl.id||kind)+'" rows="3" placeholder="Notas forenses�"></textarea></div>';
 
-    // Inserção
+    // Inser��o
     var anchor = anchorId && d.getElementById(anchorId);
     if(anchor && anchor.parentElement) anchor.parentElement.insertAdjacentElement('afterend', box);
     else formEl.appendChild(box);
@@ -116,7 +116,7 @@
     return { flags:flags, notes:notes };
   }
 
-  // Anexa forense ao último registo do histórico
+  // Anexa forense ao �ltimo registo do hist�rico
   function attachForense(kind, fileInput, payload){
     try{
       var key = bestHistoryKey(kind);
@@ -164,3 +164,4 @@
     }
   });
 })(window, document);
+

@@ -1,4 +1,4 @@
-// engine_picker.v2.js — configurador por selects (sem texto livre)
+﻿// engine_picker.v2.js � configurador por selects (sem texto livre)
 (function(){
   const el = sel => document.querySelector(sel);
   const create = (tag, attrs={}) => Object.assign(document.createElement(tag), attrs);
@@ -10,7 +10,7 @@
   function uniq(a){ return Array.from(new Set(a)); }
   function by(obj, path){ return path.reduce((o,k)=>o && o[k], obj); }
 
-  function mountSelect(labelText, id, options, placeholder="— selecione —"){
+  function mountSelect(labelText, id, options, placeholder="� selecione �"){
     const wrap = create('div');
     const lab  = create('label', { htmlFor:id, textContent: labelText });
     const sel  = create('select', { id });
@@ -22,7 +22,7 @@
     return {wrap, sel, lab};
   }
 
-  function fillSelect(sel, options, placeholder="— selecione —", keepValue=false){
+  function fillSelect(sel, options, placeholder="� selecione �", keepValue=false){
     const prev = keepValue ? sel.value : "";
     sel.innerHTML = "";
     sel.appendChild(create('option', { value:"", textContent: placeholder }));
@@ -52,18 +52,18 @@
 
     // 1) Marca (usa o teu select #brand)
     const selBrand = document.getElementById('brand');
-    if(!selBrand){ console.warn('engine_picker: #brand não encontrado'); return; }
+    if(!selBrand){ console.warn('engine_picker: #brand n�o encontrado'); return; }
 
-    // 2) Família
-    const famBox = mountSelect("Família / Family", "eng_family", Object.keys(catalog.brands[selBrand.value]?.families||[]));
+    // 2) Fam�lia
+    const famBox = mountSelect("Fam�lia / Family", "eng_family", Object.keys(catalog.brands[selBrand.value]?.families||[]));
     // 3) HP
-    const hpBox  = mountSelect("Potência (hp)", "eng_hp", []);
+    const hpBox  = mountSelect("Pot�ncia (hp)", "eng_hp", []);
     // 4) Rigging
     const rigBox = mountSelect("Comando / Rigging", "eng_rig", []);
     // 5) Shaft
     const shBox  = mountSelect("Altura de coluna / Shaft", "eng_shaft", []);
-    // 6) Rotação
-    const rotBox = mountSelect("Rotação", "eng_rot", []);
+    // 6) Rota��o
+    const rotBox = mountSelect("Rota��o", "eng_rot", []);
     // 7) Cor
     const colBox = mountSelect("Cor / Color", "eng_color", []);
     // 8) Gearcase
@@ -97,7 +97,7 @@
       }
       const v = variantsFor(fam);
 
-      // valores possíveis gerais da família
+      // valores poss�veis gerais da fam�lia
       const allHP   = uniq( (fam.hp||[]).concat(v.map(x=>x.hp).filter(Boolean)) );
       const allRig  = uniq( (fam.rigging||[]).concat(...v.map(x=>x.rigging||[])) );
       const allShaft= uniq( (fam.shaft||[]).concat(...v.map(x=>x.shaft||[])) );
@@ -119,11 +119,11 @@
       const codes = uniq(v.map(x=>x.code).filter(Boolean));
       fillSelect(mdlBox.sel, codes);
 
-      // liga aos teus campos de pesquisa existentes (para manter histórico/validação):
+      // liga aos teus campos de pesquisa existentes (para manter hist�rico/valida��o):
       const mapToExisting = {
         model: document.querySelector('[data-engine-field=model_code], #srch_model'),
         power: document.querySelector('[data-engine-field=power], #srch_power'),
-        //.displacement deixamos para futuro (depende da família)
+        //.displacement deixamos para futuro (depende da fam�lia)
       };
 
       function sync(){
@@ -136,12 +136,12 @@
 
     famBox.sel.addEventListener('change', refreshAll);
 
-    // primeira carga (se já havia marca escolhida)
+    // primeira carga (se j� havia marca escolhida)
     const fams = Object.keys(catalog.brands[selBrand.value]?.families||[]);
     fillSelect(famBox.sel, fams);
     refreshAll();
 
-    // se muda a marca, recarrega famílias
+    // se muda a marca, recarrega fam�lias
     selBrand.addEventListener('change', ()=>{
       const fams2 = Object.keys(catalog.brands[selBrand.value]?.families||[]);
       fillSelect(famBox.sel, fams2);
@@ -162,3 +162,4 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
 })();
+

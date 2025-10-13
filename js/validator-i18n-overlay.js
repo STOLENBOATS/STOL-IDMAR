@@ -1,4 +1,4 @@
-// js/validator-i18n-overlay.js (v3 - resilient)
+﻿// js/validator-i18n-overlay.js (v3 - resilient)
 (function(){
   const LS_KEY = "IDMAR_LANG";
   const isEN = () => {
@@ -14,12 +14,12 @@
     ["Validador Motor", "Engine Validator"],
     ["WIN / HIN", "WIN / HIN"],
     ["Marca", "Brand"],
-    ["Código do modelo / Model code", "Model code"],
+    ["C�digo do modelo / Model code", "Model code"],
     ["Shaft", "Shaft"],
     ["Par de letras (ano)", "Year letter pair"],
-    ["Série (6–7 dígitos)", "Serial (6–7 digits)"],
+    ["S�rie (6�7 d�gitos)", "Serial (6�7 digits)"],
     ["Modelo (pesquisa)", "Model (search)"],
-    ["Potência (hp)", "Power (hp)"],
+    ["Pot�ncia (hp)", "Power (hp)"],
     ["Cilindrada (cc)", "Displacement (cc)"],
     ["Ano", "Year"],
     ["Origem", "Origin"],
@@ -27,7 +27,7 @@
     ["Forense (opcional)", "Forensics (optional)"],
     ["Campo / Field", "Field"],
     ["Valor / Value", "Value"],
-    ["Interpretação / Meaning", "Meaning"],
+    ["Interpreta��o / Meaning", "Meaning"],
     ["Validar WIN", "Validate WIN"],
     ["Validar Motor", "Validate Engine"]
   ]);
@@ -35,16 +35,16 @@
   const LABELS_N = new Map(Array.from(LABELS.entries()).map(([pt,en]) => [norm(pt).toLowerCase(), en]));
 
   const MSG = [
-    { pt: "Número válido.", en: "Valid number." },
-    { pt: "Registo guardado no histórico.", en: "Record saved to history." },
-    { pt_prefix: "Número inválido:", en_prefix: "Invalid number:" },
-    { pt_prefix: "S/N inválido:", en_prefix: "Invalid S/N:" },
+    { pt: "N�mero v�lido.", en: "Valid number." },
+    { pt: "Registo guardado no hist�rico.", en: "Record saved to history." },
+    { pt_prefix: "N�mero inv�lido:", en_prefix: "Invalid number:" },
+    { pt_prefix: "S/N inv�lido:", en_prefix: "Invalid S/N:" },
   ];
 
   function translatePlaceholder(pt){
     if (!pt) return pt;
     let out = pt.replace(/^\s*Ex\.\s*:/i, "E.g.:");
-    out = out.replace(/\bJapão\b/g, "Japan");
+    out = out.replace(/\bJap�o\b/g, "Japan");
     return out;
   }
 
@@ -110,3 +110,4 @@
 
   boot();
 })();
+

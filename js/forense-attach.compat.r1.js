@@ -1,4 +1,4 @@
-/* IDMAR — Forense attach compat r1 (leve, sem thumbs base64) */
+﻿/* IDMAR � Forense attach compat r1 (leve, sem thumbs base64) */
 (function(){
   if (window.__IDMAR_FORENSE_ATTACH_R1__) return; window.__IDMAR_FORENSE_ATTACH_R1__=true;
 
@@ -40,7 +40,7 @@
       const arr = readKey(key); const arrB = readKey(alt);
       rec = (arr.length?arr:arrB)[0];
     }
-    if (!kind || !rec) { console.warn('[forense-attach.r1] Sem histórico para anexar'); return }
+    if (!kind || !rec) { console.warn('[forense-attach.r1] Sem hist�rico para anexar'); return }
 
     const K1 = kind==='win' ? 'history_win'   : 'history_motor';
     const K2 = kind==='win' ? 'historyWin'    : 'historyMotor';
@@ -60,7 +60,7 @@
   }
 
   function install(){
-    // tenta capturar o botão "Exportar PNG"
+    // tenta capturar o bot�o "Exportar PNG"
     const candidates = [
       '#exportPNG','[data-export="png"]','button#exportarPng','button','input[type="button"]'
     ];
@@ -84,3 +84,4 @@
 
   if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', install); else install();
 })();
+

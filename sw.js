@@ -1,4 +1,4 @@
-﻿// sw.js â€” gerado por tools/build-sw.ps1
+﻿// sw.js — gerado por tools/build-sw.ps1
 const CACHE_NAME = 'idmar-cache-20251010161615';
 const ASSETS = [
   '/STOL-IDMAR/css/nav-ribbon.v5.css',
@@ -34,7 +34,7 @@ self.addEventListener('activate', (e) => {
   );
 });
 
-// cache-first bÃ¡sico para GET do mesmo domÃ­nio
+// cache-first básico para GET do mesmo domínio
 self.addEventListener('fetch', (e) => {
   const req = e.request;
   if (req.method !== 'GET') return;
@@ -61,3 +61,4 @@ self.addEventListener('fetch', (e) => {
     })
   );
 });
+

@@ -1,13 +1,13 @@
-// js/engine-sn-panel.v2.js  (r2)
-// - Lê seleção do cartão "Validador Motor"
-// - Calcula janelas válidas (ranges) para a seleção
-// - Valida o nº introduzido e MOSTRA também os intervalos esperados logo por baixo
+﻿// js/engine-sn-panel.v2.js  (r2)
+// - L� sele��o do cart�o "Validador Motor"
+// - Calcula janelas v�lidas (ranges) para a sele��o
+// - Valida o n� introduzido e MOSTRA tamb�m os intervalos esperados logo por baixo
 (function(w,d){
   "use strict";
   const q = s => d.querySelector(s);
   const qa= s => d.querySelectorAll(s);
 
-  // Mantemos as últimas janelas calculadas para mostrar no resultado
+  // Mantemos as �ltimas janelas calculadas para mostrar no resultado
   let lastWindows = [];
 
   function readSelection(){
@@ -18,7 +18,7 @@
     const yearRaw= (q("#srch_year")?.value || "").trim();
     const year   = yearRaw ? parseInt(yearRaw.replace(/\D+/g,""),10) : null;
 
-    // tentar extrair família+subcódigo do campo modelo (ex.: BF40A-BAAL)
+    // tentar extrair fam�lia+subc�digo do campo modelo (ex.: BF40A-BAAL)
     let family=null, code=null;
     const m1 = model.match(/^(BF\d+[A-Z]?)/i); // BF40 / BF40A
     if (m1) family = m1[1].toUpperCase();
@@ -29,10 +29,10 @@
   }
 
   function chipText(r){
-    const base = `${r.range?.[0] ?? "?"}–${r.range?.[1] ?? "?"}`;
-    const yrs  = r.years ? ` — ${r.years[0]}–${r.years[1]}` : "";
-    const shaft= r.shaft?.length ? ` — eixo ${r.shaft.join("/")}` : "";
-    const hp   = r.hp?.length ? ` — hp ${r.hp.join("/")}` : "";
+    const base = `${r.range?.[0] ?? "?"}�${r.range?.[1] ?? "?"}`;
+    const yrs  = r.years ? ` � ${r.years[0]}�${r.years[1]}` : "";
+    const shaft= r.shaft?.length ? ` � eixo ${r.shaft.join("/")}` : "";
+    const hp   = r.hp?.length ? ` � hp ${r.hp.join("/")}` : "";
     return base + yrs + shaft + hp;
   }
 
@@ -41,11 +41,11 @@
     if (!box) return;
     box.innerHTML = "";
     if (!ranges || !ranges.length){
-      box.innerHTML = '<span class="muted">Sem janelas conhecidas para a seleção atual.</span>';
+      box.innerHTML = '<span class="muted">Sem janelas conhecidas para a sele��o atual.</span>';
       return;
     }
     const h = d.createElement("div");
-    h.innerHTML = '<div class="muted">Janelas válidas para '
+    h.innerHTML = '<div class="muted">Janelas v�lidas para '
       + [sel.brand, sel.family, sel.code].filter(Boolean).join(" ") + '</div>';
     box.appendChild(h);
     ranges.forEach(r=>{
@@ -82,12 +82,12 @@
     const sel = readSelection();
     const hints = q("#engine-sn-hints");
     if (hints) hints.textContent = [sel.brand, sel.family, sel.code, sel.hp?.toString(), sel.year?.toString()]
-      .filter(Boolean).join(" · ");
+      .filter(Boolean).join(" � ");
 
     // carregar dataset de faixas
     const all = await w.IDMAR_SerialRangeCheck.loadRanges();
 
-    // pedir as janelas possíveis para a seleção atual (se a função existir)
+    // pedir as janelas poss�veis para a sele��o atual (se a fun��o existir)
     let cands = [];
     if (typeof w.IDMAR_SerialRangeCheck.getWindowsForSelection === "function"){
       cands = w.IDMAR_SerialRangeCheck.getWindowsForSelection(sel, all) || [];
@@ -98,12 +98,12 @@
 
     renderWindow(cands, sel);
 
-    // se já tiver nº escrito, revalidar
+    // se j� tiver n� escrito, revalidar
     const sn = (q("#engine-sn-raw")?.value || "").trim();
     if (sn) runValidation();
   }
 
-  // fallback: procurar por marca/família/código
+  // fallback: procurar por marca/fam�lia/c�digo
   function fallbackWindows(sel, all){
     const out = [];
     const b = all?.[sel.brand]; if (!b) return out;
@@ -127,14 +127,14 @@
     const serialPresent = !!raw;
 
     if (!serialPresent){
-      renderResult(true, ["Introduza o nº para validar contra a(s) janela(s)."], false);
+      renderResult(true, ["Introduza o n� para validar contra a(s) janela(s)."], false);
       return;
     }
 
-    // parser por marca (módulo existente)
+    // parser por marca (m�dulo existente)
     let parsed = w.IDMAR_EngineSN?.parse(raw, sel.brand) || null;
 
-    // Honda: exterior/interior (dois números distintos)
+    // Honda: exterior/interior (dois n�meros distintos)
     if ((sel.brand||"").toLowerCase()==="honda"){
       const hasPrefix = /^[A-Z0-9]+[-\s]?\d{4,}$/.test(raw) && /[A-Z]/.test(raw.charAt(0));
       if (kind==="exterior" && !hasPrefix) parsed = null;
@@ -146,7 +146,7 @@
     const ranges = await w.IDMAR_SerialRangeCheck.loadRanges();
     let res;
     if (parsed && parsed.brand==="Honda" && parsed.source==="interior"){
-      res = { ok:true, notes:["ℹ️ Honda (interior): número de bloco interno. Validação por coerência (sem faixa de prefixo)."] };
+      res = { ok:true, notes:["?? Honda (interior): n�mero de bloco interno. Valida��o por coer�ncia (sem faixa de prefixo)."] };
     } else {
       res = w.IDMAR_SerialRangeCheck.checkAgainstSelection(parsed, sel, ranges);
     }
@@ -154,16 +154,16 @@
   }
 
   function wire(){
-    // sempre que muda algo no cartão do Motor → recalcula janelas
+    // sempre que muda algo no cart�o do Motor ? recalcula janelas
     ["#brand","#srch_model","#srch_power","#srch_year"].forEach(sel=>{
       q(sel)?.addEventListener("input", recomputeWindows, {passive:true});
       q(sel)?.addEventListener("change", recomputeWindows, {passive:true});
     });
-    // nº do motor
+    // n� do motor
     q("#engine-sn-raw")?.addEventListener("input", runValidation, {passive:true});
     qa('input[name="engine-sn-kind"]').forEach(r=>r.addEventListener("change", runValidation));
 
-    // botão "Validar Motor" também dispara recalcular
+    // bot�o "Validar Motor" tamb�m dispara recalcular
     q("#btnMotor")?.addEventListener("click", ()=>{ setTimeout(recomputeWindows, 0); });
   }
 
@@ -177,3 +177,4 @@
     console.info("[IDMAR] engine-sn-panel v2 (r2) pronto.");
   });
 })(window, document);
+

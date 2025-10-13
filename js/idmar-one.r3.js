@@ -1,12 +1,12 @@
-/*! IDMAR One r3 — bootstrap único para todas as páginas
- *  Inclui: NAV shim, tema (light por defeito), i18n, histórico (core+hook),
+﻿/*! IDMAR One r3 � bootstrap �nico para todas as p�ginas
+ *  Inclui: NAV shim, tema (light por defeito), i18n, hist�rico (core+hook),
  *          UI interpretativa (renderWinResult/renderMotorResult).
- *  Seguro para carregar em TODAS as páginas (idempotente).
+ *  Seguro para carregar em TODAS as p�ginas (idempotente).
  */
 (function(w,d){
   if (w.__IDMAR_ONE_R3__) return; w.__IDMAR_ONE_R3__ = true;
 
-  /* --- 0) NAV shim síncrono (para validadores legados) --- */
+  /* --- 0) NAV shim s�ncrono (para validadores legados) --- */
   w.IDMAR = w.IDMAR || {};
   w.NAV   = w.NAV   || w.IDMAR;
   NAV.util = NAV.util || {
@@ -34,10 +34,10 @@
     }catch(e){}
   })();
 
-  /* --- 2) i18n mínimo PT/EN via data-i18n --- */
+  /* --- 2) i18n m�nimo PT/EN via data-i18n --- */
   (function(){
     var DICT = {
-      pt: { field:'Campo', value:'Valor', meaning:'Interpretação', rules:'Regras aplicadas' },
+      pt: { field:'Campo', value:'Valor', meaning:'Interpreta��o', rules:'Regras aplicadas' },
       en: { field:'Field', value:'Value', meaning:'Meaning', rules:'Applied rules' }
     };
     function apply(lang, root){
@@ -53,9 +53,9 @@
     };
   })();
 
-  /* --- 3) Histórico core (localStorage) --- */
+  /* --- 3) Hist�rico core (localStorage) --- */
   (function(g){
-    if (g.IDMAR_HIST) return; // já definido?
+    if (g.IDMAR_HIST) return; // j� definido?
     var KEYS = { win:'hist_win', motor:'hist_motor' };
     function now(){ return Date.now(); }
     function iso(ts){ try{ return new Date(ts).toISOString(); }catch(e){ return ''; } }
@@ -108,11 +108,11 @@
       URL.revokeObjectURL(a.href);
     }
     g.IDMAR_HIST = { save:save, all:all, clear:clear, filter:filter, toCSV:toCSV };
-    // ponte para NAV.history se ainda não tiver
+    // ponte para NAV.history se ainda n�o tiver
     if (!NAV.history) NAV.history = g.IDMAR_HIST;
   })(w);
 
-  /* --- 4) Hook (só ativa se a página tiver os elementos) --- */
+  /* --- 4) Hook (s� ativa se a p�gina tiver os elementos) --- */
   function domReady(fn){ if(d.readyState!=='loading') fn(); else d.addEventListener('DOMContentLoaded', fn); }
   domReady(function(){
     // WIN
@@ -122,7 +122,7 @@
     function grabWinStatus(){
       var el = d.querySelector('#win-output .status, #win-output .resultado, #winResult .status, #winResult, .win-result .status');
       var txt = el && el.textContent || ''; var s='';
-      if(/inv[aá]lid/i.test(txt)) s='inválido'; else if(/v[aá]lid/i.test(txt)) s='válido'; return s;
+      if(/inv[a�]lid/i.test(txt)) s='inv�lido'; else if(/v[a�]lid/i.test(txt)) s='v�lido'; return s;
     }
     function saveWin(){
       var val = (winInput && winInput.value || '').trim(); if(!val) return;
@@ -141,7 +141,7 @@
     function grabMotorStatus(){
       var el = d.querySelector('#motor-output .status, #motor-output .resultado, #motorResult .status, #motorResult, .motor-result .status');
       var txt = el && el.textContent || ''; var s='';
-      if(/inv[aá]lid/i.test(txt)) s='inválido'; else if(/v[aá]lid/i.test(txt)) s='válido'; return s;
+      if(/inv[a�]lid/i.test(txt)) s='inv�lido'; else if(/v[a�]lid/i.test(txt)) s='v�lido'; return s;
     }
     function saveMotor(){
       var sn = (snInput && snInput.value || '').trim(); if(!sn) return;
@@ -153,7 +153,7 @@
     if(motorForm){ motorForm.addEventListener('submit', function(){ setTimeout(saveMotor, 80); }); }
     if(motorBtn ){ motorBtn .addEventListener('click',  function(){ setTimeout(saveMotor, 80); }); }
 
-    // HISTÓRICO (só se a tabela existir)
+    // HIST�RICO (s� se a tabela existir)
     var tbd = d.querySelector('#hist-tbl tbody');
     if(tbd){
       var TYPE = d.body.dataset.hist || 'win';
@@ -190,19 +190,19 @@
       [inpQ, selEstado, selMarca, inpFrom, inpTo].forEach(function(el){
         if(el){ el.addEventListener('input', apply); if(el.tagName==='SELECT'){ el.addEventListener('change', apply); } }
       });
-      if(btnClear) btnClear.addEventListener('click', function(){ if(confirm('Limpar histórico?')){ w.IDMAR_HIST && IDMAR_HIST.clear(TYPE); apply(); } });
+      if(btnClear) btnClear.addEventListener('click', function(){ if(confirm('Limpar hist�rico?')){ w.IDMAR_HIST && IDMAR_HIST.clear(TYPE); apply(); } });
       if(btnCSV)   btnCSV  .addEventListener('click', function(){ var all=(w.IDMAR_HIST && IDMAR_HIST.all(TYPE))||[]; var filtered=(w.IDMAR_HIST && IDMAR_HIST.filter(all,{ query:(inpQ&&inpQ.value||'').trim() }))||[]; w.IDMAR_HIST && IDMAR_HIST.toCSV(TYPE, filtered); });
       apply();
     }
   });
 
-  /* --- 5) UI interpretativa (renderizadores públicos) --- */
+  /* --- 5) UI interpretativa (renderizadores p�blicos) --- */
   (function(){
     if (w.renderWinResult && w.renderMotorResult) return;
     function el(tag, cls){ var e=d.createElement(tag); if(cls) e.className=cls; return e; }
-    function badge(status){ var b=el('span','badge '+(status==='válido'?'ok':'nok')); b.textContent=status||''; return b; }
+    function badge(status){ var b=el('span','badge '+(status==='v�lido'?'ok':'nok')); b.textContent=status||''; return b; }
     function table(fields){
-      var t=el('table','tbl'); t.innerHTML='<thead><tr><th data-i18n="field">Campo</th><th data-i18n="value">Valor</th><th data-i18n="meaning">Interpretação</th></tr></thead><tbody></tbody>';
+      var t=el('table','tbl'); t.innerHTML='<thead><tr><th data-i18n="field">Campo</th><th data-i18n="value">Valor</th><th data-i18n="meaning">Interpreta��o</th></tr></thead><tbody></tbody>';
       var tb=t.querySelector('tbody'); (fields||[]).forEach(function(r){ var tr=d.createElement('tr'); tr.innerHTML='<td>'+(r.label||'')+'</td><td>'+(r.value||'')+'</td><td>'+(r.meaning||'')+'</td>'; tb.appendChild(tr); });
       return t;
     }
@@ -225,3 +225,4 @@
   })();
 
 })(window, document);
+

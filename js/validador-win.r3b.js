@@ -1,4 +1,4 @@
-// IDMAR — Validador WIN (r3b + compat histórico + PT/EN)
+﻿// IDMAR � Validador WIN (r3b + compat hist�rico + PT/EN)
 (function (w, d) {
   console.info("[IDMAR] validador-win ATIVO: r3b+hist");
 
@@ -17,7 +17,7 @@
   function save(key, val) { try { localStorage.setItem(key, JSON.stringify(val || [])); } catch {} }
   function nowISO() { try { return new Date().toISOString(); } catch { return String(Date.now()); } }
 
-  // Leitura de ficheiro com compressão (JPEG ~1024x768, ~0.72)
+  // Leitura de ficheiro com compress�o (JPEG ~1024x768, ~0.72)
   function readFileAsDataURL(file) {
     return new Promise((res, rej) => {
       if (!file) { res(""); return; }
@@ -54,24 +54,24 @@
     });
   }
 
-  // ---------- Tradução PT→EN simples da razão ----------
+  // ---------- Tradu��o PT?EN simples da raz�o ----------
   const REASON_EN = {
-    "Tamanho inválido (14/16).": "Invalid length (14/16).",
-    "Formato EUA não admite 15.": "US format does not allow 15.",
-    "Caracteres inválidos.": "Invalid characters.",
-    "País inválido.": "Invalid country.",
-    "Fabricante inválido.": "Invalid manufacturer.",
-    "Mês inválido (I,O,Q proibidas).": "Invalid month (I,O,Q not allowed).",
-    "Ano (1 dígito) inválido.": "Invalid production year (1 digit).",
-    "Modelo (2 dígitos) inválido.": "Invalid model year digits (2).",
+    "Tamanho inv�lido (14/16).": "Invalid length (14/16).",
+    "Formato EUA n�o admite 15.": "US format does not allow 15.",
+    "Caracteres inv�lidos.": "Invalid characters.",
+    "Pa�s inv�lido.": "Invalid country.",
+    "Fabricante inv�lido.": "Invalid manufacturer.",
+    "M�s inv�lido (I,O,Q proibidas).": "Invalid month (I,O,Q not allowed).",
+    "Ano (1 d�gito) inv�lido.": "Invalid production year (1 digit).",
+    "Modelo (2 d�gitos) inv�lido.": "Invalid model year digits (2).",
     "Ano do modelo fora do intervalo permitido (>=1998).": "Model year outside allowed window (>=1998).",
-    "Ano de produção inconsistente ou fora de 1998+.": "Production year inconsistent or <1998.",
-    "Ano do modelo não pode ser anterior ao de produção.": "Model year cannot be earlier than production year.",
-    "Estrutura válida.": "Structure valid.",
+    "Ano de produ��o inconsistente ou fora de 1998+.": "Production year inconsistent or <1998.",
+    "Ano do modelo n�o pode ser anterior ao de produ��o.": "Model year cannot be earlier than production year.",
+    "Estrutura v�lida.": "Structure valid.",
   };
   function reasonPTEN(pt) { return pt + " / " + (REASON_EN[pt] || ""); }
 
-  // ---------- Histórico compat + quota-safe ----------
+  // ---------- Hist�rico compat + quota-safe ----------
   function cryptoRandomId() {
     try {
       const a = new Uint8Array(8); crypto.getRandomValues(a);
@@ -119,12 +119,12 @@
     return entry;
   }
 
-  // ---------- Interpretação WIN/HIN ----------
+  // ---------- Interpreta��o WIN/HIN ----------
   function interpretWIN(win) {
     const c = String(win || "").replace(/\s|-/g, "").toUpperCase().trim();
-    if (c.length !== 14 && c.length !== 16) return { valid: false, reason: "Tamanho inválido (14/16)." };
-    if (c.length === 15) return { valid: false, reason: "Formato EUA não admite 15." };
-    if (!/^[A-Z0-9]+$/.test(c)) return { valid: false, reason: "Caracteres inválidos." };
+    if (c.length !== 14 && c.length !== 16) return { valid: false, reason: "Tamanho inv�lido (14/16)." };
+    if (c.length === 15) return { valid: false, reason: "Formato EUA n�o admite 15." };
+    if (!/^[A-Z0-9]+$/.test(c)) return { valid: false, reason: "Caracteres inv�lidos." };
 
     const eu = (c.length === 14);
     const country = c.slice(0, 2), maker = c.slice(2, 5);
@@ -133,11 +133,11 @@
     if (eu) { series = c.slice(5, 10); month = c.slice(10, 11); year = c.slice(11, 12); model = c.slice(12, 14); }
     else    { series = c.slice(5, 12); month = c.slice(12, 13); year = c.slice(13, 14); model = c.slice(14, 16); }
 
-    if (!/^[A-Z]{2}$/.test(country))   return { valid: false, reason: "País inválido." };
-    if (!/^[A-Z]{3}$/.test(maker))     return { valid: false, reason: "Fabricante inválido." };
-    if (!/^[A-HJ-NPR-Z]$/.test(month)) return { valid: false, reason: "Mês inválido (I,O,Q proibidas)." };
-    if (!/^\d$/.test(year))            return { valid: false, reason: "Ano (1 dígito) inválido." };
-    if (!/^\d{2}$/.test(model))        return { valid: false, reason: "Modelo (2 dígitos) inválido." };
+    if (!/^[A-Z]{2}$/.test(country))   return { valid: false, reason: "Pa�s inv�lido." };
+    if (!/^[A-Z]{3}$/.test(maker))     return { valid: false, reason: "Fabricante inv�lido." };
+    if (!/^[A-HJ-NPR-Z]$/.test(month)) return { valid: false, reason: "M�s inv�lido (I,O,Q proibidas)." };
+    if (!/^\d$/.test(year))            return { valid: false, reason: "Ano (1 d�gito) inv�lido." };
+    if (!/^\d{2}$/.test(model))        return { valid: false, reason: "Modelo (2 d�gitos) inv�lido." };
 
     const monthMap = { A: "Jan", B: "Fev", C: "Mar", D: "Abr", E: "Mai", F: "Jun", G: "Jul", H: "Ago", J: "Set", K: "Out", L: "Nov", M: "Dez" };
     const monthName = monthMap[month] || month;
@@ -161,38 +161,38 @@
     }
 
     const prodResolved = resolveProdYearDigit(modelResolved, yy);
-    if (prodResolved === null) return { valid: false, reason: "Ano de produção inconsistente ou fora de 1998+." };
-    if (modelResolved < prodResolved) return { valid: false, reason: "Ano do modelo não pode ser anterior ao de produção." };
+    if (prodResolved === null) return { valid: false, reason: "Ano de produ��o inconsistente ou fora de 1998+." };
+    if (modelResolved < prodResolved) return { valid: false, reason: "Ano do modelo n�o pode ser anterior ao de produ��o." };
 
     const countryMap = {
-      PT: "Portugal", FR: "França", ES: "Espanha", IT: "Itália", DE: "Alemanha",
-      NL: "Países Baixos", GB: "Reino Unido", UK: "Reino Unido", US: "Estados Unidos", CA: "Canadá"
+      PT: "Portugal", FR: "Fran�a", ES: "Espanha", IT: "It�lia", DE: "Alemanha",
+      NL: "Pa�ses Baixos", GB: "Reino Unido", UK: "Reino Unido", US: "Estados Unidos", CA: "Canad�"
     };
     const makerMap = {
-      CNB: "CNB Yacht Builders", BEN: "Bénéteau", JEA: "Jeanneau", SEA: "Sea Ray",
+      CNB: "CNB Yacht Builders", BEN: "B�n�teau", JEA: "Jeanneau", SEA: "Sea Ray",
       BRP: "BRP (Evinrude)", YAM: "Yamaha", HON: "Honda"
     };
 
     return {
       valid: true,
-      reason: "Estrutura válida.",
+      reason: "Estrutura v�lida.",
       eu,
       cleaned: c,
       country, countryName: countryMap[country] || "Desconhecido",
-      maker, makerName: makerMap[maker] || "Código de fabricante (não identificado)",
+      maker, makerName: makerMap[maker] || "C�digo de fabricante (n�o identificado)",
       series, month, monthName, year, prodResolved, model, modelResolved
     };
   }
 
-  // ---------- Render interpretação ----------
+  // ---------- Render interpreta��o ----------
   function renderInterpretation(info) {
     const table = $id("interpWinBody"); if (!table) return; table.innerHTML = "";
     const rows = [
-      ["País", "Country", info.country, `${info.country} → ${info.countryName}`],
-      ["Fabricante", "Manufacturer", info.maker, `${info.maker} → ${info.makerName}`],
-      ["Série", "Series", info.series, "Sequência livre / Free sequence"],
-      ["Mês de produção", "Prod. month", info.month, info.monthName],
-      ["Ano de produção", "Prod. year", info.year, String(info.prodResolved)],
+      ["Pa�s", "Country", info.country, `${info.country} ? ${info.countryName}`],
+      ["Fabricante", "Manufacturer", info.maker, `${info.maker} ? ${info.makerName}`],
+      ["S�rie", "Series", info.series, "Sequ�ncia livre / Free sequence"],
+      ["M�s de produ��o", "Prod. month", info.month, info.monthName],
+      ["Ano de produ��o", "Prod. year", info.year, String(info.prodResolved)],
       ["Ano do modelo", "Model year", info.model, String(info.modelResolved)],
       ["Formato", "Format", info.eu ? "UE (14)" : "EUA (16)", "Derivado do comprimento / Based on length"],
     ];
@@ -213,10 +213,10 @@
     const info = interpretWIN(win);
 
     if (!info.valid) {
-      out.innerHTML = '<span class="badge bad">Inválido / Invalid</span> ' + reasonPTEN(info.reason);
+      out.innerHTML = '<span class="badge bad">Inv�lido / Invalid</span> ' + reasonPTEN(info.reason);
       $id("interpWinBody").innerHTML = "";
     } else {
-      out.innerHTML = '<span class="badge good">Válido / Valid</span> ' + reasonPTEN(info.reason);
+      out.innerHTML = '<span class="badge good">V�lido / Valid</span> ' + reasonPTEN(info.reason);
       renderInterpretation(info);
     }
 
@@ -227,13 +227,13 @@
       try { photoData = await readFileAsDataURL(file.files[0]); } catch {}
     }
 
-    // Histórico (PT/EN)
+    // Hist�rico (PT/EN)
     const entry = {
       id: cryptoRandomId(),
       date: nowISO(),
       win,
       valid: !!info.valid,
-      reason: reasonPTEN(info.reason || (info.valid ? "Estrutura válida." : "")),
+      reason: reasonPTEN(info.reason || (info.valid ? "Estrutura v�lida." : "")),
       photoName, photoData
     };
     recordHistoryWinCompat(entry);
@@ -263,10 +263,10 @@
         '<summary>Forense (opcional) / Forensic (optional)</summary>' +
         '<div class="forense-grid">' +
         '<label><input type="checkbox" id="flagRebites_formWin"> Rebites / Rivets</label>' +
-        '<label><input type="checkbox" id="flagSolda_formWin"> Cordões de solda / Weld beads</label>' +
+        '<label><input type="checkbox" id="flagSolda_formWin"> Cord�es de solda / Weld beads</label>' +
         '<label><input type="checkbox" id="flagPlaca_formWin"> Placa remarcada / Re-stamped plate</label>' +
-        '<label><input type="checkbox" id="flagTinta_formWin"> Camadas de tinta/abrasões / Paint layers/abrasions</label>' +
-        '<textarea id="forenseNotes_formWin" rows="3" placeholder="Notas forenses… / Forensic notes…"></textarea>' +
+        '<label><input type="checkbox" id="flagTinta_formWin"> Camadas de tinta/abras�es / Paint layers/abrasions</label>' +
+        '<textarea id="forenseNotes_formWin" rows="3" placeholder="Notas forenses� / Forensic notes�"></textarea>' +
         '</div>';
       const anchor = $id("winPhoto");
       (anchor && anchor.parentElement) ? anchor.parentElement.insertAdjacentElement("afterend", box) : form.appendChild(box);
@@ -290,7 +290,7 @@
 
     function attach() {
       setTimeout(async function () {
-        // ler histórico (qualquer chave compat)
+        // ler hist�rico (qualquer chave compat)
         const readKeys = ["hist_win", "history_win", "historyWin", "histWin"];
         let arr = [];
         for (const k of readKeys) {
@@ -319,9 +319,9 @@
         // Flags bilingues
         const flags = [];
         if ($id("flagRebites_formWin")?.checked) flags.push("Rebites / Rivets");
-        if ($id("flagSolda_formWin")?.checked)   flags.push("Cordões de solda / Weld beads");
+        if ($id("flagSolda_formWin")?.checked)   flags.push("Cord�es de solda / Weld beads");
         if ($id("flagPlaca_formWin")?.checked)   flags.push("Placa remarcada / Re-stamped plate");
-        if ($id("flagTinta_formWin")?.checked)   flags.push("Camadas de tinta/abrasões / Paint layers/abrasions");
+        if ($id("flagTinta_formWin")?.checked)   flags.push("Camadas de tinta/abras�es / Paint layers/abrasions");
 
         const notes = ($id("forenseNotes_formWin")?.value) || "";
 
@@ -346,3 +346,4 @@
   if (d.readyState === "loading") d.addEventListener("DOMContentLoaded", wire); else wire();
 
 })(window, document);
+

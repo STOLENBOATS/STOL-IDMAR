@@ -1,4 +1,4 @@
-/*! IDMAR compat bridge r3
+﻿/*! IDMAR compat bridge r3
  *  - Define NAV.STORAGE constants esperados (SESSION, WIN_HISTORY, MOTOR_HISTORY)
  *  - Polyfills: loadFromLS, saveToLS, readFileAsDataURL
  *  - DOM aliases: suporta IDs antigos (formWin/formMotor, win, winOut, interpWinBody, brand, brandDynamic, motorOut, motorPhoto, etc.)
@@ -14,7 +14,7 @@
     MOTOR_HISTORY: 'hist_motor'
   };
 
-  // 1) Polyfills mínimos usados nos validadores legados
+  // 1) Polyfills m�nimos usados nos validadores legados
   w.loadFromLS = w.loadFromLS || function(key){
     try{ return JSON.parse(localStorage.getItem(key) || '[]'); }catch(e){ return []; }
   };
@@ -35,14 +35,14 @@
 
   // 2) DOM aliases (idempotente): tenta mapear os teus ids atuais para os ids legacy esperados
   function alias(idNew, selExisting){
-    if(d.getElementById(idNew)) return; // já existe
+    if(d.getElementById(idNew)) return; // j� existe
     var el = d.querySelector(selExisting);
     if(el){ el.id = idNew; }
   }
   function ensureWinAliases(){
     alias('formWin', 'form#winForm, form[data-form="win"], form[action*="win"]');
     alias('win',      '#winInput, input[name="win"], input[name="hin"]');
-    // criar caixote de saída interpretativo se não existir
+    // criar caixote de sa�da interpretativo se n�o existir
     if(!d.getElementById('winOut')){
       var host = d.getElementById('winResult') || d.querySelector('#win-output .resultado');
       if(host){
@@ -63,13 +63,13 @@
     alias('formMotor',  'form#motorForm, form[data-form="motor"], form[action*="motor"]');
     alias('brand',      '#brandSelect, select[name="brand"], select[name="marca"]');
     alias('brandDynamic','#brandDynamic, #motorDynamic, #dyn, form[data-form="motor"] .dynamic');
-    // local de saída
+    // local de sa�da
     if(!d.getElementById('motorOut')){
       var host = d.getElementById('motorResult') || d.querySelector('#motor-output .resultado');
       if(host){ var box = d.createElement('div'); box.id='motorOut'; host.prepend(box); }
     }
     alias('motorPhoto', '#motorPhoto, input[type="file"][name="motorPhoto"]');
-    // Campos de pesquisa opcionais: cria se não existirem (inputs *não bloqueiam*)
+    // Campos de pesquisa opcionais: cria se n�o existirem (inputs *n�o bloqueiam*)
     function ensureInput(id){ if(!d.getElementById(id)){ var i=d.createElement('input'); i.id=id; i.type='text'; i.style.display='none'; (d.body||d.documentElement).appendChild(i); } }
     ['srch_model','srch_power','srch_disp','srch_year','srch_origin'].forEach(ensureInput);
   }
@@ -77,7 +77,7 @@
   function run(){ ensureWinAliases(); ensureMotorAliases(); }
   if(d.readyState!=='loading') run(); else d.addEventListener('DOMContentLoaded', run);
 
-  // 3) Extra: se o login da app usou outra key, aceitar NAV_SESSION também
+  // 3) Extra: se o login da app usou outra key, aceitar NAV_SESSION tamb�m
   try{
     var s = sessionStorage.getItem('IDMAR_SESSION') || sessionStorage.getItem('NAV_SESSION');
     if(s && s!=='ok'){ sessionStorage.setItem(NAV.STORAGE.SESSION, 'ok'); }
@@ -86,3 +86,4 @@
     }
   }catch(e){}
 })(window, document);
+

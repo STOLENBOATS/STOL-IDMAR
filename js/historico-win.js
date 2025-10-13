@@ -1,8 +1,8 @@
-/* IDMAR — histórico WIN (Fase 3)
-   - Ordena mais recente → mais antigo
-   - Filtros: estado (Todos/Válido/Inválido) + data (de/até) + pesquisa (WIN/justificação)
+﻿/* IDMAR � hist�rico WIN (Fase 3)
+   - Ordena mais recente ? mais antigo
+   - Filtros: estado (Todos/V�lido/Inv�lido) + data (de/at�) + pesquisa (WIN/justifica��o)
    - Export CSV (UTF-8 + BOM)
-   - Sem mexer no HTML/CSS original; injeta uma toolbar e uma listagem própria
+   - Sem mexer no HTML/CSS original; injeta uma toolbar e uma listagem pr�pria
 */
 (() => {
   const LS_KEYS = ['history_win','historyWin'];
@@ -13,7 +13,7 @@
   const parseTS = s => { const d = new Date(s); return isNaN(d) ? null : d; };
   const pad = n => String(n).padStart(2,'0');
   const fmt = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
-  const isTrue = v => v===true || v===1 || v==='1' || v==='true' || v==='VÁLIDO';
+  const isTrue = v => v===true || v===1 || v==='1' || v==='true' || v==='V�LIDO';
 
   function readStoreKey(){
     for (const k of LS_KEYS){ try{ if(localStorage.getItem(k)) return k; }catch{} }
@@ -33,7 +33,7 @@
     if (wrap) return wrap;
     wrap = el('section', 'hist-win-wrap');
     wrap.setAttribute('data-hist-win-wrap','');
-    // inserir após o header
+    // inserir ap�s o header
     const hdr = document.querySelector('.app-header') || document.body.firstChild;
     if (hdr && hdr.nextSibling) document.body.insertBefore(wrap, hdr.nextSibling);
     else document.body.insertBefore(wrap, document.body.firstChild);
@@ -45,12 +45,12 @@
     bar.style.display='flex'; bar.style.flexWrap='wrap'; bar.style.gap='0.5rem'; bar.style.alignItems='center';
 
     const status = el('select'); status.setAttribute('data-filter-status','');
-    ['Todos','Válido','Inválido'].forEach(v=>{ const o=el('option',null,v); o.value=v.toLowerCase(); status.appendChild(o); });
+    ['Todos','V�lido','Inv�lido'].forEach(v=>{ const o=el('option',null,v); o.value=v.toLowerCase(); status.appendChild(o); });
 
     const from = el('input'); from.type='date'; from.setAttribute('data-filter-from','');
     const to   = el('input'); to.type='date';   to.setAttribute('data-filter-to','');
 
-    const q = el('input'); q.type='search'; q.placeholder='Pesquisar WIN/justificação…'; q.setAttribute('data-filter-q','');
+    const q = el('input'); q.type='search'; q.placeholder='Pesquisar WIN/justifica��o�'; q.setAttribute('data-filter-q','');
 
     const btnA = el('button',null,'Aplicar'); btnA.addEventListener('click', onApply);
     const btnC = el('button',null,'Limpar');  btnC.addEventListener('click', ()=>{
@@ -73,7 +73,7 @@
     let out = rows.slice();
     // estado
     if (f.status && f.status!=='todos'){
-      const wantValid = f.status==='válido';
+      const wantValid = f.status==='v�lido';
       out = out.filter(r => isTrue(r.valid) === wantValid);
     }
     // datas (compara com YYYY-MM-DD limites 00:00 / 23:59)
@@ -124,7 +124,7 @@
       const t2 = el('small',null, fmt(dt));
       left.append(t1,t2);
 
-      const badge = el('strong',null, isTrue(r.valid) ? 'VÁLIDO' : 'INVÁLIDO');
+      const badge = el('strong',null, isTrue(r.valid) ? 'V�LIDO' : 'INV�LIDO');
       badge.setAttribute('data-valid', isTrue(r.valid)?'1':'0');
 
       const just = el('div'); just.style.marginTop='0.25rem';
@@ -144,7 +144,7 @@
     rows.forEach(r=>{
       const row = [
         r.id, r.ts, (r.win || r.hin || ''), isTrue(r.valid)?1:0,
-        (r.resultado || (isTrue(r.valid)?'VÁLIDO':'INVÁLIDO')),
+        (r.resultado || (isTrue(r.valid)?'V�LIDO':'INV�LIDO')),
         (r.justificacao || r.reason || '')
       ];
       lines.push(row.map(esc).join(','));
@@ -180,12 +180,13 @@
     function apply(){ refresh(); }
     function clear(){ refs.status.value='todos'; refs.from.value=''; refs.to.value=''; refs.q.value=''; refresh(); }
 
-    // primeira renderização
+    // primeira renderiza��o
     refresh();
 
-    // expõe API mínima (opcional)
+    // exp�e API m�nima (opcional)
     window.IDMAR_HIST_WIN = { refresh, export:()=>toCSV(current) };
   }
 
   if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 })();
+

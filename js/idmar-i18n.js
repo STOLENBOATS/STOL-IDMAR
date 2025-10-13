@@ -1,49 +1,49 @@
-/* IDMAR i18n mini • zero deps (fix) */
+﻿/* IDMAR i18n mini � zero deps (fix) */
 (() => {
   const DICT = {
     pt: {
-      app: { name: "IDMAR", subtitle: "Identificação Marítima — Cascos & Motores" },
-      nav: { validator:"Validador", hist_win:"Histórico WIN", hist_motor:"Histórico Motor", forense:"Forense", logout:"Sair" },
+      app: { name: "IDMAR", subtitle: "Identifica��o Mar�tima � Cascos & Motores" },
+      nav: { validator:"Validador", hist_win:"Hist�rico WIN", hist_motor:"Hist�rico Motor", forense:"Forense", logout:"Sair" },
       login: {
-        title:"Iniciar sessão", lead:"Aceda com as suas credenciais.",
+        title:"Iniciar sess�o", lead:"Aceda com as suas credenciais.",
         user_label:"Utilizador", user_ph:"nome.apelido",
-        pass_label:"Palavra-passe", pass_ph:"••••••••",
-        remember:"Lembrar sessão", signin:"Entrar",
+        pass_label:"Palavra-passe", pass_ph:"��������",
+        remember:"Lembrar sess�o", signin:"Entrar",
         forgot:"Esqueci-me da palavra-passe", lang:"Idioma"
       },
       forense: {
-        title:"Forense — Índice", load:"Carregar evidências",
+        title:"Forense � �ndice", load:"Carregar evid�ncias",
         context_win:"Contexto: WIN/HIN", context_motor:"Contexto: Motor",
-        attach:"Anexar ao histórico mais recente", workspace:"Workspace",
+        attach:"Anexar ao hist�rico mais recente", workspace:"Workspace",
         lightbox:"Abrir lightbox", compare:"Comparar",
-        annotate:"Anotar (rect)", clear:"Limpar anotações",
-        export_png:"Exportar PNG anotado", save_bundle:"Guardar “bundle” (JSON)",
-        notes:"Observações técnicas…", commit_attach:"Commit & Anexar"
+        annotate:"Anotar (rect)", clear:"Limpar anota��es",
+        export_png:"Exportar PNG anotado", save_bundle:"Guardar �bundle� (JSON)",
+        notes:"Observa��es t�cnicas�", commit_attach:"Commit & Anexar"
       },
       validator: {
         win:{ label:"WIN / HIN", validate:"Validar WIN",
-              invalid:(p)=>`WIN inválido: ${p.win}`, valid:"WIN válido" },
+              invalid:(p)=>`WIN inv�lido: ${p.win}`, valid:"WIN v�lido" },
         motor:{ validate:"Validar Motor" }
       }
     },
     en: {
-      app: { name: "IDMAR", subtitle: "Maritime Identification — Hulls & Engines" },
+      app: { name: "IDMAR", subtitle: "Maritime Identification � Hulls & Engines" },
       nav: { validator:"Validator", hist_win:"WIN History", hist_motor:"Engine History", forense:"Forensics", logout:"Sign out" },
       login: {
         title:"Sign in", lead:"Access with your credentials.",
         user_label:"User", user_ph:"name.surname",
-        pass_label:"Password", pass_ph:"••••••••",
+        pass_label:"Password", pass_ph:"��������",
         remember:"Remember me", signin:"Sign in",
         forgot:"Forgot your password?", lang:"Language"
       },
       forense: {
-        title:"Forensics — Index", load:"Load evidence",
+        title:"Forensics � Index", load:"Load evidence",
         context_win:"Context: WIN/HIN", context_motor:"Context: Engine",
         attach:"Attach to latest record", workspace:"Workspace",
         lightbox:"Open lightbox", compare:"Compare",
         annotate:"Annotate (rect)", clear:"Clear annotations",
         export_png:"Export annotated PNG", save_bundle:"Save bundle (JSON)",
-        notes:"Technical notes…", commit_attach:"Commit & Attach"
+        notes:"Technical notes�", commit_attach:"Commit & Attach"
       },
       validator: {
         win:{ label:"WIN / HIN", validate:"Validate WIN",
@@ -116,4 +116,5 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ()=>apply());
   else apply();
 })();
+
 

@@ -1,4 +1,4 @@
-// validador-motor.r3d.js — validação reforçada + histórico compatível (PT/EN)
+﻿// validador-motor.r3d.js � valida��o refor�ada + hist�rico compat�vel (PT/EN)
 (function (w, d) {
   console.info('[IDMAR] validador-motor ATIVO: r3d');
   w.IDMAR = w.IDMAR || {};
@@ -50,12 +50,12 @@
 
   function buildSummaryPTEN(s) {
     const parts = [];
-    if (s.family) parts.push(`Família/Family: ${s.family}`);
+    if (s.family) parts.push(`Fam�lia/Family: ${s.family}`);
     if (s.model) parts.push(`Modelo/Model: ${s.model}`);
-    if (s.hp) parts.push(`Potência/Power: ${s.hp} hp`);
+    if (s.hp) parts.push(`Pot�ncia/Power: ${s.hp} hp`);
     if (s.rigging) parts.push(`Comando/Rigging: ${s.rigging}`);
     if (s.shaft) parts.push(`Coluna/Shaft: ${s.shaft}`);
-    if (s.rotation) parts.push(`Rotação/Rotation: ${s.rotation}`);
+    if (s.rotation) parts.push(`Rota��o/Rotation: ${s.rotation}`);
     if (s.displacement) parts.push(`Cilindrada/Displacement: ${s.displacement} cc`);
     if (s.year) parts.push(`Ano/Year: ${s.year}`);
     if (s.origin) parts.push(`Origem/Origin: ${s.origin}`);
@@ -81,12 +81,12 @@
   }
 
   function badge(ok, errs) {
-    if (ok) return '<span class="badge good">Válido / Valid</span>';
+    if (ok) return '<span class="badge good">V�lido / Valid</span>';
     const lis = (errs || []).map(e => '<li>' + e + '</li>').join('');
-    return '<span class="badge bad">Inválido / Invalid</span><ul style="margin:.4rem 0 .2rem .9rem">' + lis + '</ul>';
+    return '<span class="badge bad">Inv�lido / Invalid</span><ul style="margin:.4rem 0 .2rem .9rem">' + lis + '</ul>';
   }
 
-  // --------- HISTÓRICO: compat total + resiliente a quota ----------
+  // --------- HIST�RICO: compat total + resiliente a quota ----------
   function cryptoRandomId() {
     try {
       const a = new Uint8Array(8); crypto.getRandomValues(a);
@@ -104,7 +104,7 @@
       const a2 = arr.map(r => ({ ...r, photoData: '' }));
       try { tryWrite(a2); return; }
       catch (e2) {
-        // última defesa: encurtar a lista até caber
+        // �ltima defesa: encurtar a lista at� caber
         let a3 = a2.slice();
         while (a3.length > 1) {
           try { tryWrite(a3); break; }
@@ -136,7 +136,7 @@
 
     if (!s.brand) { out.innerHTML = badge(false, ["Selecione a marca / Select the brand"]); return; }
 
-    // 1) validação por catálogo (se engine_validation estiver carregado)
+    // 1) valida��o por cat�logo (se engine_validation estiver carregado)
     let ok = true, errs = [];
     try {
       if (w.IDMAR_VALIDATION && typeof w.IDMAR_VALIDATION.validateSelection === 'function') {
@@ -146,36 +146,36 @@
         );
         ok = !!res.ok; errs = res.errors || [];
       }
-    } catch (e) { ok = false; errs.push("Erro de validação / Validation error"); }
+    } catch (e) { ok = false; errs.push("Erro de valida��o / Validation error"); }
 
-    // 2) validação EXTRA (texto livre vs envelope da marca/família)
+    // 2) valida��o EXTRA (texto livre vs envelope da marca/fam�lia)
     try {
       const cat = await loadCatalog();
       const env = gatherEnv(cat, s.brand, s.family);
       if (s.model) {
         const found = env.models.includes(String(s.model).toLowerCase());
-        if (!found) { ok = false; errs.push("Modelo (texto) não corresponde a códigos conhecidos da marca/família / Free-text model not found for brand/family"); }
+        if (!found) { ok = false; errs.push("Modelo (texto) n�o corresponde a c�digos conhecidos da marca/fam�lia / Free-text model not found for brand/family"); }
       }
       if (s.hp) {
         const hpNum = String(s.hp).trim();
         if (env.hp.length && !env.hp.includes(hpNum)) {
-          ok = false; errs.push("Potência (texto) fora das opções para a marca/família / Free-text power not in catalog for brand/family");
+          ok = false; errs.push("Pot�ncia (texto) fora das op��es para a marca/fam�lia / Free-text power not in catalog for brand/family");
         }
       }
       if (s.year) {
         const yr = String(s.year).trim();
         if (env.years.length && !env.years.includes(yr)) {
-          ok = false; errs.push("Ano (texto) fora do intervalo da família / Free-text year outside family range");
+          ok = false; errs.push("Ano (texto) fora do intervalo da fam�lia / Free-text year outside family range");
         }
       }
       if (s.displacement) {
         if (env.displacement.length && !env.displacement.includes(String(s.displacement))) {
-          ok = false; errs.push("Cilindrada (texto) não coincide com registos / Free-text displacement not in records");
+          ok = false; errs.push("Cilindrada (texto) n�o coincide com registos / Free-text displacement not in records");
         }
       }
-    } catch (e) { /* catálogo indisponível → segue só com o que houver */ }
+    } catch (e) { /* cat�logo indispon�vel ? segue s� com o que houver */ }
 
-    // Saída & Histórico
+    // Sa�da & Hist�rico
     const summary = buildSummaryPTEN(s);
     out.innerHTML = badge(ok, errs) + ' ' + summary;
 
@@ -193,16 +193,16 @@
       date: nowISO(),
       brand: s.brand,
       model: s.model || (s.family ? `${s.family}` : null),
-      sn: summary,                               // compatível com a coluna "S/N" do histórico
+      sn: summary,                               // compat�vel com a coluna "S/N" do hist�rico
       valid: !!ok,
-      reason: ok ? "Combinação compatível / Combination valid" : (errs || []).join(' ; '),
+      reason: ok ? "Combina��o compat�vel / Combination valid" : (errs || []).join(' ; '),
       photoName, photoData,
-      // campos adicionais úteis para filtros futuros
+      // campos adicionais �teis para filtros futuros
       estado: ok ? 'ok' : 'erro',
-      estadoLabel: ok ? 'Válido' : 'Inválido'
+      estadoLabel: ok ? 'V�lido' : 'Inv�lido'
     };
 
-    // grava em TODAS as chaves que alguma página possa ler
+    // grava em TODAS as chaves que alguma p�gina possa ler
     recordHistoryMotorCompat(rec);
   }
 
@@ -212,3 +212,4 @@
   }
   if (document.readyState === 'loading') d.addEventListener('DOMContentLoaded', wire); else wire();
 })(window, document);
+

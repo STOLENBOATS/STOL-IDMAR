@@ -1,13 +1,13 @@
-// [IDMAR] header override v4 — branding + ribbons + timing-safe
+﻿// [IDMAR] header override v4 � branding + ribbons + timing-safe
 (function (w, d) {
   console.log("[IDMAR] override v4 carregado");
   var APP_NAME = w.IDMAR_APP_NAME || "IDMAR";
-  var APP_SUB  = w.IDMAR_APP_SUB  || "Identificação Marítima — Cascos & Motores";
+  var APP_SUB  = w.IDMAR_APP_SUB  || "Identifica��o Mar�tima � Cascos & Motores";
   var HIDE_NAV = !!w.IDMAR_HIDE_NAV;
   var MAP = [
     { href: "validador.html",       label: "Validador",        id: "validador" },
-    { href: "historico_win.html",   label: "Histórico WIN",    id: "hist_win" },
-    { href: "historico_motor.html", label: "Histórico Motor",  id: "hist_motor" },
+    { href: "historico_win.html",   label: "Hist�rico WIN",    id: "hist_win" },
+    { href: "historico_motor.html", label: "Hist�rico Motor",  id: "hist_motor" },
     { href: "forense.html",         label: "Forense",          id: "forense" },
     { href: "login.html",           label: "Sair",             id: "logout" }
   ];
@@ -38,3 +38,4 @@
   }
   if(d.readyState==='loading') d.addEventListener('DOMContentLoaded', arm); else arm();
 })(window, document);
+

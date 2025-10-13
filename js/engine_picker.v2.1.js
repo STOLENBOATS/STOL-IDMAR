@@ -1,4 +1,4 @@
-// engine_picker.v2.1.js — tolera schema v1 e v2 e loga diagnóstico
+﻿// engine_picker.v2.1.js � tolera schema v1 e v2 e loga diagn�stico
 (function(){
   const $ = s => document.querySelector(s);
   const el = id => document.getElementById(id);
@@ -6,7 +6,7 @@
 
   async function loadCatalog(url){
     const r = await fetch(url);
-    if(!r.ok) throw new Error('fetch '+url+' → '+r.status);
+    if(!r.ok) throw new Error('fetch '+url+' ? '+r.status);
     return r.json();
   }
   const uniq = a => Array.from(new Set(a));
@@ -18,7 +18,7 @@
     wrap.append(lab, sel);
     return {wrap, sel};
   }
-  function fill(sel, arr, ph='— selecione —'){
+  function fill(sel, arr, ph='� selecione �'){
     sel.innerHTML='';
     const opt0 = document.createElement('option'); opt0.value=''; opt0.textContent=ph; sel.appendChild(opt0);
     (arr||[]).forEach(v=>{ const o=document.createElement('option'); o.value=String(v); o.textContent=String(v); sel.appendChild(o); });
@@ -31,11 +31,11 @@
 
     container.innerHTML='';
     const boxes = {
-      fam: mount('Família / Family','eng_family'),
-      hp:  mount('Potência (hp)','eng_hp'),
+      fam: mount('Fam�lia / Family','eng_family'),
+      hp:  mount('Pot�ncia (hp)','eng_hp'),
       rig: mount('Comando / Rigging','eng_rig'),
       sh:  mount('Altura de coluna / Shaft','eng_shaft'),
-      rot: mount('Rotação','eng_rot'),
+      rot: mount('Rota��o','eng_rot'),
       col: mount('Cor / Color','eng_color'),
       gc:  mount('Gearcase','eng_gear'),
       yr:  mount('Ano / Year','eng_year'),
@@ -92,7 +92,7 @@
     boxes.fam.sel.addEventListener('change', refresh);
     refresh();
 
-    // Se mudar a marca, refaz famílias
+    // Se mudar a marca, refaz fam�lias
     el('brand')?.addEventListener('change', ()=>{
       const fams2 = Object.keys(catalog.brands?.[el('brand').value]?.families || {});
       fill(boxes.fam.sel, fams2);
@@ -107,13 +107,13 @@
     C('schema v1 fallback; brand=', brand, 'keys=', Object.keys(b||{}));
     container.innerHTML='';
     const boxes = {
-      hp:  mount('Potência (hp)','eng_hp'),
+      hp:  mount('Pot�ncia (hp)','eng_hp'),
       rig: mount('Comando / Rigging','eng_rig'),
       sh:  mount('Altura de coluna / Shaft','eng_shaft'),
-      rot: mount('Rotação','eng_rot'),
+      rot: mount('Rota��o','eng_rot'),
     };
     Object.values(boxes).forEach(bx=>container.appendChild(bx.wrap));
-    const hp = (b?.power_hp_range and isinstance(b['power_hp_range'], list)) and [f"{b['power_hp_range'][0]}–{b['power_hp_range'][1]}"] or [];
+    const hp = (b?.power_hp_range and isinstance(b['power_hp_range'], list)) and [f"{b['power_hp_range'][0]}�{b['power_hp_range'][1]}"] or [];
     const rig = b.get('rigging', []);
     const sh  = b.get('shaft_options', []);
     const rot = ['STD','CCW'];
@@ -128,10 +128,10 @@
     const url = script?.dataset?.catalog || 'data/engines_catalog.json';
     let cat;
     try { cat = await loadCatalog(url); }
-    catch(e){ console.error('[engine_picker] erro a carregar catálogo:', e); return; }
+    catch(e){ console.error('[engine_picker] erro a carregar cat�logo:', e); return; }
 
     const target = document.getElementById('brandDynamic');
-    if(!target){ console.warn('[engine_picker] #brandDynamic não encontrado'); return; }
+    if(!target){ console.warn('[engine_picker] #brandDynamic n�o encontrado'); return; }
 
     const v = Number(cat.schema_version||1);
     C('catalog schema_version =', v, 'url=', url);

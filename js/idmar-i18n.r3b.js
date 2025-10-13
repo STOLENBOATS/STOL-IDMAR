@@ -1,24 +1,24 @@
-
-// IDMAR i18n r3b — non-invasive i18n with MutationObserver for common dynamic labels.
+﻿
+// IDMAR i18n r3b � non-invasive i18n with MutationObserver for common dynamic labels.
 (function(w,d){
   const KEY = 'IDMAR_LANG';
   const i18n = {
     pt: {
       // Static
-      'login.title': 'Iniciar sessão',
+      'login.title': 'Iniciar sess�o',
       'login.username': 'Utilizador',
       'login.password': 'Palavra-passe',
       'login.submit': 'Entrar',
 
       'nav.validator': 'Validador',
-      'nav.win': 'Histórico WIN',
-      'nav.motor': 'Histórico Motor',
+      'nav.win': 'Hist�rico WIN',
+      'nav.motor': 'Hist�rico Motor',
       'nav.forense': 'Forense',
       'nav.exit': 'Sair',
 
       'page.validator': 'Validador',
-      'page.winHistory': 'Histórico — WIN',
-      'page.motorHistory': 'Histórico — Motores',
+      'page.winHistory': 'Hist�rico � WIN',
+      'page.motorHistory': 'Hist�rico � Motores',
 
       'win.validator': 'Validador WIN',
       'win.input': 'WIN / HIN',
@@ -32,16 +32,16 @@
       'hist.search.win': 'Pesquisar (WIN / texto)',
       'hist.search.sn': 'Pesquisar (S/N / marca)',
       'hist.from': 'De',
-      'hist.to': 'Até',
+      'hist.to': 'At�',
       'hist.export': 'Exportar CSV',
-      'hist.clear.win': 'Limpar histórico (WIN)',
-      'hist.clear.motor': 'Limpar histórico (Motor)',
+      'hist.clear.win': 'Limpar hist�rico (WIN)',
+      'hist.clear.motor': 'Limpar hist�rico (Motor)',
 
       // table heads
       'th.when': 'Quando',
       'th.win': 'WIN/HIN',
       'th.status': 'Estado',
-      'th.reason': 'Justificação',
+      'th.reason': 'Justifica��o',
       'th.photo': 'Foto (nome)',
       'th.thumb': 'Miniatura',
       'th.sn': 'S/N',
@@ -49,9 +49,9 @@
       'th.model': 'Modelo',
 
       // dynamics (for observer)
-      'dyn.valid': 'Válido',
-      'dyn.invalid': 'Inválido',
-      'dyn.structureOk': 'Estrutura válida.',
+      'dyn.valid': 'V�lido',
+      'dyn.invalid': 'Inv�lido',
+      'dyn.structureOk': 'Estrutura v�lida.',
       'dyn.ok': 'OK'
     },
     en: {
@@ -67,8 +67,8 @@
       'nav.exit': 'Sign out',
 
       'page.validator': 'Validator',
-      'page.winHistory': 'History — WIN',
-      'page.motorHistory': 'History — Engines',
+      'page.winHistory': 'History � WIN',
+      'page.motorHistory': 'History � Engines',
 
       'win.validator': 'WIN Validator',
       'win.input': 'WIN / HIN',
@@ -103,9 +103,9 @@
       'dyn.ok': 'OK'
     },
     es: {
-      'login.title': 'Iniciar sesión',
+      'login.title': 'Iniciar sesi�n',
       'login.username': 'Usuario',
-      'login.password': 'Contraseña',
+      'login.password': 'Contrase�a',
       'login.submit': 'Entrar',
       'nav.validator': 'Validador',
       'nav.win': 'Historial WIN',
@@ -113,8 +113,8 @@
       'nav.forense': 'Forense',
       'nav.exit': 'Salir',
       'page.validator': 'Validador',
-      'page.winHistory': 'Historial — WIN',
-      'page.motorHistory': 'Historial — Motores',
+      'page.winHistory': 'Historial � WIN',
+      'page.motorHistory': 'Historial � Motores',
       'win.validator': 'Validador WIN',
       'win.input': 'WIN / HIN',
       'win.placeholder': 'Ej.: PT-ABC12345D404',
@@ -129,7 +129,7 @@
       'hist.export': 'Exportar CSV',
       'hist.clear.win': 'Limpiar historial (WIN)',
       'hist.clear.motor': 'Limpiar historial (Motor)',
-      'th.when': 'Cuándo',
+      'th.when': 'Cu�ndo',
       'th.win': 'WIN/HIN',
       'th.status': 'Estado',
       'th.reason': 'Motivo',
@@ -138,9 +138,9 @@
       'th.sn': 'S/N',
       'th.brand': 'Marca',
       'th.model': 'Modelo',
-      'dyn.valid': 'Válido',
-      'dyn.invalid': 'Inválido',
-      'dyn.structureOk': 'Estructura válida.',
+      'dyn.valid': 'V�lido',
+      'dyn.invalid': 'Inv�lido',
+      'dyn.structureOk': 'Estructura v�lida.',
       'dyn.ok': 'OK'
     },
     de: {
@@ -154,34 +154,34 @@
       'nav.forense': 'Forensik',
       'nav.exit': 'Abmelden',
       'page.validator': 'Validator',
-      'page.winHistory': 'Verlauf — WIN',
-      'page.motorHistory': 'Verlauf — Motoren',
+      'page.winHistory': 'Verlauf � WIN',
+      'page.motorHistory': 'Verlauf � Motoren',
       'win.validator': 'WIN-Validator',
       'win.input': 'WIN / HIN',
       'win.placeholder': 'z.B.: PT-ABC12345D404',
-      'win.button': 'WIN prüfen',
+      'win.button': 'WIN pr�fen',
       'motor.validator': 'Motor-Validator',
       'motor.brand': 'Marke',
-      'motor.button': 'Motor prüfen',
+      'motor.button': 'Motor pr�fen',
       'hist.search.win': 'Suchen (WIN / Text)',
       'hist.search.sn': 'Suchen (S/N / Marke)',
       'hist.from': 'Von',
       'hist.to': 'Bis',
       'hist.export': 'CSV exportieren',
-      'hist.clear.win': 'Verlauf löschen (WIN)',
-      'hist.clear.motor': 'Verlauf löschen (Motor)',
+      'hist.clear.win': 'Verlauf l�schen (WIN)',
+      'hist.clear.motor': 'Verlauf l�schen (Motor)',
       'th.when': 'Wann',
       'th.win': 'WIN/HIN',
       'th.status': 'Status',
-      'th.reason': 'Begründung',
+      'th.reason': 'Begr�ndung',
       'th.photo': 'Foto (Name)',
       'th.thumb': 'Miniatur',
       'th.sn': 'S/N',
       'th.brand': 'Marke',
       'th.model': 'Modell',
-      'dyn.valid': 'Gültig',
-      'dyn.invalid': 'Ungültig',
-      'dyn.structureOk': 'Struktur gültig.',
+      'dyn.valid': 'G�ltig',
+      'dyn.invalid': 'Ung�ltig',
+      'dyn.structureOk': 'Struktur g�ltig.',
       'dyn.ok': 'OK'
     }
   };
@@ -213,8 +213,8 @@
     // Translate header nav labels if they are bare anchors (best-effort)
     const map = {
       'Validador':'nav.validator',
-      'Histórico WIN':'nav.win',
-      'Histórico Motor':'nav.motor',
+      'Hist�rico WIN':'nav.win',
+      'Hist�rico Motor':'nav.motor',
       'Forense':'nav.forense',
       'Sair':'nav.exit'
     };
@@ -226,9 +226,9 @@
 
   // Dynamic phrases replacement (non-invasive)
   const dynPT = {
-    'Válido':'dyn.valid',
-    'Inválido':'dyn.invalid',
-    'Estrutura válida.':'dyn.structureOk',
+    'V�lido':'dyn.valid',
+    'Inv�lido':'dyn.invalid',
+    'Estrutura v�lida.':'dyn.structureOk',
     'OK':'dyn.ok'
   };
   function translateNode(node){
@@ -283,3 +283,4 @@
   // expose
   w.IDMAR_i18n = { t, getLang };
 })(window, document);
+

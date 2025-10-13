@@ -1,4 +1,4 @@
-/* IDMAR Header — Forense • 2025-09-18 */
+﻿/* IDMAR Header � Forense � 2025-09-18 */
 (() => {
   const ACTIVE = 'forense.html';
   injectHeader(ACTIVE);
@@ -9,9 +9,9 @@
     const header = h('header','app-header'); header.setAttribute('data-idmar','header-only'); styleHeader(header);
 
     const left = h('div'); styleFlex(left,'.75rem');
-    const logo = h('img'); logo.src='img/logo-pm.png'; logo.alt='Polícia Marítima'; logo.style.height='32px';
+    const logo = h('img'); logo.src='img/logo-pm.png'; logo.alt='Pol�cia Mar�tima'; logo.style.height='32px';
     const titles = h('div'); const app=h('div',null,'IDMAR'); app.style.fontWeight='800'; app.style.fontSize='1.6rem'; app.style.lineHeight='1';
-    const sub=h('div',null,'Identificação Marítima — Cascos & Motores'); sub.style.opacity='.8';
+    const sub=h('div',null,'Identifica��o Mar�tima � Cascos & Motores'); sub.style.opacity='.8';
     titles.append(app,sub); left.append(logo,titles);
 
     const right = h('div'); styleFlex(right,'1rem');
@@ -31,8 +31,8 @@
     const nav=h('nav','app-nav'); styleFlex(nav,'1rem');
     [
       ['validador.html','Validador'],
-      ['historico_win.html','Histórico WIN'],
-      ['historico_motor.html','Histórico Motor'],
+      ['historico_win.html','Hist�rico WIN'],
+      ['historico_motor.html','Hist�rico Motor'],
       ['forense.html','Forense'],
       ['#logout','Sair']
     ].forEach(([href,txt])=>{

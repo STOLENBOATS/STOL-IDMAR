@@ -1,5 +1,5 @@
-/* IDMAR compat — Motor injector r0 (não destrutivo)
-   Escuta o submit/click do formulário do Motor e grava no histórico
+﻿/* IDMAR compat � Motor injector r0 (n�o destrutivo)
+   Escuta o submit/click do formul�rio do Motor e grava no hist�rico
    (history_motor + historyMotor), sem alterar o teu validador.
 */
 (function(){
@@ -34,8 +34,8 @@
   function parseVerdict(text){
     if (!text) return {valid:null, msg:''};
     const t=text.toLowerCase();
-    const valid = t.includes('válido') || t.includes(' valid');
-    const invalid = t.includes('inválido') || t.includes(' invalid');
+    const valid = t.includes('v�lido') || t.includes(' valid');
+    const invalid = t.includes('inv�lido') || t.includes(' invalid');
     return { valid: valid && !invalid, msg: text };
   }
 
@@ -54,7 +54,7 @@
       modelo: model || '',
       valid: verdict.valid===true,
       estado: verdict.valid===true ? 'ok' : 'erro',
-      estadoLabel: verdict.valid===true ? 'Válido' : 'Inválido',
+      estadoLabel: verdict.valid===true ? 'V�lido' : 'Inv�lido',
       justificacao: verdict.msg || '',
       foto: '',
       meta: { module:'MOTOR' }
@@ -87,3 +87,4 @@
 
   if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', hook); else hook();
 })();
+
