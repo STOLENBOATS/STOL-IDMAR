@@ -1,5 +1,4 @@
-ï»¿
-/* IDMAR ï¿½ Histï¿½rico Motor r1.1 (filtros + CSV + compat keys + foto from meta.forense) */
+/* IDMAR — Histórico Motor r1.1 (filtros + CSV + compat keys + foto from meta.forense) */
 (() => {
   function readKey(k){ try{ const raw=localStorage.getItem(k); if(!raw) return []; const arr=JSON.parse(raw); return Array.isArray(arr)?arr:[]; }catch{return []} }
   function deriveFoto(r){
@@ -16,7 +15,7 @@
     o.marca = o.marca || x.brand || '';
     o.modelo = o.modelo || x.model || '';
     o.estado = o.estado || (o.valid===true?'ok':(o.valid===false?'erro':'')) || '';
-    o.estadoLabel = o.estadoLabel || (o.valid ? 'Vï¿½lido' : 'Invï¿½lido');
+    o.estadoLabel = o.estadoLabel || (o.valid ? 'Válido' : 'Inválido');
     o.justificacao = o.justificacao || x.reason || '';
     o.meta = o.meta || x.meta || {};
     o.foto = deriveFoto(o);
