@@ -1,0 +1,97 @@
+﻿<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+  <!-- CSS base -->
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/theme-soft-light.v1.css">
+  <link rel="stylesheet" href="css/nav-ribbon.v5.css"><!-- os botÃµes novos -->
+
+  <!-- VersÃ£o + branding -->
+  <script>window.IDMAR_VERSION="Vs 1.3";</script>
+  <script defer src="js/idmar-config.v4.js"></script>
+
+  <!-- Header/i18n (core) -->
+  <script defer src="js/idmar-i18n.js"></script>
+  <script defer src="js/idmar-header-only.all.v4.js"></script>
+
+  <!-- Overrides -->
+  <script defer src="js/header-override.v4.js"></script>
+  <script defer src="js/i18n-boot.js"></script>
+  <script defer src="js/idmar-version.v4.js"></script>
+  
+
+  <!-- Bilingue PT/EN para a pÃ¡gina Forense -->
+  <script defer src="js/forense-bilingual.v2.js"></script>
+
+</head>
+
+<body>
+  <!-- header Ã© injetado por JS -->
+
+  <main class="container">
+    <h1>Forense â€” Ãndice</h1>
+
+    <section class="panel">
+      <h2>Carregar evidÃªncias</h2>
+      <div class="row" style="display:flex;gap:.5rem;flex-wrap:wrap">
+        <input id="evPhotos" type="file" accept="image/*" multiple />
+        <select id="evContext">
+          <option value="win">Contexto: WIN/HIN</option>
+          <option value="motor">Contexto: Motor</option>
+        </select>
+        <button id="evAttach">Anexar ao histÃ³rico mais recente</button>
+      </div>
+      <div id="evMeta" class="meta" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:.5rem;margin-top:.5rem"></div>
+      <div id="evThumbs" class="thumbs" style="display:flex;gap:.5rem;flex-wrap:wrap"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Workspace</h2>
+      <div class="row" style="display:flex;gap:.5rem;flex-wrap:wrap">
+        <button id="lbOpen">Abrir lightbox</button>
+        <label>Comparar <input id="cmpRange" type="range" min="0" max="100" value="50"/></label>
+        <button id="addRect">Anotar (rect)</button>
+        <button id="clearRects">Limpar anotaÃ§Ãµes</button>
+        <button id="exportPNG">Exportar PNG anotado</button>
+        <button id="saveBundle">Guardar â€œbundleâ€ (JSON)</button>
+        <input id="loadBundle" type="file" accept=".json" />
+      </div>
+      <div class="canvas-wrap" style="position:relative;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:#f1f5f9;height:540px">
+        <canvas id="evCanvas" style="display:block;width:100%;height:100%"></canvas>
+      </div>
+      <small>Dica: a comparaÃ§Ã£o usa a 1Âª e a 2Âª foto; as anotaÃ§Ãµes servem para redacÃ§Ã£o/realce.</small>
+    </section>
+
+    <section class="panel">
+      <h2>Checklist forense</h2>
+      <div class="checkboxes" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.35rem">
+        <label><input type="checkbox" id="chk_rebites"> Rebites inconsistentes/aÃ±adidos</label>
+        <label><input type="checkbox" id="chk_solda"> CordÃµes de solda anÃ³malos</label>
+        <label><input type="checkbox" id="chk_placa"> Placa remarcada/substituÃ­da</label>
+        <label><input type="checkbox" id="chk_tinta"> Camadas de tinta/abrasÃµes</label>
+        <label><input type="checkbox" id="chk_etq"> Etiqueta adulterada/ausente (motor)</label>
+        <label><input type="checkbox" id="chk_core"> Core plug danificado/removido (motor)</label>
+        <label><input type="checkbox" id="chk_boss"> Solda/corrosÃ£o anÃ³mala no boss (motor)</label>
+        <label><input type="checkbox" id="chk_bloco"> RemarcaÃ§Ã£o no bloco (motor)</label>
+      </div>
+      <label>Notas</label>
+      <textarea id="notes" rows="4" placeholder="ObservaÃ§Ãµes tÃ©cnicasâ€¦" style="width:100%;border:1px solid var(--border);border-radius:10px;padding:.5rem .6rem;background:#fff"></textarea>
+    </section>
+  </main>
+
+  <footer class="footer" style="border-top:1px solid var(--border);padding:1rem;opacity:.85;background:var(--bg-elev)">IDMAR â€” IdentificaÃ§Ã£o MarÃ­tima</footer>
+
+  <div class="lightbox" id="lightbox" style="position:fixed;inset:0;background:rgba(15,23,42,.85);display:none;align-items:center;justify-content:center;z-index:50">
+    <img id="lbImg" alt="" style="max-width:90vw;max-height:90vh;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.5)"/>
+  </div>
+
+  <!-- (limpo) removido idmar-layout.r3c.js -->
+  <script src="js/forense-r1.js?v=r1"></script>
+<script defer src="js/forense-i18n.v2.js"></script>
+</body>
+</html>
+
+

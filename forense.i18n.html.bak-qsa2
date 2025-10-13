@@ -1,0 +1,72 @@
+﻿
+<!DOCTYPE html>
+
+<html lang="pt">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>IDMAR â€” Forense</title>
+<link href="img/logo-pm.png" rel="icon"/>
+<script defer="" src="js/idmar-header-only.all.js?v=1"></script>
+</head>
+<body>
+<header id="fallback-topbar"></header>
+<main class="container">
+<h1 data-i18n="forense.title">Forense â€” Ãndice</h1>
+<section class="panel">
+<h2>Carregar evidÃªncias</h2>
+<div class="row" style="display:flex;gap:.5rem;flex-wrap:wrap">
+<input accept="image/*" id="evPhotos" multiple="" type="file"/>
+<select id="evContext">
+<option data-i18n="forense.context_win" value="win">Contexto: WIN/HIN</option>
+<option data-i18n="forense.context_motor" value="motor">Contexto: Motor</option>
+</select>
+<button id="evAttach">Anexar ao histÃ³rico mais recente</button>
+</div>
+<div class="meta" id="evMeta" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:.5rem;margin-top:.5rem"></div>
+<div class="thumbs" id="evThumbs" style="display:flex;gap:.5rem;flex-wrap:wrap"></div>
+</section>
+<section class="panel">
+<h2>Workspace</h2>
+<div class="row" style="display:flex;gap:.5rem;flex-wrap:wrap">
+<button data-i18n="forense.lightbox" id="lbOpen">Abrir lightbox</button>
+<label>Comparar <input id="cmpRange" max="100" min="0" type="range" value="50"/></label>
+<button data-i18n="forense.annotate" id="addRect">Anotar (rect)</button>
+<button data-i18n="forense.clear" id="clearRects">Limpar anotaÃ§Ãµes</button>
+<button data-i18n="forense.export_png" id="exportPNG">Exportar PNG anotado</button>
+<button data-i18n="forense.save_bundle" id="saveBundle">Guardar â€œbundleâ€ (JSON)</button>
+<input accept=".json" id="loadBundle" type="file"/>
+</div>
+<div class="canvas-wrap" style="position:relative;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:#f1f5f9;height:540px">
+<canvas id="evCanvas" style="display:block;width:100%;height:100%"></canvas>
+</div>
+<small>Dica: a comparaÃ§Ã£o usa a 1Âª e a 2Âª foto; as anotaÃ§Ãµes servem para redacÃ§Ã£o/realce.</small>
+</section>
+<section class="panel">
+<h2>Checklist forense</h2>
+<div class="checkboxes" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.35rem">
+<label><input id="chk_rebites" type="checkbox"/> Rebites inconsistentes/aÃ±adidos</label>
+<label><input id="chk_solda" type="checkbox"/> CordÃµes de solda anÃ³malos</label>
+<label><input id="chk_placa" type="checkbox"/> Placa remarcada/substituÃ­da</label>
+<label><input id="chk_tinta" type="checkbox"/> Camadas de tinta/abrasÃµes</label>
+<label><input id="chk_etq" type="checkbox"/> Etiqueta adulterada/ausente (motor)</label>
+<label><input id="chk_core" type="checkbox"/> Core plug danificado/removido (motor)</label>
+<label><input id="chk_boss" type="checkbox"/> Solda/corrosÃ£o anÃ³mala no boss (motor)</label>
+<label><input id="chk_bloco" type="checkbox"/> RemarcaÃ§Ã£o no bloco (motor)</label>
+</div>
+<label>Notas</label>
+<textarea data-i18n-placeholder="forense.notes" id="notes" placeholder="ObservaÃ§Ãµes tÃ©cnicasâ€¦" rows="4" style="width:100%;border:1px solid var(--border);border-radius:10px;padding:.5rem .6rem;background:#fff"></textarea>
+</section>
+</main>
+<footer class="footer" style="border-top:1px solid var(--border);padding:1rem;opacity:.85;background:var(--bg-elev)">IDMAR â€” v2.2.7-baseline+merge-r3.3</footer>
+<div class="lightbox" id="lightbox" style="position:fixed;inset:0;background:rgba(15,23,42,.85);display:none;align-items:center;justify-content:center;z-index:50">
+<img alt="" id="lbImg" style="max-width:90vw;max-height:90vh;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.5)"/>
+</div>
+<!-- Layout com header unificado -->
+<script src="js/idmar-layout.r3c.js?v=r3c"></script>
+<!-- MÃ³dulo forense (jÃ¡ existente no teu projeto) -->
+<script src="js/forense.r3b.js?v=r3b"></script>
+</body>
+</html>
+
+
