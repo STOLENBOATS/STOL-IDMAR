@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "admin": {
-    "notes": "CatÃ¡logo v1 enriquecido; pode ser extendido via localStorage[IDMAR_ENGINE_OVERRIDES]."
+    "notes": "Catálogo v1 enriquecido; pode ser extendido via localStorage[IDMAR_ENGINE_OVERRIDES]."
   },
   "brands": {
     "Yamaha": {

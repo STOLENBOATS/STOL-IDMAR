@@ -1,4 +1,4 @@
-{
+ï»¿{
   "schema_version": 2,
   "brands": {
     "Yamaha": {
@@ -24,7 +24,7 @@
           "LF{hp}",
           "XTO{hp}"
         ],
-        "notes": "Shaft: S(15\"), L(20\"), X(25\"), U(30\"), XX(35\"). RotaÃ¯Â¿Â½Ã¯Â¿Â½o: STD / CCW (contra-rotaÃ¯Â¿Â½Ã¯Â¿Â½o)."
+        "notes": "Shaft: S(15\"), L(20\"), X(25\"), U(30\"), XX(35\"). Rotaï¿½ï¿½o: STD / CCW (contra-rotaï¿½ï¿½o)."
       },
       "families": {
         "XTO Offshore V8": {
@@ -251,7 +251,7 @@
           "DF{hp}",
           "DF{hp}A"
         ],
-        "notes": "Drive-by-Wire (A) em vÃ¯Â¿Â½rias potÃ¯Â¿Â½ncias; shafts L/X/UL conforme modelo."
+        "notes": "Drive-by-Wire (A) em vï¿½rias potï¿½ncias; shafts L/X/UL conforme modelo."
       },
       "families": {
         "DF-A Series": {
@@ -339,7 +339,7 @@
         "series_digits": [
           7
         ],
-        "notes": "Shaft: S/L/X. Rigging mecÃ¯Â¿Â½nico e DBW em gamas recentes."
+        "notes": "Shaft: S/L/X. Rigging mecï¿½nico e DBW em gamas recentes."
       },
       "families": {
         "BF250/225/200": {
@@ -442,7 +442,7 @@
           "FourStroke {hp}",
           "SeaPro {hp}"
         ],
-        "notes": "FamÃ¯Â¿Â½lias Verado/SeaPro/FourStroke; shafts L/X/XX; STD/CCW; DBW/MecÃ¯Â¿Â½nico conforme sÃ¯Â¿Â½rie."
+        "notes": "Famï¿½lias Verado/SeaPro/FourStroke; shafts L/X/XX; STD/CCW; DBW/Mecï¿½nico conforme sï¿½rie."
       },
       "families": {
         "Verado": {
@@ -559,7 +559,7 @@
           "transom_no",
           "rotation"
         ],
-        "notes": "Registo usa nÃ¯Â¿Â½ motor, nÃ¯Â¿Â½ drive e nÃ¯Â¿Â½ transom. Gasolina 4.5L/6.2L/8.2L; Diesel TDI."
+        "notes": "Registo usa nï¿½ motor, nï¿½ drive e nï¿½ transom. Gasolina 4.5L/6.2L/8.2L; Diesel TDI."
       },
       "families": {
         "Gasoline V6/V8": {
@@ -626,7 +626,7 @@
           "drive_no",
           "transom_no"
         ],
-        "notes": "SÃ¯Â¿Â½ries gasolina V6/V8 (Aquamatic), diesel D1Ã¯Â¿Â½D6, IPS. IdentificaÃ¯Â¿Â½Ã¯Â¿Â½o por nÃ¯Â¿Â½ motor/drive/transom."
+        "notes": "Sï¿½ries gasolina V6/V8 (Aquamatic), diesel D1ï¿½D6, IPS. Identificaï¿½ï¿½o por nï¿½ motor/drive/transom."
       },
       "families": {
         "Aquamatic Gasoline V6/V8": {
@@ -742,7 +742,7 @@
           "MFS {hp}",
           "BFT {hp}"
         ],
-        "notes": "MFS (prÃ¯Â¿Â½prios); BFT (co-branded Honda)."
+        "notes": "MFS (prï¿½prios); BFT (co-branded Honda)."
       },
       "families": {
         "MFS": {
@@ -799,7 +799,7 @@
           "rotation",
           "series"
         ],
-        "notes": "OMC legado; BRP E-TEC/G2 descontinuado. IdentificaÃ¯Â¿Â½Ã¯Â¿Â½o por model & serial; verificar etiqueta."
+        "notes": "OMC legado; BRP E-TEC/G2 descontinuado. Identificaï¿½ï¿½o por model & serial; verificar etiqueta."
       },
       "families": {
         "E-TEC G2": {
