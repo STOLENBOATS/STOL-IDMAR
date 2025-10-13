@@ -1,9 +1,14 @@
-# Normaliza texto e evita surpresas de encoding
-* text=auto
+﻿*               text=auto eol=lf
 
-# Força UTF-8 no working tree para estes tipos
-*.html text working-tree-encoding=UTF-8 eol=lf
-*.css  text working-tree-encoding=UTF-8 eol=lf
-*.js   text working-tree-encoding=UTF-8 eol=lf
-*.json text working-tree-encoding=UTF-8 eol=lf
-*.md   text working-tree-encoding=UTF-8 eol=lf
+# texto sempre UTF-8
+*.html          text working-tree-encoding=UTF-8
+*.js            text working-tree-encoding=UTF-8
+*.css           text working-tree-encoding=UTF-8
+*.json          text working-tree-encoding=UTF-8
+
+# binários
+*.png           binary
+*.jpg           binary
+*.jpeg          binary
+# SVG é texto
+*.svg           text
