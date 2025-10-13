@@ -1,0 +1,44 @@
+{
+  "Honda": {
+    "families": {
+      "BF15": {
+        "codes": {
+          "BAAL": { "hp": [15,20], "years": [2015, 2018], "range": [1200000, 1299999], "shaft": ["S","M"], "confidence": "provisional" }
+        }
+      },
+      "BF20": {
+        "codes": {
+          "BAAL": { "hp": [15,20], "years": [2015, 2018], "range": [1200000, 1299999], "shaft": ["S","M"], "confidence": "provisional" }
+        }
+      },
+      "BF30": {
+        "codes": {
+          "BACL": { "hp": [30], "years": [2016, 2019], "range": [2000000, 2099999], "shaft": ["S","L"], "confidence": "provisional" }
+        }
+      },
+      "BF40": {
+        "codes": {
+          "BALJ": { "hp": [40], "years": [2018, 2021], "range": [3100000, 3199999], "shaft": ["L"], "confidence": "provisional" },
+          "BAAL": { "hp": [15,20], "years": [2015, 2018], "range": [1200000, 1299999], "shaft": ["S","M"], "confidence": "provisional" }
+        }
+      },
+      "BF50": {
+        "codes": {
+          "LAJH": { "hp": [50], "years": [2010, 2014], "range": [1000001, 1099999], "shaft": ["L","X"], "confidence": "provisional" }
+        }
+      },
+      "BF90": {
+        "codes": {
+          "BJLA": { "hp": [90], "years": [2012, 2016], "range": [2200000, 2299999], "shaft": ["L","X"], "confidence": "provisional" }
+        }
+      }
+    },
+    "interior_hint": "Honda pode ter nº exterior (com prefixo/código) e nº interior (bloco). Interior valida por coerência geral."
+  },
+
+  "Mercury": {
+    "prefixes": {
+      "1B": { "models": ["40","50","60"], "years": [2008, 2014], "range": [10000000, 19999999], "confidence": "provisional" }
+    }
+  }
+}
