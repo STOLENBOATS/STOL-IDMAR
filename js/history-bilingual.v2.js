@@ -1,26 +1,25 @@
-ï»¿
 // IDMAR history bilingual enhancer v2
 (function(){
   const mapReason = [
-    [/^Estrutura vï¿½lida\.?$/i, "Structure valid"],
-    [/Ano de produï¿½ï¿½o inconsistente/i, "Production year inconsistent"],
+    [/^Estrutura válida\.?$/i, "Structure valid"],
+    [/Ano de produção inconsistente/i, "Production year inconsistent"],
     [/fora de 1998\+/i, "outside 1998+"],
-    [/Ano do modelo nï¿½o pode ser anterior/i, "Model year cannot be earlier than production year"],
-    [/M[eï¿½]s invï¿½lido/i, "Invalid month code"],
-    [/Tamanho invï¿½lido/i, "Invalid length"],
-    [/Formato EUA nï¿½o admite 15/i, "US format does not allow 15"],
-    [/Caracteres invï¿½lidos/i, "Invalid characters"],
-    [/Pa[iï¿½]s invï¿½lido/i, "Invalid country code"],
-    [/Fabricante invï¿½lido/i, "Invalid manufacturer code"],
+    [/Ano do modelo não pode ser anterior/i, "Model year cannot be earlier than production year"],
+    [/M[eê]s inválido/i, "Invalid month code"],
+    [/Tamanho inválido/i, "Invalid length"],
+    [/Formato EUA não admite 15/i, "US format does not allow 15"],
+    [/Caracteres inválidos/i, "Invalid characters"],
+    [/Pa[ií]s inválido/i, "Invalid country code"],
+    [/Fabricante inválido/i, "Invalid manufacturer code"],
     [/Ano do modelo fora do intervalo/i, "Model year out of allowed range"],
-    [/Prï¿½-?1998.*DoC\/CE/i, "Pre-1998 with DoC/CE"],
-    [/Prï¿½-?1998.*falta DoC\/CE/i, "Pre-1998: missing DoC/CE"],
+    [/Pré-?1998.*DoC\/CE/i, "Pre‑1998 with DoC/CE"],
+    [/Pré-?1998.*falta DoC\/CE/i, "Pre‑1998: missing DoC/CE"],
   ];
   function trStatePTEN(text){
     const s = (text||"").toString().trim().toLowerCase();
-    if (s.includes("prï¿½-1998") || s.includes("pre-1998")) return 'Prï¿½-1998 / <span class="en">Pre-1998</span>';
-    if (s.includes("vï¿½lido")) return 'Vï¿½lido / <span class="en">Valid</span>';
-    if (s.includes("invï¿½lido")) return 'Invï¿½lido / <span class="en">Invalid</span>';
+    if (s.includes("pré-1998") || s.includes("pre-1998")) return 'Pré‑1998 / <span class="en">Pre‑1998</span>';
+    if (s.includes("válido")) return 'Válido / <span class="en">Valid</span>';
+    if (s.includes("inválido")) return 'Inválido / <span class="en">Invalid</span>';
     return text;
   }
   function trReasonPTEN(text){
