@@ -6,3 +6,7 @@ js/patch-forense-i18n-ribbon.r1.backup*.js
 *.bak
 *.bak*
 js/patch-forense-i18n-ribbon.r1.backup*.js
+# backups e ferramentas locais
+*.bak
+*.backup*.js
+tools/
