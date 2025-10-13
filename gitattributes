@@ -1,0 +1,9 @@
+# Normaliza texto e evita surpresas de encoding
+* text=auto
+
+# Força UTF-8 no working tree para estes tipos
+*.html text working-tree-encoding=UTF-8 eol=lf
+*.css  text working-tree-encoding=UTF-8 eol=lf
+*.js   text working-tree-encoding=UTF-8 eol=lf
+*.json text working-tree-encoding=UTF-8 eol=lf
+*.md   text working-tree-encoding=UTF-8 eol=lf
