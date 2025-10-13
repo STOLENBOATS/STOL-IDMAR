@@ -1,4 +1,4 @@
-ï»¿/* IDMAR Header ï¿½ Validador ï¿½ 2025-09-18 */
+/* IDMAR Header — Validador • 2025-09-18 */
 (() => {
   const ACTIVE = 'validador.html';
   injectHeader(ACTIVE);
@@ -10,19 +10,19 @@
     header.setAttribute('data-idmar','header-only');
     styleHeader(header);
 
-    // LEFT (logo + tï¿½tulos)
+    // LEFT (logo + títulos)
     const left = h('div'); styleFlex(left, '.75rem');
-    const logo = h('img'); logo.src = 'img/logo-pm.png'; logo.alt = 'Polï¿½cia Marï¿½tima'; logo.style.height = '32px';
+    const logo = h('img'); logo.src = 'img/logo-pm.png'; logo.alt = 'Polícia Marítima'; logo.style.height = '32px';
     const titles = h('div');
     const app = h('div', null, 'IDMAR'); app.style.fontWeight='800'; app.style.fontSize='1.6rem'; app.style.lineHeight='1';
-    const sub = h('div', null, 'Identificaï¿½ï¿½o Marï¿½tima ï¿½ Cascos & Motores'); sub.style.opacity='.8';
+    const sub = h('div', null, 'Identificação Marítima — Cascos & Motores'); sub.style.opacity='.8';
     titles.append(app, sub);
     left.append(logo, titles);
 
     // RIGHT (nav + theme)
     const right = h('div'); styleFlex(right, '1rem');
     const nav = buildNav(activeHref);
-    // tenta agarrar botï¿½o de tema existente
+    // tenta agarrar botão de tema existente
     const themeBtn = document.querySelector('#idmar-theme-toggle') ||
                      document.querySelector('[data-theme-toggle]') ||
                      document.querySelector('.theme-toggle') ||
@@ -40,8 +40,8 @@
     const nav = h('nav', 'app-nav'); styleFlex(nav, '1rem');
     [
       ['validador.html','Validador'],
-      ['historico_win.html','Histï¿½rico WIN'],
-      ['historico_motor.html','Histï¿½rico Motor'],
+      ['historico_win.html','Histórico WIN'],
+      ['historico_motor.html','Histórico Motor'],
       ['forense.html','Forense'],
       ['#logout','Sair']
     ].forEach(([href,txt])=>{
@@ -71,5 +71,3 @@
     el.style.gap='1rem'; el.style.padding='.75rem 1rem'; el.style.borderBottom='1px solid #e5e7eb'; el.style.background='#fff';
   }
 })();
-
-
