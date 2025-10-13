@@ -1,24 +1,24 @@
-ï»¿/* IDMAR i18n (plus) ï¿½ History/Validator/Login/Forense */
+/* IDMAR i18n (plus) — History/Validator/Login/Forense */
 (() => {
   const DICT = {
     pt: {
-      app: { name: "IDMAR", subtitle: "Identificaï¿½ï¿½o Marï¿½tima ï¿½ Cascos & Motores" },
-      nav: { validator:"Validador", hist_win:"Histï¿½rico WIN", hist_motor:"Histï¿½rico Motor", forense:"Forense", logout:"Sair" },
+      app: { name: "IDMAR", subtitle: "Identificação Marítima — Cascos & Motores" },
+      nav: { validator:"Validador", hist_win:"Histórico WIN", hist_motor:"Histórico Motor", forense:"Forense", logout:"Sair" },
       login: {
-        title:"Iniciar sessï¿½o", lead:"Aceda com as suas credenciais.",
+        title:"Iniciar sessão", lead:"Aceda com as suas credenciais.",
         user_label:"Utilizador", user_ph:"nome.apelido",
-        pass_label:"Palavra-passe", pass_ph:"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",
-        remember:"Lembrar sessï¿½o", signin:"Entrar",
+        pass_label:"Palavra-passe", pass_ph:"••••••••",
+        remember:"Lembrar sessão", signin:"Entrar",
         forgot:"Esqueci-me da palavra-passe", lang:"Idioma"
       },
       validator: {
         title:"Validador",
-        win: { label:"WIN / HIN", validate:"Validar WIN", invalid:(p)=>`WIN invï¿½lido: ${p.win}`, valid:"WIN vï¿½lido" },
+        win: { label:"WIN / HIN", validate:"Validar WIN", invalid:(p)=>`WIN inválido: ${p.win}`, valid:"WIN válido" },
         motor:{ title:"Validador de Motor", validate:"Validar Motor" }
       },
       history: {
-        title_win:"Histï¿½rico WIN",
-        title_motor:"Histï¿½rico Motor",
+        title_win:"Histórico WIN",
+        title_motor:"Histórico Motor",
         filters:"Filtros",
         state:"Estado",
         date_range:"Intervalo de datas",
@@ -33,36 +33,36 @@
           brand:"Marca",
           model:"Modelo",
           state:"Estado",
-          reason:"Justificaï¿½ï¿½o",
+          reason:"Justificação",
           photo:"Foto"
         },
-        state_ok:"Vï¿½lido",
-        state_err:"Invï¿½lido"
+        state_ok:"Válido",
+        state_err:"Inválido"
       },
       forense: {
-        title:"Forense ï¿½ ï¿½ndice",
-        load:"Carregar evidï¿½ncias",
+        title:"Forense — Índice",
+        load:"Carregar evidências",
         context_win:"Contexto: WIN/HIN",
         context_motor:"Contexto: Motor",
-        attach:"Anexar ao histï¿½rico mais recente",
+        attach:"Anexar ao histórico mais recente",
         workspace:"Workspace",
         lightbox:"Abrir lightbox",
         compare:"Comparar",
         annotate:"Anotar (rect)",
-        clear:"Limpar anotaï¿½ï¿½es",
+        clear:"Limpar anotações",
         export_png:"Exportar PNG anotado",
-        save_bundle:"Guardar ï¿½bundleï¿½ (JSON)",
-        notes:"Observaï¿½ï¿½es tï¿½cnicasï¿½",
+        save_bundle:"Guardar “bundle” (JSON)",
+        notes:"Observações técnicas…",
         commit_attach:"Commit & Anexar"
       }
     },
     en: {
-      app: { name: "IDMAR", subtitle: "Maritime Identification ï¿½ Hulls & Engines" },
+      app: { name: "IDMAR", subtitle: "Maritime Identification — Hulls & Engines" },
       nav: { validator:"Validator", hist_win:"WIN History", hist_motor:"Engine History", forense:"Forensics", logout:"Sign out" },
       login: {
         title:"Sign in", lead:"Access with your credentials.",
         user_label:"User", user_ph:"name.surname",
-        pass_label:"Password", pass_ph:"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",
+        pass_label:"Password", pass_ph:"••••••••",
         remember:"Remember me", signin:"Sign in",
         forgot:"Forgot your password?", lang:"Language"
       },
@@ -95,7 +95,7 @@
         state_err:"Invalid"
       },
       forense: {
-        title:"Forensics ï¿½ Index",
+        title:"Forensics — Index",
         load:"Load evidence",
         context_win:"Context: WIN/HIN",
         context_motor:"Context: Engine",
@@ -107,7 +107,7 @@
         clear:"Clear annotations",
         export_png:"Export annotated PNG",
         save_bundle:"Save bundle (JSON)",
-        notes:"Technical notesï¿½",
+        notes:"Technical notes…",
         commit_attach:"Commit & Attach"
       }
     }
@@ -135,5 +135,3 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ()=>apply());
   else apply();
 })();
-
-
