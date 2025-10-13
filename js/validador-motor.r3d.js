@@ -1,5 +1,6 @@
-ï»¿// validador-motor.r3d.js ï¿½ validaï¿½ï¿½o reforï¿½ada + histï¿½rico compatï¿½vel (PT/EN)
-(function (w, d) {
+// validador-motor.r3c.js — histórico + validação (PT/EN)
+(function(w,d){
+
   console.info('[IDMAR] validador-motor ATIVO: r3d');
   w.IDMAR = w.IDMAR || {};
   w.NAV = w.NAV || w.IDMAR;
