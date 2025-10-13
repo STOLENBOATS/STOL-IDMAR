@@ -1,4 +1,4 @@
-ï»¿// IDMAR ï¿½ Histï¿½rico MOTOR (r3b) ï¿½ filtros, ordenaï¿½ï¿½o, CSV, miniatura e forense
+// IDMAR — Histórico MOTOR (r3b) — filtros, ordenação, CSV, miniatura e forense
 (function(w,d){
   w.IDMAR=w.IDMAR||{}; w.NAV=w.NAV||w.IDMAR;
   NAV.STORAGE = NAV.STORAGE || { SESSION:'IDMAR_SESSION', WIN_HISTORY:'hist_win', MOTOR_HISTORY:'hist_motor' };
@@ -20,12 +20,12 @@
     if(!pt) return '';
     const s=(''+pt).trim();
     if(/^ok$/i.test(s)) return 'OK';
-    if(/Estrutura v[aï¿½]lida/i.test(s)) return s + ' / <span class="en">Structure valid</span>';
-    if(/S[eï¿½]rie/i.test(s) && /inv[aï¿½]lida/i.test(s)) return s + ' / <span class="en">Invalid serial</span>';
+    if(/Estrutura v[aá]lida/i.test(s)) return s + ' / <span class="en">Structure valid</span>';
+    if(/S[eé]rie/i.test(s) && /inv[aá]lida/i.test(s)) return s + ' / <span class="en">Invalid serial</span>';
     return s + ' / <span class="en">' + s + '</span>';
   }
   function trStatePTEN(valid){
-    return valid ? 'Vï¿½lido / <span class="en">Valid</span>' : 'Invï¿½lido / <span class="en">Invalid</span>';
+    return valid ? 'Válido / <span class="en">Valid</span>' : 'Inválido / <span class="en">Invalid</span>';
   }
 
   function findCSV(){ return $id('hist_motor_csv') || Array.from(d.querySelectorAll('button,input[type="button"]')).find(b=>/exportar/i.test(b.textContent||b.value||'')); }
