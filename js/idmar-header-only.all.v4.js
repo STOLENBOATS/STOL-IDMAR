@@ -1,4 +1,4 @@
-ï»¿/* IDMAR ï¿½ Header Only v4 (com PT/EN) */
+/* IDMAR — Header Only v4 (com PT/EN) */
 (() => {
   if (document.querySelector('.app-header[data-idmar="header-only"]')) return;
 
@@ -19,7 +19,7 @@
 
   const left = document.createElement('div');
   Object.assign(left.style,{display:'flex',alignItems:'center',gap:'.75rem'});
-  const img = new Image(); img.src='img/logo-pm.png'; img.alt='Polï¿½cia Marï¿½tima'; img.style.height='32px';
+  const img = new Image(); img.src='img/logo-pm.png'; img.alt='Polícia Marítima'; img.style.height='32px';
   const tbox = document.createElement('div');
   const app = document.createElement('div'); app.setAttribute('data-i18n-appname',''); app.textContent=t('app.name'); app.style.fontWeight='800'; app.style.fontSize='1.6rem'; app.style.lineHeight='1';
   const sub = document.createElement('div'); sub.setAttribute('data-i18n-appsub',''); sub.textContent=t('app.subtitle'); sub.style.opacity='.8';
@@ -42,7 +42,7 @@
     nav.appendChild(a);
   });
 
-  // Botï¿½o de idioma PT/EN
+  // Botão de idioma PT/EN
   const langBtn = document.createElement('button');
   langBtn.id = 'idmar-lang-toggle';
   langBtn.title = 'Language';
@@ -55,7 +55,7 @@
     langBtn.textContent = nxt.toUpperCase();
   });
 
-  // Botï¿½o de tema (se existir na pï¿½gina)
+  // Botão de tema (se existir na página)
   const themeBtn = document.querySelector('#idmar-theme-toggle') ||
                    document.querySelector('[data-theme-toggle]') ||
                    document.querySelector('.theme-toggle') ||
@@ -67,9 +67,9 @@
   head.append(left,right);
   document.body.insertBefore(head, document.body.firstChild);
 
-  // Aplicar traduï¿½ï¿½es ao header recï¿½m-injetado
+  // Aplicar traduções ao header recém-injetado
   window.IDMAR_I18N?.apply(head);
-  // === IDMAR layout normalize (margens/containers homogï¿½neas) ===
+  // === IDMAR layout normalize (margens/containers homogéneas) ===
 (function injectIdmarNormalize(){
   if (document.getElementById('idmar-normalize')) return;
   const css = `
@@ -78,7 +78,7 @@
   }
   /* header fica full-bleed */
   .app-header{max-width:none !important;margin:0 !important;padding:.75rem 1rem}
-  /* conteï¿½do alinhado */
+  /* conteúdo alinhado */
   body>main, body>.container, main .container:first-child{
     max-width:var(--idmar-max) !important;
     margin:var(--idmar-top) auto !important;
@@ -86,9 +86,9 @@
     padding-right:var(--idmar-pad) !important;
     box-sizing:border-box;
   }
-  /* painï¿½is/blocks */
+  /* painéis/blocks */
   .panel{margin:var(--idmar-gap) 0 !important}
-  /* footer com mesma largura do conteï¿½do */
+  /* footer com mesma largura do conteúdo */
   footer{
     max-width:var(--idmar-max); margin:var(--idmar-top) auto 0 auto;
     padding-left:var(--idmar-pad); padding-right:var(--idmar-pad); width:100%;
@@ -100,7 +100,8 @@
   document.head.appendChild(style);
 })();
 
-  })(); // <ï¿½ fecha o IIFE do header v4
+  })(); // <— fecha o IIFE do header v4
+
 
 
 
